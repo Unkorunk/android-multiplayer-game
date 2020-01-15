@@ -1,4 +1,4 @@
-package ru.timelimit.client.game;
+package ru.timelimit.client.game.UI;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -9,7 +9,7 @@ public abstract class UI {
 
     public abstract void init();
 
-    public boolean IsClicked(String elementName) throws Exception {
+    public boolean isClicked(String elementName) {
         if (!btnMap.containsKey(elementName)) {
             return false;
         }

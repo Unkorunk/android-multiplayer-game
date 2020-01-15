@@ -9,6 +9,6 @@ public abstract class BehaviourModel {
         RUN
     }
 
-    public abstract Command update() throws Exception;
+    public abstract Command update();
 
 }

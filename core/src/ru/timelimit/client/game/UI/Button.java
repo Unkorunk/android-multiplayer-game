@@ -1,4 +1,4 @@
-package ru.timelimit.client.game;
+package ru.timelimit.client.game.UI;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -16,6 +16,10 @@ public class Button {
     }
 
     public boolean checkClick(Vector2 touch) {
+        if (touch == null) {
+            return false;
+        }
+
         if (touch.x >= btnRect.x && touch.x <= btnRect.x + btnRect.width
                 && touch.y >= btnRect.y && touch.y <= btnRect.y + btnRect.height) {
 

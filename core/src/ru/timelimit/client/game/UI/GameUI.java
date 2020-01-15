@@ -1,7 +1,7 @@
-package ru.timelimit.client.game;
+package ru.timelimit.client.game.UI;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import ru.timelimit.client.game.TextureManager;
 
 import java.util.HashMap;
 
