@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import ru.timelimit.client.game.UI.UI;
 import ru.timelimit.client.game.UI.GameUI;
 
@@ -26,6 +27,7 @@ public class GameClient extends ApplicationAdapter {
 	//private ArrayList<GameObject> gameObjects;
 
 	private void texturesInit() {
+		TextureManager.addTexture("test", "badlogic.jpg");
 		TextureManager.addTexture("BackgroundSky", "Background/Background_sky.png");
 		TextureManager.addTexture("Character", "Character/idle.gif");
 	}
@@ -41,16 +43,18 @@ public class GameClient extends ApplicationAdapter {
 
 	@Override
 	public void create () {
+		texturesInit();
+
 		float width = Gdx.graphics.getWidth();
 		float height = Gdx.graphics.getHeight();
 
         camera = new OrthographicCamera(600, 600 * (height / width));
+        // camera.setToOrtho(false, 600, 600 * (height / width));
         camera.position.set(WORLD_WIDTH / 2f, WORLD_HEIGHT / 2f, 0);
         camera.update();
         gui.init();
 		batch = new SpriteBatch();
 
-		texturesInit();
 		background = new Sprite(TextureManager.get("BackgroundSky"));
 		background.setPosition(0, 0);
 		background.setSize(WORLD_WIDTH, WORLD_HEIGHT);
@@ -72,6 +76,11 @@ public class GameClient extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+		var touch = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+		camera.unproject(touch);
+
+		UI.lastClick = new Vector2(touch.x, touch.y);
+
 		updateObjects();
 
 		camera.update();
@@ -80,6 +89,8 @@ public class GameClient extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		background.draw(batch);
+
+		gui.render(batch);
 
 		renderObjects();
 
