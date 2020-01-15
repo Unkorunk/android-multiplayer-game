@@ -23,7 +23,7 @@ public class GameClient extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private Sprite background;
 
-	private ArrayList<GameObject> gameObjects;
+	//private ArrayList<GameObject> gameObjects;
 
 	private void texturesInit() {
 		TextureManager.addTexture("BackgroundSky", "Background/Background_sky.png");
@@ -31,14 +31,12 @@ public class GameClient extends ApplicationAdapter {
 	}
 
 	private void objectsInit() {
-		gameObjects = new ArrayList<>();
-
 		var player = new Entity();
 		player.setBehaviour(new PlayerBehaviour());
 		player.position = new Vector2(0, 0);
 		player.sprite = new Sprite(TextureManager.get("Character"));
 
-		gameObjects.add(player);
+		GlobalSettings.gameObjects.add(player);
 	}
 
 	@Override
@@ -61,13 +59,13 @@ public class GameClient extends ApplicationAdapter {
 	}
 
 	private void updateObjects() {
-		for (var gameObj : gameObjects) {
+		for (var gameObj : GlobalSettings.gameObjects) {
 			gameObj.update();
 		}
 	}
 
 	private void renderObjects() {
-		for (var gameObj : gameObjects) {
+		for (var gameObj : GlobalSettings.gameObjects) {
 			gameObj.render(batch);
 		}
 	}
