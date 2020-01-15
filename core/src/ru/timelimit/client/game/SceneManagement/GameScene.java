@@ -19,10 +19,15 @@ public class GameScene implements Scene {
     private void objectsInit() {
         var player = new Entity();
         player.setBehaviour(new PlayerBehaviour());
-        player.position = new Vector2(0, 0);
         player.sprite = new Sprite(TextureManager.get("Character"));
+        player.setCell(new Pair(1, 1));
+
+        var laser = new Trap();
+        laser.sprite = new Sprite(TextureManager.get("Laser"));
+        laser.setCell(new Pair(5, 1));
 
         GlobalSettings.gameObjects.add(player);
+        GlobalSettings.gameObjects.add(laser);
     }
 
     @Override
