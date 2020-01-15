@@ -3,39 +3,44 @@ package ru.timelimit.client.game;
 import com.badlogic.gdx.math.Vector2;
 
 public class Entity extends GameObject {
+    public Pair targetCell = new Pair(1, 1);
 
-    private Vector2 speed = new Vector2(1, 0);
-
-    private int jumpTimer = 0;
+    private int chooseTimer = 0;
 
     @Override
     public void update() {
-        BehaviourModel.Command cmd = bm.update();
+        var nowCell = getCell();
 
-        var curSpeed = new Vector2(speed.x, speed.y);
-
-        if (jumpTimer == 0){
-            // TODO: Normal command handling
-            switch(cmd) {
-                case JUMP:
-                    position.y += 25;
-                    jumpTimer = 60;
-                    break;
-
-                case SLIP:
-                    // TODO: ???
-                    break;
-
-                default:
-                    break;
+        if (nowCell.equals(targetCell)) {
+            if (chooseTimer == 0 && GlobalSettings.checkObjectOnCell(new Pair(nowCell.x + 1, nowCell.y))) {
+                chooseTimer = 60;
+                // TODO: show buttons with choose
             }
-        } else {
-            jumpTimer--;
-            if (jumpTimer == 0) {
-                position.y -= 25;
+
+            BehaviourModel.Command cmd = bm.update();
+
+            if (chooseTimer == 0 || cmd != BehaviourModel.Command.RUN) {
+                // TODO: hide buttons with choose
+                chooseTimer = 0;
+                switch (cmd) {
+                    case JUMP:
+                        targetCell = new Pair(nowCell.x + 1, nowCell.y + 1);
+                        break;
+
+                    case SLIP:
+                        targetCell = new Pair(nowCell.x + 2, nowCell.y);
+                        break;
+
+                    default:
+                        targetCell = new Pair(nowCell.x + 1, nowCell.y); // damage ????
+                        break;
+                }
+            } else {
+                chooseTimer--;
             }
         }
 
+        Vector2 curSpeed = new Vector2(targetCell.x - nowCell.x, targetCell.y - nowCell.y);
 
         position.x += curSpeed.x;
         position.y += curSpeed.y;

@@ -10,7 +10,7 @@ public class GlobalSettings {
     public static ArrayList<GameObject> getObjectsOnCell(Pair cell) {
         ArrayList<GameObject> result = new ArrayList<>();
         for (var gameObj : gameObjects) {
-            if (gameObj.getCell() == cell) {
+            if (gameObj.getCell().equals(cell)) {
                 result.add(gameObj);
             }
         }
