@@ -10,5 +10,5 @@ repositories {
 }
 
 dependencies {
-
+    compile group: 'com.github.menacher', name: 'nadron', version: '0.7'
 }
