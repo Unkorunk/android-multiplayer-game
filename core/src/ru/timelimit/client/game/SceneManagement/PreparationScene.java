@@ -6,32 +6,25 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import ru.timelimit.client.game.*;
-import ru.timelimit.client.game.UI.GameUI;
+import ru.timelimit.client.game.UI.PreparationUI;
 import ru.timelimit.client.game.UI.UI;
 
-public class GameScene implements Scene {
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class PreparationScene implements Scene {
     public int exitCode = 0;
-
+    private Timer preparationTimer;
     private OrthographicCamera camera;
-    private static UI gui = new GameUI();
+    private static UI gui = new PreparationUI();
     private Sprite background;
-
-    private void objectsInit() {
-        var player = new Entity();
-        player.setBehaviour(new PlayerBehaviour());
-        player.position = new Vector2(0, 0);
-        player.sprite = new Sprite(TextureManager.get("Character"));
-
-        GlobalSettings.gameObjects.add(player);
-    }
 
     @Override
     public void instantiate() {
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();
 
-        camera = new OrthographicCamera(600, 600 * (height / width));
-        // camera.setToOrtho(false, 600, 600 * (height / width));
+        camera = new OrthographicCamera(800, 800 * (height / width));
         camera.position.set(GameClient.WORLD_WIDTH / 2f, GameClient.WORLD_HEIGHT / 2f, 0);
         camera.update();
         gui.init();
@@ -40,7 +33,13 @@ public class GameScene implements Scene {
         background.setPosition(0, 0);
         background.setSize(GameClient.WORLD_WIDTH, GameClient.WORLD_HEIGHT);
 
-        objectsInit();
+        preparationTimer = new Timer();
+        preparationTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                exitCode = 3;
+            }
+        }, 10 * 1000);
     }
 
     @Override
@@ -58,11 +57,6 @@ public class GameScene implements Scene {
         return camera;
     }
 
-    private void updateObjects() {
-        for (var gameObj : GlobalSettings.gameObjects) {
-            gameObj.update();
-        }
-    }
 
     private void renderObjects(SpriteBatch batch) {
         for (var gameObj : GlobalSettings.gameObjects) {
@@ -72,9 +66,9 @@ public class GameScene implements Scene {
 
     @Override
     public void render(SpriteBatch batch) {
-        updateObjects();
-
         background.draw(batch);
+
+        gui.findClicked();
 
         gui.render(batch);
 

@@ -14,4 +14,6 @@ public interface Scene {
     OrthographicCamera getCamera();
 
     void render(SpriteBatch batch);
+
+    int isOver();
 }

@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import ru.timelimit.client.game.UI.UI;
 
 public class MenuScene implements Scene {
+    public int exitCode = 0;
+
     @Override
     public void instantiate() {
         // TODO: implement MenuScene
@@ -12,7 +14,7 @@ public class MenuScene implements Scene {
 
     @Override
     public void dispose() {
-        // TODO: implement MenuScene
+
     }
 
     @Override
@@ -30,5 +32,10 @@ public class MenuScene implements Scene {
     @Override
     public void render(SpriteBatch batch) {
         // TODO: implement MenuScene
+    }
+
+    @Override
+    public int isOver() {
+        return 0;
     }
 }

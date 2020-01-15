@@ -82,6 +82,8 @@ public class GameClient extends ApplicationAdapter {
 		sceneManager.currentScene.render(batch);
 
 		batch.end();
+
+		sceneManager.checkScene();
 	}
 	
 	@Override
