@@ -3,17 +3,30 @@ package ru.timelimit.client.game;
 import com.badlogic.gdx.math.Vector2;
 
 public class Entity extends GameObject {
-    public Pair targetCell = new Pair(1, 1);
+    public Pair targetCell = null;
 
     private int chooseTimer = 0;
 
     @Override
     public void update() {
+        if (targetCell == null) {
+            targetCell = getCell();
+        }
+
         var nowCell = getCell();
 
         if (nowCell.equals(targetCell)) {
+            Trap trapObj = null;
             if (chooseTimer == 0 && GlobalSettings.checkObjectOnCell(new Pair(nowCell.x + 1, nowCell.y))) {
-                chooseTimer = 60;
+                for (var gameObj : GlobalSettings.getObjectsOnCell(new Pair(nowCell.x + 1, nowCell.y))) {
+                    if (gameObj instanceof Trap) {
+                        trapObj = (Trap) gameObj;
+                        break;
+                    }
+                }
+                if (trapObj != null) {
+                    chooseTimer = 60;
+                }
                 // TODO: show buttons with choose
             }
 
@@ -32,7 +45,7 @@ public class Entity extends GameObject {
                         break;
 
                     default:
-                        targetCell = new Pair(nowCell.x + 1, nowCell.y); // damage ????
+                        targetCell = new Pair(nowCell.x + 1, nowCell.y); // TODO: Lose or minus health
                         break;
                 }
             } else {

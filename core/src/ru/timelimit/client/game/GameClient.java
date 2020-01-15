@@ -35,15 +35,7 @@ public class GameClient extends ApplicationAdapter {
 		TextureManager.addTexture("test", "badlogic.jpg");
 		TextureManager.addTexture("BackgroundSky", "Background/Background_sky.png");
 		TextureManager.addTexture("Character", "Character/idle.gif");
-	}
-
-	private void objectsInit() {
-		var player = new Entity();
-		player.setBehaviour(new PlayerBehaviour());
-		player.position = new Vector2(0, 0);
-		player.sprite = new Sprite(TextureManager.get("Character"));
-
-		GlobalSettings.gameObjects.add(player);
+		TextureManager.addTexture("Laser", "Sprites/Trap.png");
 	}
 
 	@Override
