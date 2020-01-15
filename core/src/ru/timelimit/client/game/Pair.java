@@ -1,5 +1,7 @@
 package ru.timelimit.client.game;
 
+import com.badlogic.gdx.math.Vector2;
+
 public class Pair {
     public int x, y;
     public Pair() {
@@ -17,5 +19,10 @@ public class Pair {
         }
         Pair pair = (Pair) other;
         return (this.x == pair.x && this.y == pair.y);
+    }
+
+    public static Pair vectorToCell(Vector2 vec) {
+        return new Pair((int) Math.floor(vec.x / GlobalSettings.WIDTH_CELL),
+                        (int) Math.floor(vec.y / GlobalSettings.HEIGHT_CELL));
     }
 }

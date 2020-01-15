@@ -39,4 +39,12 @@ public abstract class GameObject {
                 (int) Math.floor(position.y / GlobalSettings.HEIGHT_CELL)
         );
     }
+
+    public int getX() {
+        return (int) Math.floor(position.x / GlobalSettings.WIDTH_CELL);
+    }
+
+    public int getY() {
+        return (int) Math.floor(position.y / GlobalSettings.HEIGHT_CELL);
+    }
 }

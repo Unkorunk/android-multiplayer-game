@@ -6,6 +6,8 @@ public class GlobalSettings {
     public static float WIDTH_CELL = 64.0f;
     public static float HEIGHT_CELL = 64.0f;
 
+    public static int preparationTime = 10 * 1000;
+
     public static ArrayList<GameObject> gameObjects = new ArrayList<>();
     public static ArrayList<GameObject> getObjectsOnCell(Pair cell) {
         ArrayList<GameObject> result = new ArrayList<>();

@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import ru.timelimit.client.game.*;
 import ru.timelimit.client.game.UI.GameUI;
 import ru.timelimit.client.game.UI.UI;
@@ -50,7 +49,7 @@ public class GameScene implements Scene {
 
     @Override
     public void dispose() {
-
+        GlobalSettings.gameObjects.clear();
     }
 
     @Override

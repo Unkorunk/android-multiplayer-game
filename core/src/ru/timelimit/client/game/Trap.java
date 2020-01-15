@@ -7,4 +7,14 @@ public class Trap extends GameObject {
 
     @Override
     public void update() {}
+
+    public Trap clone() {
+        Trap newTrap = new Trap();
+        newTrap.sprite = this.sprite;
+        newTrap.commands = this.commands;
+        newTrap.setCell(this.getCell());
+
+
+        return newTrap;
+    }
 }

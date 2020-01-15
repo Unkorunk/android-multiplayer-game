@@ -9,18 +9,37 @@ import ru.timelimit.client.game.*;
 import ru.timelimit.client.game.UI.PreparationUI;
 import ru.timelimit.client.game.UI.UI;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class PreparationScene implements Scene {
     public int exitCode = 0;
+
     private Timer preparationTimer;
     private OrthographicCamera camera;
     private static UI gui = new PreparationUI();
     private Sprite background;
 
+    private ArrayList<Trap> trapTypes;
+    private ArrayList<Trap> trapList;
+
+    private Trap currentTrap = null;
+
+    private void trapInit() {
+        trapTypes = new ArrayList<>();
+
+        var laser = new Trap();
+        laser.sprite = new Sprite(TextureManager.get("Laser"));
+        laser.setCell(new Pair(0, 0));
+
+        trapTypes.add(laser);
+    }
+
     @Override
     public void instantiate() {
+        trapInit();
+
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();
 
@@ -39,12 +58,18 @@ public class PreparationScene implements Scene {
             public void run() {
                 exitCode = 3;
             }
-        }, 10 * 1000);
+        }, GlobalSettings.preparationTime);
+
+        ((PreparationUI)gui).initChooser(trapTypes, (Trap trap) -> {
+            currentTrap = trap;
+        });
     }
 
     @Override
     public void dispose() {
-
+        if (exitCode != 3) {
+            GlobalSettings.gameObjects.clear();
+        }
     }
 
     @Override
@@ -68,7 +93,15 @@ public class PreparationScene implements Scene {
     public void render(SpriteBatch batch) {
         background.draw(batch);
 
-        gui.findClicked();
+        String clickedBtn = gui.findClicked();
+        if (clickedBtn != null) {
+            System.out.println(2);
+        }
+        if (clickedBtn == null && currentTrap != null && Gdx.input.justTouched()) {
+            var newTrap = currentTrap.clone();
+            newTrap.setCell(Pair.vectorToCell(GameClient.lastClick));
+            GlobalSettings.gameObjects.add(newTrap);
+        }
 
         gui.render(batch);
 

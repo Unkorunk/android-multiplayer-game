@@ -12,6 +12,7 @@ public class SceneManager {
 
     public void checkScene() {
         if (currentScene.isOver() != 0) {
+            currentScene.dispose();
             nextLevel(currentScene.isOver());
         }
     }
