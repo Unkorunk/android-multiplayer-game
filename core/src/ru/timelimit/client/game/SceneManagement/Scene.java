@@ -1,0 +1,17 @@
+package ru.timelimit.client.game.SceneManagement;
+
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import ru.timelimit.client.game.UI.UI;
+
+public interface Scene {
+    void instantiate();
+
+    void dispose();
+
+    UI getUI();
+
+    OrthographicCamera getCamera();
+
+    void render(SpriteBatch batch);
+}

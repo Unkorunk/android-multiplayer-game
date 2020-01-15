@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import ru.timelimit.client.game.SceneManagement.SceneManager;
 import ru.timelimit.client.game.UI.UI;
 import ru.timelimit.client.game.UI.GameUI;
 
@@ -19,10 +20,14 @@ public class GameClient extends ApplicationAdapter {
 	public static final int WORLD_HEIGHT = 360;
 	public static final int WORLD_WIDTH = 640;
 
+	public SceneManager sceneManager;
+
 	private OrthographicCamera camera;
 
 	private SpriteBatch batch;
 	private Sprite background;
+
+	public static Vector2 lastClick;
 
 	//private ArrayList<GameObject> gameObjects;
 
@@ -45,21 +50,10 @@ public class GameClient extends ApplicationAdapter {
 	public void create () {
 		texturesInit();
 
-		float width = Gdx.graphics.getWidth();
-		float height = Gdx.graphics.getHeight();
-
-        camera = new OrthographicCamera(600, 600 * (height / width));
-        // camera.setToOrtho(false, 600, 600 * (height / width));
-        camera.position.set(WORLD_WIDTH / 2f, WORLD_HEIGHT / 2f, 0);
-        camera.update();
-        gui.init();
 		batch = new SpriteBatch();
 
-		background = new Sprite(TextureManager.get("BackgroundSky"));
-		background.setPosition(0, 0);
-		background.setSize(WORLD_WIDTH, WORLD_HEIGHT);
-
-		objectsInit();
+		sceneManager = new SceneManager();
+		sceneManager.setup();
 	}
 
 	private void updateObjects() {
@@ -77,22 +71,15 @@ public class GameClient extends ApplicationAdapter {
 	@Override
 	public void render () {
 		var touch = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-		camera.unproject(touch);
+		sceneManager.currentScene.getCamera().unproject(touch);
+		lastClick = new Vector2(touch.x, touch.y);
 
-		UI.lastClick = new Vector2(touch.x, touch.y);
-
-		updateObjects();
-
-		camera.update();
-		batch.setProjectionMatrix(camera.combined);
+		batch.setProjectionMatrix(sceneManager.currentScene.getCamera().combined);
 		Gdx.gl.glClearColor(0, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		background.draw(batch);
 
-		gui.render(batch);
-
-		renderObjects();
+		sceneManager.currentScene.render(batch);
 
 		batch.end();
 	}
