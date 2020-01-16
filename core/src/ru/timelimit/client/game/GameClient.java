@@ -28,6 +28,8 @@ public class GameClient extends ApplicationAdapter {
 	private void texturesInit() {
 		TextureManager.addTexture("test", "badlogic.jpg");
 		TextureManager.addTexture("BackgroundSky", "Background/Background_sky.png");
+		TextureManager.addTexture("BackgroundCity", "Background/Parallax_bg_city.png");
+		TextureManager.addTexture("BackgroundGround", "Background/Ground_1.png");
 		TextureManager.addTexture("Character", "Character/idle.gif");
 		TextureManager.addTexture("Laser", "Sprites/Trap.png");
 		TextureManager.addTexture("PlatformL", "Sprites/PlatformLeft.png");
@@ -50,7 +52,7 @@ public class GameClient extends ApplicationAdapter {
 		sceneManager = new SceneManager();
 		sceneManager.setup();
 
-		inputProcessor.updateCamera(sceneManager.currentScene.getCamera());
+		inputProcessor.updateCamera(sceneManager.currentScene.getCamera(), sceneManager.currentScene.getBackground());
 
 		im.addProcessor(inputProcessor);
 		im.addProcessor(gd);
@@ -73,7 +75,7 @@ public class GameClient extends ApplicationAdapter {
 
 		batch.end();
 
-		inputProcessor.updateCamera(sceneManager.currentScene.getCamera());
+		inputProcessor.updateCamera(sceneManager.currentScene.getCamera(), sceneManager.currentScene.getBackground());
 		sceneManager.currentScene.getCamera().update();
 
 		sceneManager.checkScene();

@@ -1,14 +1,11 @@
 package ru.timelimit.client.game.UI;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import ru.timelimit.client.game.GameClient;
-
-import java.util.function.Function;
 
 public class Button {
     public Button(int x, int y, int width, int height, Runnable callback) {

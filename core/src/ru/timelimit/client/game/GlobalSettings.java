@@ -1,6 +1,7 @@
 package ru.timelimit.client.game;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import java.util.ArrayList;
 
@@ -33,14 +34,14 @@ public class GlobalSettings {
         return type.isInstance(candidate);
     }
 
-    public static void translateCamera(float deltaX, float deltaY, OrthographicCamera camera) {
-        if (GlobalSettings.WORLD_HEIGHT - camera.viewportHeight / 2 - camera.position.y < deltaY) {
-            deltaY = GlobalSettings.WORLD_HEIGHT - camera.viewportHeight / 2 - camera.position.y;
-        }
-
-        if (0 + camera.viewportHeight / 2 - camera.position.y > deltaY){
-            deltaY = 0 + camera.viewportHeight / 2 - camera.position.y;
-        }
+    public static void translateCamera(float deltaX, float deltaY, OrthographicCamera camera, Sprite background) {
+//        if (GlobalSettings.WORLD_HEIGHT - camera.viewportHeight / 2 - camera.position.y < deltaY) {
+//            deltaY = GlobalSettings.WORLD_HEIGHT - camera.viewportHeight / 2 - camera.position.y;
+//        }
+//
+//        if (0 + camera.viewportHeight / 2 - camera.position.y > deltaY){
+//            deltaY = 0 + camera.viewportHeight / 2 - camera.position.y;
+//        }
 
         if (GlobalSettings.WORLD_WIDTH - camera.viewportWidth / 2 - camera.position.x < deltaX) {
             deltaX = GlobalSettings.WORLD_WIDTH - camera.viewportWidth / 2 - camera.position.x;
@@ -50,6 +51,7 @@ public class GlobalSettings {
             deltaX = 0 + camera.viewportWidth / 2 - camera.position.x;
         }
 
-        camera.translate(deltaX, deltaY);
+        camera.translate(deltaX, 0);
+        background.translate(deltaX, 0);
     }
 }

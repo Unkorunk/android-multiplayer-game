@@ -8,6 +8,8 @@ import ru.timelimit.client.game.*;
 import ru.timelimit.client.game.UI.GameUI;
 import ru.timelimit.client.game.UI.UI;
 
+import java.util.ArrayList;
+
 public class GameScene implements Scene {
     public int exitCode = 0;
 
@@ -16,6 +18,8 @@ public class GameScene implements Scene {
     private OrthographicCamera camera;
     private static UI gui = new GameUI();
     private Sprite background;
+    private ArrayList<Sprite> ground;
+    private ArrayList<Sprite> parallaxCity;
 
     private void objectsInit() {
         player = new Entity();
@@ -33,13 +37,26 @@ public class GameScene implements Scene {
 
         camera = new OrthographicCamera(600, 600 * (height / width));
         // camera.setToOrtho(false, 600, 600 * (height / width));
-        camera.position.set(GlobalSettings.WORLD_WIDTH / 2f, GlobalSettings.WORLD_HEIGHT / 2f, 0);
+        camera.position.set(0 + camera.viewportWidth / 2, 0 + camera.viewportHeight / 2, 0);
         camera.update();
         gui.init();
 
         background = new Sprite(TextureManager.get("BackgroundSky"));
         background.setPosition(0, 0);
-        background.setSize(GlobalSettings.WORLD_WIDTH, GlobalSettings.WORLD_HEIGHT);
+        background.setSize(camera.viewportWidth, camera.viewportHeight);
+
+        int x = 0;
+        ground = new ArrayList<>();
+        parallaxCity = new ArrayList<>();
+        while (x < GlobalSettings.WORLD_WIDTH) {
+            var gSprite = new Sprite(TextureManager.get("BackgroundGround"));
+            var cSprite = new Sprite(TextureManager.get("BackgroundCity"));
+            gSprite.setPosition(x, 0);
+            cSprite.setPosition(x, 0);
+            ground.add(gSprite);
+            parallaxCity.add(cSprite);
+            x += gSprite.getWidth();
+        }
 
         objectsInit();
     }
@@ -59,6 +76,11 @@ public class GameScene implements Scene {
         return camera;
     }
 
+    @Override
+    public Sprite getBackground() {
+        return background;
+    }
+
     private void updateObjects() {
         for (var gameObj : GlobalSettings.gameObjects) {
             gameObj.update();
@@ -71,17 +93,30 @@ public class GameScene implements Scene {
         }
     }
 
+    private void renderBackground(SpriteBatch batch) {
+        background.draw(batch);
+
+        for (var sprite : parallaxCity) {
+            sprite.draw(batch);
+        }
+
+        for (var sprite : ground) {
+            sprite.draw(batch);
+        }
+    }
+
     @Override
     public void render(SpriteBatch batch) {
         updateObjects();
 
-        background.draw(batch);
+        renderBackground(batch);
 
         gui.render(batch);
 
         renderObjects(batch);
 
-        GlobalSettings.translateCamera(player.position.x - camera.position.x, player.position.y - camera.position.y, camera);
+        GlobalSettings.translateCamera(player.position.x - camera.position.x,
+                player.position.y - camera.position.y, camera, background);
 
         if (player.position.x >= GlobalSettings.gameObjects.get(0).position.x){
             exitCode = 2;

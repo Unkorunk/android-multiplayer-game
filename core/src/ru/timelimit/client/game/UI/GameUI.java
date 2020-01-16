@@ -12,7 +12,6 @@ public final class GameUI extends UI {
         btnMap = new HashMap<>();
         btnSettings = new HashMap<>();
 
-        //var t = TextureManager.addTexture("JumpBtn", "badlogic.jpg");
         var jumpBtn = new Button(50, 10, 10, 10, () -> {});
         var slipBtn = new Button(90, 10, 10, 10, () -> {});
         var menuBtn = new Button(130, 10, 10, 10, () -> {});

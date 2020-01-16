@@ -19,7 +19,10 @@ public class PreparationScene implements Scene {
     private Timer preparationTimer;
     private OrthographicCamera camera;
     private static UI gui = new PreparationUI();
+
     private Sprite background;
+    private ArrayList<Sprite> ground;
+    private ArrayList<Sprite> parallaxCity;
 
     private ArrayList<Trap> trapTypes;
     private ArrayList<Trap> trapList;
@@ -40,13 +43,26 @@ public class PreparationScene implements Scene {
         float height = Gdx.graphics.getHeight();
 
         camera = new OrthographicCamera(600, 600 * (height / width));
-        camera.position.set(GlobalSettings.WORLD_WIDTH / 2f, GlobalSettings.WORLD_HEIGHT / 2f, 0);
+        camera.position.set(0 + camera.viewportWidth / 2, 0 + camera.viewportHeight / 2, 0);
         camera.update();
         gui.init();
 
         background = new Sprite(TextureManager.get("BackgroundSky"));
         background.setPosition(0, 0);
-        background.setSize(GlobalSettings.WORLD_WIDTH, GlobalSettings.WORLD_HEIGHT);
+        background.setSize(camera.viewportWidth, camera.viewportHeight);
+
+        int x = 0;
+        ground = new ArrayList<>();
+        parallaxCity = new ArrayList<>();
+        while (x < GlobalSettings.WORLD_WIDTH) {
+            var gSprite = new Sprite(TextureManager.get("BackgroundGround"));
+            var cSprite = new Sprite(TextureManager.get("BackgroundCity"));
+            gSprite.setPosition(x, 0);
+            cSprite.setPosition(x, 0);
+            ground.add(gSprite);
+            parallaxCity.add(cSprite);
+            x += gSprite.getWidth();
+        }
 
         preparationTimer = new Timer();
         preparationTimer.schedule(new TimerTask() {
@@ -84,6 +100,11 @@ public class PreparationScene implements Scene {
         return camera;
     }
 
+    @Override
+    public Sprite getBackground() {
+        return background;
+    }
+
 
     private void renderObjects(SpriteBatch batch) {
         for (var gameObj : GlobalSettings.gameObjects) {
@@ -91,9 +112,21 @@ public class PreparationScene implements Scene {
         }
     }
 
+    private void renderBackground(SpriteBatch batch) {
+        background.draw(batch);
+
+        for (var sprite : parallaxCity) {
+            sprite.draw(batch);
+        }
+
+        for (var sprite : ground) {
+            sprite.draw(batch);
+        }
+    }
+
     @Override
     public void render(SpriteBatch batch) {
-        background.draw(batch);
+        renderBackground(batch);
 
         String clickedBtn = gui.findClicked();
         if (clickedBtn != null) {
