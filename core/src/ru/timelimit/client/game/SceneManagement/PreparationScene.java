@@ -30,6 +30,7 @@ public class PreparationScene implements Scene {
         trapTypes = new ArrayList<>();
 
         var laser = new Trap();
+        laser.commands.add(BehaviourModel.Command.JUMP);
         laser.sprite = new Sprite(TextureManager.get("Laser"));
         laser.setCell(new Pair(0, 0));
 
