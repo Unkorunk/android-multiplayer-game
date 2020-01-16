@@ -5,7 +5,18 @@ import com.badlogic.gdx.math.Vector2;
 public class Entity extends GameObject {
     public Pair targetCell = null;
 
-    private int chooseTimer = 0;
+    private long lastTime = 0;
+    private long chooseTimer = 0;
+    private long delaySeconds = 10;
+
+    private enum TaskState {
+        UNLOCK,
+        UNLOCKED,
+        LOCKED,
+        LOCK
+    };
+
+    private TaskState stateNow = TaskState.UNLOCKED;
 
     @Override
     public void update() {
@@ -14,27 +25,35 @@ public class Entity extends GameObject {
         }
 
         var nowCell = getCell();
+        Trap trapObj = null;
 
-        if (nowCell.equals(targetCell)) {
-            Trap trapObj = null;
-            if (chooseTimer == 0 && GlobalSettings.checkObjectOnCell(new Pair(nowCell.x + 1, nowCell.y))) {
-                for (var gameObj : GlobalSettings.getObjectsOnCell(new Pair(nowCell.x + 1, nowCell.y))) {
-                    if (gameObj instanceof Trap) {
-                        trapObj = (Trap) gameObj;
-                        break;
+        if (stateNow == TaskState.UNLOCKED) {
+            if (nowCell.equals(targetCell)) {
+                if (chooseTimer == 0 && GlobalSettings.checkObjectOnCell(new Pair(nowCell.x + 1, nowCell.y))) {
+                    for (var gameObj : GlobalSettings.getObjectsOnCell(new Pair(nowCell.x + 1, nowCell.y))) {
+                        if (gameObj instanceof Trap) {
+                            trapObj = (Trap) gameObj;
+                            stateNow = TaskState.LOCK;
+                            break;
+                        }
                     }
                 }
-                if (trapObj != null) {
-                    chooseTimer = 60;
-                }
-                // TODO: show buttons with choose
             }
+        }
 
+        if (stateNow == TaskState.LOCK) {
+            // TODO: show choose buttons
+            chooseTimer = delaySeconds * 1000;
+            lastTime = System.currentTimeMillis();
+            stateNow = TaskState.LOCKED;
+        }
+
+        if (stateNow == TaskState.LOCKED) {
             BehaviourModel.Command cmd = bm.update();
 
             if (chooseTimer == 0 || cmd != BehaviourModel.Command.RUN) {
-                // TODO: hide buttons with choose
                 chooseTimer = 0;
+                stateNow = TaskState.UNLOCK;
                 switch (cmd) {
                     case JUMP:
                         targetCell = new Pair(nowCell.x + 1, nowCell.y + 1);
@@ -49,14 +68,32 @@ public class Entity extends GameObject {
                         break;
                 }
             } else {
-                chooseTimer--;
+                var nowTime = System.currentTimeMillis();
+
+                var deltaTime = nowTime - lastTime;
+                if (deltaTime >= chooseTimer) {
+                    chooseTimer = 0;
+                } else {
+                    chooseTimer -= deltaTime;
+                }
+
+                lastTime = nowTime;
             }
         }
 
-        Vector2 curSpeed = new Vector2(targetCell.x - nowCell.x, targetCell.y - nowCell.y);
+        if (stateNow == TaskState.UNLOCK) {
+            // TODO: hide choose buttons
+            stateNow = TaskState.UNLOCKED;
+        } else if (nowCell.equals(targetCell)) {
+            targetCell = new Pair(nowCell.x + 1, nowCell.y);
+        }
 
-        position.x += curSpeed.x;
-        position.y += curSpeed.y;
+        if (stateNow == TaskState.UNLOCKED) {
+            Vector2 curSpeed = new Vector2(targetCell.x - nowCell.x, targetCell.y - nowCell.y);
+
+            position.x += curSpeed.x;
+            position.y += curSpeed.y;
+        }
     }
 
     public void setBehaviour(BehaviourModel model){
