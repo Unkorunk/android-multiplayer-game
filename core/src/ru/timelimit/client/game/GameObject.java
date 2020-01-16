@@ -11,9 +11,14 @@ public abstract class GameObject {
     public Vector2 position;
     public Sprite sprite;
 
+    public boolean isEnabled = true;
+
     public abstract void update();
 
     public void render(Batch spriteBatch) {
+        if (!isEnabled)
+            return;
+
         sprite.setPosition(position.x - sprite.getWidth() / 2.0f, position.y - sprite.getHeight() / 2.0f);
         sprite.draw(spriteBatch);
 

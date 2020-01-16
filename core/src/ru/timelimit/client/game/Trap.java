@@ -5,6 +5,8 @@ import java.util.ArrayList;
 public class Trap extends GameObject {
     public ArrayList<BehaviourModel.Command> commands = new ArrayList<>();
 
+    public int dmg = 25;
+
     @Override
     public void update() {}
 
