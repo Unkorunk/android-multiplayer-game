@@ -30,6 +30,9 @@ public class GameClient extends ApplicationAdapter {
 		TextureManager.addTexture("BackgroundSky", "Background/Background_sky.png");
 		TextureManager.addTexture("Character", "Character/idle.gif");
 		TextureManager.addTexture("Laser", "Sprites/Trap.png");
+		TextureManager.addTexture("PlatformL", "Sprites/PlatformLeft.png");
+		TextureManager.addTexture("PlatformM", "Sprites/PlatformMiddle.png");
+		TextureManager.addTexture("PlatformR", "Sprites/PlatformRight.png");
 	}
 
 	@Override
