@@ -44,13 +44,13 @@ public class PreparationScene implements Scene {
         float height = Gdx.graphics.getHeight();
 
         camera = new OrthographicCamera(600, 600 * (height / width));
-        camera.position.set(GameClient.WORLD_WIDTH / 2f, GameClient.WORLD_HEIGHT / 2f, 0);
+        camera.position.set(GlobalSettings.WORLD_WIDTH / 2f, GlobalSettings.WORLD_HEIGHT / 2f, 0);
         camera.update();
         gui.init();
 
         background = new Sprite(TextureManager.get("BackgroundSky"));
         background.setPosition(0, 0);
-        background.setSize(GameClient.WORLD_WIDTH, GameClient.WORLD_HEIGHT);
+        background.setSize(GlobalSettings.WORLD_WIDTH, GlobalSettings.WORLD_HEIGHT);
 
         preparationTimer = new Timer();
         preparationTimer.schedule(new TimerTask() {

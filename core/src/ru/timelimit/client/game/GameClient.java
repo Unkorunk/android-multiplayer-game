@@ -3,10 +3,7 @@ package ru.timelimit.client.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.badlogic.gdx.input.GestureDetector;
@@ -17,13 +14,12 @@ import ru.timelimit.client.game.UI.UI;
 import ru.timelimit.client.game.UI.GameUI;
 
 public class GameClient extends ApplicationAdapter {
+	public static GameClient instance;
 
 	private CustomInputProcessor inputProcessor;
 	private InputMultiplexer im;
 
 	public static UI gui = new GameUI();
-	public static final int WORLD_HEIGHT = 360;
-	public static final int WORLD_WIDTH = 640;
 
 	public SceneManager sceneManager;
 	private SpriteBatch batch;
@@ -40,6 +36,7 @@ public class GameClient extends ApplicationAdapter {
 
 	@Override
 	public void create () {
+		instance = this;
 		texturesInit();
 
 		batch = new SpriteBatch();

@@ -11,12 +11,14 @@ import ru.timelimit.client.game.UI.UI;
 public class GameScene implements Scene {
     public int exitCode = 0;
 
+    private Entity player;
+
     private OrthographicCamera camera;
     private static UI gui = new GameUI();
     private Sprite background;
 
     private void objectsInit() {
-        var player = new Entity();
+        player = new Entity();
         player.setBehaviour(new PlayerBehaviour());
         player.sprite = new Sprite(TextureManager.get("Character"));
         player.setCell(new Pair(1, 1));
@@ -36,13 +38,13 @@ public class GameScene implements Scene {
 
         camera = new OrthographicCamera(600, 600 * (height / width));
         // camera.setToOrtho(false, 600, 600 * (height / width));
-        camera.position.set(GameClient.WORLD_WIDTH / 2f, GameClient.WORLD_HEIGHT / 2f, 0);
+        camera.position.set(GlobalSettings.WORLD_WIDTH / 2f, GlobalSettings.WORLD_HEIGHT / 2f, 0);
         camera.update();
         gui.init();
 
         background = new Sprite(TextureManager.get("BackgroundSky"));
         background.setPosition(0, 0);
-        background.setSize(GameClient.WORLD_WIDTH, GameClient.WORLD_HEIGHT);
+        background.setSize(GlobalSettings.WORLD_WIDTH, GlobalSettings.WORLD_HEIGHT);
 
         objectsInit();
     }
@@ -83,6 +85,8 @@ public class GameScene implements Scene {
         gui.render(batch);
 
         renderObjects(batch);
+
+        GlobalSettings.translateCamera(player.position.x - camera.position.x, player.position.y - camera.position.y, camera);
     }
 
     @Override

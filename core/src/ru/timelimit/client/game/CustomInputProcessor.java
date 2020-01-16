@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
+import ru.timelimit.client.game.SceneManagement.PreparationScene;
 
 public class CustomInputProcessor implements InputProcessor, GestureDetector.GestureListener {
     private OrthographicCamera cam;
@@ -75,8 +76,12 @@ public class CustomInputProcessor implements InputProcessor, GestureDetector.Ges
 
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
-        System.out.println("test");
-        cam.translate(-deltaX * (cam.viewportWidth / Gdx.graphics.getWidth()), deltaY * (cam.viewportHeight / Gdx.graphics.getHeight()));
+        if (GlobalSettings.checkForType(GameClient.instance.sceneManager.currentScene, PreparationScene.class)) {
+            deltaX = -deltaX * (cam.viewportWidth / Gdx.graphics.getWidth());
+            deltaY = deltaY * (cam.viewportHeight / Gdx.graphics.getHeight());
+
+            GlobalSettings.translateCamera(deltaX, deltaY, cam);
+        }
         return true;
     }
 
