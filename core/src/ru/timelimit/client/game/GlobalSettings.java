@@ -8,7 +8,7 @@ public class GlobalSettings {
 
     public static int defaultHP = 100;
 
-    public static int preparationTime = 10 * 1000;
+    public static int preparationTime = 100 * 1000;
 
     public static ArrayList<GameObject> gameObjects = new ArrayList<>();
     public static ArrayList<GameObject> getObjectsOnCell(Pair cell) {
@@ -22,5 +22,9 @@ public class GlobalSettings {
     }
     public static boolean checkObjectOnCell(Pair cell) {
         return (getObjectsOnCell(cell).size() > 0);
+    }
+
+    public static boolean checkForType(Object candidate, Class<?> type){
+        return type.isInstance(candidate);
     }
 }

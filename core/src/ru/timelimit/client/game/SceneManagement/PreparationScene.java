@@ -43,7 +43,7 @@ public class PreparationScene implements Scene {
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();
 
-        camera = new OrthographicCamera(800, 800 * (height / width));
+        camera = new OrthographicCamera(600, 600 * (height / width));
         camera.position.set(GameClient.WORLD_WIDTH / 2f, GameClient.WORLD_HEIGHT / 2f, 0);
         camera.update();
         gui.init();

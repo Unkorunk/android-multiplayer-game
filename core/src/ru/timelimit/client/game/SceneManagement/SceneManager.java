@@ -1,7 +1,5 @@
 package ru.timelimit.client.game.SceneManagement;
 
-import java.awt.*;
-
 public class SceneManager {
     public Scene currentScene;
 
