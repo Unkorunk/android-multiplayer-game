@@ -87,6 +87,10 @@ public class GameScene implements Scene {
         renderObjects(batch);
 
         GlobalSettings.translateCamera(player.position.x - camera.position.x, player.position.y - camera.position.y, camera);
+
+        if (player.position.x >= GlobalSettings.gameObjects.get(0).position.x){
+            exitCode = 2;
+        }
     }
 
     @Override

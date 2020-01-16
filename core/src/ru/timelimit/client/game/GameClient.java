@@ -72,10 +72,10 @@ public class GameClient extends ApplicationAdapter {
 
 		batch.end();
 
-		sceneManager.checkScene();
 		inputProcessor.updateCamera(sceneManager.currentScene.getCamera());
-
 		sceneManager.currentScene.getCamera().update();
+
+		sceneManager.checkScene();
 	}
 	
 	@Override

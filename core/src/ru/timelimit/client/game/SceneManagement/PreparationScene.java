@@ -63,6 +63,12 @@ public class PreparationScene implements Scene {
         ((PreparationUI)gui).initChooser(trapTypes, (Trap trap) -> {
             currentTrap = trap;
         });
+
+        var finishObj = new Finish();
+        finishObj.position = new Vector2(GlobalSettings.WORLD_WIDTH - 20, GlobalSettings.HEIGHT_CELL);
+        finishObj.sprite = new Sprite(TextureManager.get("test"));
+
+        GlobalSettings.gameObjects.add(finishObj);
     }
 
     @Override
