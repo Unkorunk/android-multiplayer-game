@@ -19,8 +19,6 @@ public class GameClient extends ApplicationAdapter {
 	private CustomInputProcessor inputProcessor;
 	private InputMultiplexer im;
 
-	public static UI gui = new GameUI();
-
 	public SceneManager sceneManager;
 	private SpriteBatch batch;
 

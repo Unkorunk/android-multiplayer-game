@@ -27,9 +27,19 @@ public abstract class UI {
 
     public void render(Batch batch) {
         for (HashMap.Entry<String, Button> it : btnMap.entrySet()) {
-            it.getValue().render(batch);
+            if (btnSettings == null || btnSettings.getOrDefault(it.getKey(), true)) {
+                it.getValue().render(batch);
+            }
         }
     }
 
+    public void hideElement(String nameElement) {
+        btnSettings.put(nameElement, false);
+    }
+    public void showElement(String nameElement) {
+        btnSettings.put(nameElement, true);
+    }
+
+    protected static HashMap<String, Boolean> btnSettings;
     protected static HashMap<String, Button> btnMap;
 }

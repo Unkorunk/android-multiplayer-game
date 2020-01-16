@@ -25,6 +25,7 @@ public class GameScene implements Scene {
 
         var laser = new Trap();
         laser.sprite = new Sprite(TextureManager.get("Laser"));
+        laser.commands.add(BehaviourModel.Command.JUMP);
         laser.setCell(new Pair(5, 1));
 
         GlobalSettings.gameObjects.add(player);
