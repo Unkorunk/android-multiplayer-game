@@ -10,5 +10,6 @@ repositories {
 }
 
 dependencies {
-    compile group: 'com.github.menacher', name: 'nadron', version: '0.7'
+    compile group: 'kryonet', name: 'kryonet', version: '2.21'
+    compile group: 'com.esotericsoftware', 'name': 'kryo', version: '5.0.0-RC4'
 }

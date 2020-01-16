@@ -112,6 +112,7 @@ public class Entity extends GameObject {
 
         if (stateNow == TaskState.UNLOCKED) {
             Vector2 curSpeed = new Vector2(targetCell.x - nowCell.x, targetCell.y - nowCell.y);
+            curSpeed = curSpeed.nor();
 
             position.x += curSpeed.x;
             position.y += curSpeed.y;

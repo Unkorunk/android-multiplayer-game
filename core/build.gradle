@@ -6,4 +6,5 @@ sourceCompatibility = '11'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 sourceSets.main.java.srcDirs = ["src/"]
 dependencies {
+    compile group: 'kryonet', name: 'kryonet', version: '2.21'
 }
