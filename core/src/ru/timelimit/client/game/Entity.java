@@ -2,12 +2,15 @@ package ru.timelimit.client.game;
 
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Entity extends GameObject {
     public Pair targetCell = null;
 
     private long lastTime = 0;
     private long chooseTimer = 0;
-    private long delaySeconds = 10;
+    private long delaySeconds = 1;
 
     private enum TaskState {
         UNLOCK,
@@ -17,16 +20,27 @@ public class Entity extends GameObject {
     };
 
     private TaskState stateNow = TaskState.UNLOCKED;
+    private Trap trapObj = null;
+    private HashMap<BehaviourModel.Command, String> commandToString = new HashMap<>();
+
+    private boolean initCalled = false;
+    private void init() {
+        commandToString.put(BehaviourModel.Command.JUMP, "JumpBtn");
+        commandToString.put(BehaviourModel.Command.SLIP, "SlipBtn");
+    }
 
     @Override
     public void update() {
+        if (!initCalled) {
+            init();
+            initCalled = true;
+        }
+
         if (targetCell == null) {
             targetCell = getCell();
         }
 
         var nowCell = getCell();
-        Trap trapObj = null;
-
         if (stateNow == TaskState.UNLOCKED) {
             if (nowCell.equals(targetCell)) {
                 if (chooseTimer == 0 && GlobalSettings.checkObjectOnCell(new Pair(nowCell.x + 1, nowCell.y))) {
@@ -42,7 +56,11 @@ public class Entity extends GameObject {
         }
 
         if (stateNow == TaskState.LOCK) {
-            // TODO: show choose buttons
+            for (var cmd : trapObj.commands) {
+                if (commandToString.containsKey(cmd)) {
+                    GameClient.instance.sceneManager.currentScene.getUI().showElement(commandToString.get(cmd));
+                }
+            }
             chooseTimer = delaySeconds * 1000;
             lastTime = System.currentTimeMillis();
             stateNow = TaskState.LOCKED;
@@ -82,7 +100,11 @@ public class Entity extends GameObject {
         }
 
         if (stateNow == TaskState.UNLOCK) {
-            // TODO: hide choose buttons
+            for (var cmd : trapObj.commands) {
+                if (commandToString.containsKey(cmd)) {
+                    GameClient.instance.sceneManager.currentScene.getUI().hideElement(commandToString.get(cmd));
+                }
+            }
             stateNow = TaskState.UNLOCKED;
         } else if (nowCell.equals(targetCell)) {
             targetCell = new Pair(nowCell.x + 1, nowCell.y);

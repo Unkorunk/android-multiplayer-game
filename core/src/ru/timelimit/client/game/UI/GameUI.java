@@ -10,6 +10,7 @@ public final class GameUI extends UI {
     @Override
     public void init() {
         btnMap = new HashMap<>();
+        btnSettings = new HashMap<>();
 
         //var t = TextureManager.addTexture("JumpBtn", "badlogic.jpg");
         var jumpBtn = new Button(50, 10, 10, 10, () -> {});
@@ -21,7 +22,9 @@ public final class GameUI extends UI {
         menuBtn.setSprite(new Sprite(TextureManager.get("test")));
 
         btnMap.put("JumpBtn", jumpBtn);
+        btnSettings.put("JumpBtn", false);
         btnMap.put("SlipBtn", slipBtn);
+        btnSettings.put("SlipBtn", false);
         btnMap.put("MenuBtn", menuBtn);
     }
 }
