@@ -29,12 +29,7 @@ public class PreparationScene implements Scene {
     private void trapInit() {
         trapTypes = new ArrayList<>();
 
-        var laser = new Trap();
-        laser.commands.add(BehaviourModel.Command.JUMP);
-        laser.sprite = new Sprite(TextureManager.get("Laser"));
-        laser.setCell(new Pair(0, 0));
-
-        trapTypes.add(laser);
+        trapTypes.add(Trap.laserTrap.clone());
     }
 
     @Override

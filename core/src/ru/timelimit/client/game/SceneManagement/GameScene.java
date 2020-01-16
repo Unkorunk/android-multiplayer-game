@@ -23,13 +23,7 @@ public class GameScene implements Scene {
         player.sprite = new Sprite(TextureManager.get("Character"));
         player.setCell(new Pair(1, 1));
 
-        var laser = new Trap();
-        laser.sprite = new Sprite(TextureManager.get("Laser"));
-        laser.commands.add(BehaviourModel.Command.JUMP);
-        laser.setCell(new Pair(5, 1));
-
         GlobalSettings.gameObjects.add(player);
-        GlobalSettings.gameObjects.add(laser);
     }
 
     @Override

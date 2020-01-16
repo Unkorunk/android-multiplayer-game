@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class GameObject {
-    public Vector2 position;
+    public Vector2 position = new Vector2();
     public Sprite sprite;
 
     public boolean isEnabled = true;
