@@ -5,7 +5,12 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
 import java.io.IOException;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
@@ -17,22 +22,33 @@ public class GameServer {
     private static final int preparationTime = 10 * 1000;
 
     private static Room room = new Room();
-    public static HashMap<Integer, User> users = new HashMap<>();
+    public static HashMap<String, User> users = new HashMap<>();
+    public static HashMap<Integer, String> usersAuth = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
         Server server = new Server();
         server.start();
 
+        java.sql.Connection databaseConnection = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+            databaseConnection = DriverManager.getConnection(GlobalSettings.databaseLink,
+                    GlobalSettings.databaseUser, GlobalSettings.databasePassword);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
         LOG.info("server start");
 
         Network.register(server);
 
+        java.sql.Connection finalDatabaseConnection = databaseConnection;
         server.addListener(new Listener() {
             @Override
             public void connected(Connection connection) {
                 super.connected(connection);
                 LOG.info("connected: " + connection.getID());
-                users.put(connection.getID(), new User());
             }
 
             @Override
@@ -42,9 +58,9 @@ public class GameServer {
                     ActionClient actionClient = (ActionClient) object;
 
                     if (actionClient.actionType == ActionClientEnum.FINISH) {
-                        if (users.get(connection.getID()).slotRoom != -1) {
-                            room.usersInRoom[users.get(connection.getID()).slotRoom] = -1;
-                            users.get(connection.getID()).slotRoom = -1;
+                        if (users.get(actionClient.accessToken).slotRoom != -1) {
+                            room.usersInRoom[users.get(actionClient.accessToken).slotRoom] = -1;
+                            users.get(actionClient.accessToken).slotRoom = -1;
                             room.countInRoom--;
 
                             ActionServer actionServer = new ActionServer();
@@ -62,7 +78,7 @@ public class GameServer {
                         }
                     } else if (actionClient.actionType == ActionClientEnum.JOIN) {
                         if (room.countInRoom < 2 && !room.gameInProcess) {
-                            users.get(connection.getID()).slotRoom = room.countInRoom;
+                            users.get(actionClient.accessToken).slotRoom = room.countInRoom;
                             room.usersInRoom[room.countInRoom] = connection.getID();
                             room.countInRoom++;
 
@@ -100,10 +116,10 @@ public class GameServer {
 
                         server.sendToAllTCP(updateLobby());
                     } else if (actionClient.actionType == ActionClientEnum.SELECT_TARGET) {
-                        User user = users.get(connection.getID());
+                        User user = users.get(actionClient.accessToken);
                         if (user.slotRoom == -1) {
                             LOG.warning("kick: " + connection.getID());
-                            users.remove(connection.getID());
+                            users.remove(actionClient.accessToken);
                             connection.close();
                         } else {
                             SelectTargetRequest request = (SelectTargetRequest) actionClient.request;
@@ -116,19 +132,19 @@ public class GameServer {
                     } else if (actionClient.actionType == ActionClientEnum.UPDATE_LOBBY) {
                         connection.sendTCP(updateLobby());
                     } else if (actionClient.actionType == ActionClientEnum.UPDATE_GAME) {
-                        User user = users.get(connection.getID());
+                        User user = users.get(actionClient.accessToken);
                         if (user.slotRoom == -1) {
                             LOG.warning("kick: " + connection.getID());
-                            users.remove(connection.getID());
+                            users.remove(actionClient.accessToken);
                             connection.close();
                         } else {
                             updateGame(server);
                         }
                     } else if (actionClient.actionType == ActionClientEnum.SET_TRAP) {
-                        User user = users.get(connection.getID());
+                        User user = users.get(actionClient.accessToken);
                         if (user.slotRoom == -1) {
                             LOG.warning("kick: " + connection.getID());
-                            users.remove(connection.getID());
+                            users.remove(actionClient.accessToken);
                             connection.close();
                         } else {
                             Trap trap = new Trap();
@@ -142,6 +158,66 @@ public class GameServer {
 
                             updateGame(server);
                         }
+                    } else if (actionClient.actionType == ActionClientEnum.CONNECT) {
+                        ConnectRequest connectRequest = (ConnectRequest) actionClient.request;
+
+                        Random random = new Random();
+                        StringBuilder accessToken;
+                        do {
+                            accessToken = new StringBuilder();
+                            for (int i = 0; i < 64; i++) {
+                                accessToken.append('a' + random.nextInt(26));
+                            }
+                        } while (users.containsKey(accessToken.toString()));
+
+                        ActionServer actionServer = new ActionServer();
+                        actionServer.actionType = ActionServerEnum.CONNECT;
+
+                        try {
+                            PreparedStatement preparedStatementLogin = finalDatabaseConnection.prepareStatement(
+                                            "SELECT * FROM users WHERE username=?"
+                            );
+
+                            preparedStatementLogin.setString(0, connectRequest.username);
+                            ResultSet resultSet = preparedStatementLogin.getResultSet();
+                            if (resultSet.next()) {
+                                if (resultSet.getString("password").equals(connectRequest.password)) {
+                                    ((ConnectResponse) actionServer.response).accessToken = accessToken.toString();
+
+                                    LOG.info(String.format("user %s success login", connectRequest.username));
+
+                                    users.put(accessToken.toString(), new User());
+                                    usersAuth.put(connection.getID(), accessToken.toString());
+                                } else {
+                                    ((ConnectResponse) actionServer.response).accessToken = "INCORRECT PASSWORD";
+                                }
+                            } else {
+                                PreparedStatement preparedStatementRegister = finalDatabaseConnection.prepareStatement(
+                                            "INSERT INTO users(username, password) VALUES(?, ?)"
+                                );
+
+                                preparedStatementRegister.setString(0, connectRequest.username);
+                                preparedStatementRegister.setString(1, connectRequest.password);
+
+                                if (preparedStatementRegister.execute()) {
+                                    LOG.info(String.format("user %s success reg", connectRequest.username));
+
+                                    ((ConnectResponse) actionServer.response).accessToken = accessToken.toString();
+
+                                    users.put(accessToken.toString(), new User());
+                                    usersAuth.put(connection.getID(), accessToken.toString());
+                                } else {
+                                    LOG.warning(String.format("user %s fail reg", connectRequest.username));
+
+                                    ((ConnectResponse) actionServer.response).accessToken = "FAILED";
+                                }
+                            }
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                            System.exit(1);
+                        }
+
+                        connection.sendTCP(actionServer);
                     }
 
                 }
@@ -151,7 +227,7 @@ public class GameServer {
             public void disconnected(Connection connection) {
                 super.disconnected(connection);
                 LOG.info("disconnected: " + connection.getID());
-                User user = users.get(connection.getID());
+                User user = users.get(usersAuth.get(connection.getID()));
                 if (user.slotRoom != -1) {
                     int otherUserId = room.usersInRoom[(user.slotRoom + 1) % 2];
 
@@ -167,7 +243,7 @@ public class GameServer {
                     server.sendToTCP(otherUserId, actionServer);
                     server.sendToAllTCP(updateLobby());
                 }
-                users.remove(connection.getID());
+                users.remove(usersAuth.get(connection.getID()));
             }
         });
         server.bind(25568);
@@ -188,10 +264,10 @@ public class GameServer {
         actionServer.actionType = ActionServerEnum.UPDATE_GAME;
         actionServer.response = new UpdateGameResponse();
         ((UpdateGameResponse)actionServer.response).targetX = new int[]{
-                users.get(room.usersInRoom[0]).targetX, users.get(room.usersInRoom[1]).targetX,
+                users.get(usersAuth.get(room.usersInRoom[0])).targetX, users.get(usersAuth.get(room.usersInRoom[1])).targetX,
         };
         ((UpdateGameResponse)actionServer.response).targetY = new int[]{
-                users.get(room.usersInRoom[0]).targetY, users.get(room.usersInRoom[1]).targetY,
+                users.get(usersAuth.get(room.usersInRoom[0])).targetY, users.get(usersAuth.get(room.usersInRoom[1])).targetY,
         };
         ((UpdateGameResponse)actionServer.response).traps = (Trap[]) room.traps.toArray();
 
