@@ -76,8 +76,8 @@ public class PreparationScene implements Scene {
         });
 
         var finishObj = new Finish();
-        finishObj.position = new Vector2(GlobalSettings.WORLD_WIDTH - 20, GlobalSettings.HEIGHT_CELL);
-        finishObj.sprite = new Sprite(TextureManager.getTexture("test"));
+        finishObj.position = new Vector2(GlobalSettings.WORLD_WIDTH - 30, GlobalSettings.HEIGHT_CELL * 1.5f);
+        finishObj.sprite = new Sprite(TextureManager.getTexture("Finish"));
 
         GlobalSettings.gameObjects.add(finishObj);
     }
