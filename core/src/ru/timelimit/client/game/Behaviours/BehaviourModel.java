@@ -1,6 +1,4 @@
-package ru.timelimit.client.game;
-
-import com.badlogic.gdx.math.Vector2;
+package ru.timelimit.client.game.Behaviours;
 
 public interface BehaviourModel {
     enum Command {

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import ru.timelimit.client.game.*;
+import ru.timelimit.client.game.Behaviours.PlayerBehaviour;
 import ru.timelimit.client.game.UI.GameUI;
 import ru.timelimit.client.game.UI.UI;
 

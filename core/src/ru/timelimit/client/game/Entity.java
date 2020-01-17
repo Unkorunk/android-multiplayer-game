@@ -1,9 +1,9 @@
 package ru.timelimit.client.game;
 
 import com.badlogic.gdx.math.Vector2;
+import ru.timelimit.client.game.Behaviours.BehaviourModel;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public final class Entity extends GameObject {
     public Pair targetCell = null;
@@ -25,12 +25,12 @@ public final class Entity extends GameObject {
 
     private TaskState stateNow = TaskState.UNLOCKED;
     private Trap trapObj = null;
-    private HashMap<BehaviourModel.Command, String> commandToString = new HashMap<>();
+    private HashMap<ru.timelimit.client.game.Behaviours.BehaviourModel.Command, String> commandToString = new HashMap<>();
 
     private boolean initCalled = false;
     private void init() {
-        commandToString.put(BehaviourModel.Command.JUMP, "JumpBtn");
-        commandToString.put(BehaviourModel.Command.SLIP, "SlipBtn");
+        commandToString.put(ru.timelimit.client.game.Behaviours.BehaviourModel.Command.JUMP, "JumpBtn");
+        commandToString.put(ru.timelimit.client.game.Behaviours.BehaviourModel.Command.SLIP, "SlipBtn");
 
         GameClient.ActionClient actionClient = new GameClient.ActionClient();
         actionClient.accessToken = "Some USER";
@@ -83,9 +83,9 @@ public final class Entity extends GameObject {
         }
 
         if (stateNow == TaskState.LOCKED) {
-            BehaviourModel.Command cmd = bm.update();
+            ru.timelimit.client.game.Behaviours.BehaviourModel.Command cmd = bm.update();
 
-            if (chooseTimer == 0 || cmd != BehaviourModel.Command.RUN) {
+            if (chooseTimer == 0 || cmd != ru.timelimit.client.game.Behaviours.BehaviourModel.Command.RUN) {
                 chooseTimer = 0;
                 stateNow = TaskState.UNLOCK;
 
@@ -148,7 +148,7 @@ public final class Entity extends GameObject {
         }
     }
 
-    public void setBehaviour(BehaviourModel model){
+    public void setBehaviour(ru.timelimit.client.game.Behaviours.BehaviourModel model){
         bm = model;
     }
 

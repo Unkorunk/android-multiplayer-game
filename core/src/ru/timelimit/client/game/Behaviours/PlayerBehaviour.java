@@ -1,4 +1,6 @@
-package ru.timelimit.client.game;
+package ru.timelimit.client.game.Behaviours;
+
+import ru.timelimit.client.game.GameClient;
 
 public final class PlayerBehaviour implements BehaviourModel {
     @Override

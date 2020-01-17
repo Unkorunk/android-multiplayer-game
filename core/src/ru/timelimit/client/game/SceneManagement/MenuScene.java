@@ -20,6 +20,8 @@ public class MenuScene implements Scene {
     private Sprite backgroundCity1;
     private Sprite backgroundCity2;
 
+
+
     private float flowSpeed = 0.5f;
 
     @Override
@@ -81,8 +83,9 @@ public class MenuScene implements Scene {
         backgroundCity2.draw(batch);
         gui.render(batch);
     }
+
     @Override
     public int isOver() {
-        return 0;
+        return exitCode;
     }
 }
