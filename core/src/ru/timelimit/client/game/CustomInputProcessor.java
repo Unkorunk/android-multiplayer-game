@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
+import ru.timelimit.client.game.SceneManagement.MenuScene;
 import ru.timelimit.client.game.SceneManagement.PreparationScene;
+import ru.timelimit.client.game.UI.MenuUI;
 
 public final class CustomInputProcessor implements InputProcessor, GestureDetector.GestureListener {
     private OrthographicCamera cam;
@@ -29,6 +31,20 @@ public final class CustomInputProcessor implements InputProcessor, GestureDetect
 
     @Override
     public boolean keyTyped(char character) {
+        if (GlobalSettings.checkForType(GameClient.instance.sceneManager.currentScene, MenuScene.class)) {
+            var tf = ((MenuUI)GameClient.instance.sceneManager.currentScene.getUI()).activeField.origin;
+
+            if (character == 8){
+                if (tf.getText().length() > 0) {
+                    tf.setText(tf.getText().substring(0, tf.getText().length() - 1));
+                }
+            } else if (tf.getText().length() < 20) {
+                tf.setText(tf.getText() + character);
+            }
+
+            return true;
+        }
+
         return false;
     }
 
@@ -84,8 +100,10 @@ public final class CustomInputProcessor implements InputProcessor, GestureDetect
             deltaY = deltaY * (cam.viewportHeight / Gdx.graphics.getHeight());
 
             GlobalSettings.translateCamera(deltaX, deltaY, cam, bg);
+            ((PreparationScene) GameClient.instance.sceneManager.currentScene).currentTrap = null;
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Override

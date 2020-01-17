@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import ru.timelimit.client.game.GameClient;
-import ru.timelimit.client.game.TextureManager;
+import ru.timelimit.client.game.ResourceManager;
 
 public final class Label extends UIElement {
     public Label(float x, float y, float width, float height, String text) {
@@ -15,15 +15,20 @@ public final class Label extends UIElement {
                 GameClient.instance.sceneManager.currentScene.getCamera().position.y + y,
                 width, height);
 
-        background = new Sprite(TextureManager.getTexture("BtnEmpty"));
+        background = new Sprite(ResourceManager.getTexture("BtnEmpty"));
 
-        bFont = TextureManager.getFont("defaultFont");
+        bFont = ResourceManager.getFont("defaultFont");
 
         labelText = text;
 
         labelLayout = new GlyphLayout();
         labelLayout.setText(bFont, labelText);
         margin = 10;
+    }
+
+    public void setText(String text) {
+        labelText = text;
+        labelLayout.setText(bFont, labelText);
     }
 
     public void setFont(BitmapFont font) {

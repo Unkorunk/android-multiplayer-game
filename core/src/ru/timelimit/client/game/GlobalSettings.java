@@ -7,7 +7,9 @@ import java.util.ArrayList;
 
 public final class GlobalSettings {
     public static final int WORLD_HEIGHT = 360;
-    public static final int WORLD_WIDTH = 1280;
+    public static final int WORLD_WIDTH = 360 * 5;
+
+    public static float gravitySpeed = 10;
 
     public static float WIDTH_CELL = 64.0f;
     public static float HEIGHT_CELL = 64.0f;

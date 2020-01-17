@@ -1,21 +1,22 @@
 package ru.timelimit.client.game;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import ru.timelimit.client.game.Behaviours.BehaviourModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Trap extends GameObject implements Cloneable {
-    public ArrayList<BehaviourModel.Command> commands;
+    public ArrayList<ru.timelimit.client.game.Behaviours.BehaviourModel.Command> commands;
 
-    protected Trap(ArrayList<BehaviourModel.Command> commands, Sprite sprite) {
+    protected Trap(ArrayList<ru.timelimit.client.game.Behaviours.BehaviourModel.Command> commands, Sprite sprite) {
         this.commands = commands;
-        this.sprite = sprite;
+        this.objSprite = sprite;
     }
 
     public static final Trap laserTrap = new Trap(
-            new ArrayList<>(Arrays.asList(BehaviourModel.Command.JUMP)),
-            new Sprite(TextureManager.getTexture("Laser"))
+            new ArrayList<>(Arrays.asList(ru.timelimit.client.game.Behaviours.BehaviourModel.Command.JUMP)),
+            new Sprite(ResourceManager.getTexture("Laser"))
     ) {
         @Override
         public boolean validator(Pair pos) {
@@ -25,7 +26,7 @@ public class Trap extends GameObject implements Cloneable {
 
     public static final Trap flyTrap = new Trap(
             new ArrayList<>(Arrays.asList(BehaviourModel.Command.SLIP)),
-            new Sprite(TextureManager.getTexture("FlyTrap"))
+            new Sprite(ResourceManager.getTexture("FlyTrap"))
     );
 
     public int dmg = 25;

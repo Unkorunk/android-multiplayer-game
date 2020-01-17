@@ -4,9 +4,9 @@ import com.badlogic.gdx.math.Vector2;
 import ru.timelimit.network.ActionClient;
 import ru.timelimit.network.ActionClientEnum;
 import ru.timelimit.network.ConnectRequest;
+import ru.timelimit.client.game.Behaviours.BehaviourModel;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public final class Entity extends GameObject {
     public Pair targetCell = null;
@@ -50,7 +50,7 @@ public final class Entity extends GameObject {
         var nowCell = getCell();
         if (stateNow == TaskState.UNLOCKED) {
             if (nowCell.equals(targetCell)) {
-                position = Pair.pairToVector(targetCell); // TODO: Create normal fix
+                //position = Pair.pairToVector(targetCell); // TODO: Create normal fix
                 if (nowCell.y > 1 && !GlobalSettings.checkObjectOnCell(new Pair(nowCell.x, nowCell.y - 1))) {
                     targetCell = new Pair(nowCell.x, nowCell.y - 1);
                 } else if (chooseTimer == 0 && GlobalSettings.checkObjectOnCell(new Pair(nowCell.x + 1, nowCell.y))) {
@@ -138,10 +138,15 @@ public final class Entity extends GameObject {
 
         if (stateNow == TaskState.UNLOCKED) {
             Vector2 curSpeed = new Vector2(targetCell.x - nowCell.x, targetCell.y - nowCell.y);
+
+            if (curSpeed.y == 0 && Math.abs(position.y - Pair.pairToVector(getCell()).y) > GlobalSettings.gravitySpeed / 2f)  {
+                curSpeed.y = Pair.pairToVector(getCell()).y - position.y;
+            }
+
             curSpeed = curSpeed.nor();
 
             position.x += curSpeed.x * speed;
-            position.y += curSpeed.y * speed;
+            position.y += curSpeed.y * GlobalSettings.gravitySpeed;
         }
     }
 

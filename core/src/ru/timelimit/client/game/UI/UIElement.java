@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import ru.timelimit.client.game.GameClient;
 
+import java.util.ArrayList;
+
 public abstract class UIElement {
     public void render(Batch batch) {
         renderRect.x = GameClient.instance.sceneManager.currentScene.getCamera().position.x
@@ -20,6 +22,10 @@ public abstract class UIElement {
             sprt.setBounds(renderRect.x, renderRect.y, renderRect.width, renderRect.height);
             sprt.draw(batch);
         }
+
+        for (var child : children) {
+            child.render(batch);
+        }
     }
 
     public void setBackground(Sprite sprite) { background = sprite; }
@@ -28,8 +34,16 @@ public abstract class UIElement {
         sprt = sprite;
     }
 
+    public Sprite getSprite() { return sprt; }
+
+    public void addChildren(UIElement child) {
+        children.add(child);
+    }
+
     protected Rectangle btnRect;
     protected Rectangle renderRect;
     protected Sprite sprt;
     protected Sprite background;
+
+    protected ArrayList<UIElement> children = new ArrayList<>();
 }

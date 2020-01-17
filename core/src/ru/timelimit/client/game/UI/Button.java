@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import ru.timelimit.client.game.GameClient;
-import ru.timelimit.client.game.TextureManager;
+import ru.timelimit.client.game.ResourceManager;
 
 public final class Button extends UIElement {
     public Button(float x, float y, float width, float height, Runnable callback) {
@@ -15,7 +15,7 @@ public final class Button extends UIElement {
                 width, height);
 
         cb = callback;
-        background = new Sprite(TextureManager.getTexture("BtnEmpty"));
+        background = new Sprite(ResourceManager.getTexture("BtnEmpty"));
     }
 
 
