@@ -2,7 +2,6 @@ plugins {
     id 'java'
 }
 
-
 sourceCompatibility = 1.8
 sourceSets.main.java.srcDirs = ["src/"]
 repositories {
@@ -20,6 +19,9 @@ jar {
 dependencies {
     compile group: 'kryonet', name: 'kryonet', version: '2.21'
     compile group: 'com.esotericsoftware', 'name': 'kryo', version: '5.0.0-RC4'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.0'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.0'
+    compile project(":network")
 }
 
 task fatJar(type: Jar) {

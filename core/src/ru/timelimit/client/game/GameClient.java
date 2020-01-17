@@ -14,6 +14,7 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import ru.timelimit.client.game.SceneManagement.SceneManager;
+import ru.timelimit.network.*;
 
 import java.io.IOException;
 
@@ -57,23 +58,6 @@ public final class GameClient extends ApplicationAdapter {
 		fontGen.dispose();
 	}
 
-	public enum ActionClientEnum {
-		CONNECT,
-		DISCONNECT
-	}
-
-	public enum ActionServerEnum {
-		OKAY
-	}
-
-	public static class ActionClient {
-		public String accessToken;
-		ActionClientEnum actionType;
-	}
-
-	public static class ActionServer {
-		public ActionServerEnum actionType;
-	}
 
 	public static Client client = null;
 
@@ -86,10 +70,8 @@ public final class GameClient extends ApplicationAdapter {
 		client = new Client();
 		client.start();
 
-		client.getKryo().register(ru.timelimit.client.game.GameClient.ActionClientEnum.class);
-		client.getKryo().register(ru.timelimit.client.game.GameClient.ActionClient.class);
-		client.getKryo().register(ru.timelimit.client.game.GameClient.ActionServerEnum.class);
-		client.getKryo().register(ru.timelimit.client.game.GameClient.ActionServer.class);
+		Network.register(client);
+
 
 		client.addListener(new Listener() {
 			public void received(Connection connection, Object object) {
@@ -102,7 +84,7 @@ public final class GameClient extends ApplicationAdapter {
 
 		new Thread(() -> {
 			try {
-				client.connect(5000, "194.67.87.216", 25567);
+				client.connect(5000, "194.67.87.216", 25568);
 			} catch (IOException e) {
 				e.printStackTrace();
 				//System.exit(1);

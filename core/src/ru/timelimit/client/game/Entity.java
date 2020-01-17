@@ -21,25 +21,16 @@ public final class Entity extends GameObject {
         UNLOCKED,
         LOCKED,
         LOCK
-    };
+    }
 
     private TaskState stateNow = TaskState.UNLOCKED;
     private Trap trapObj = null;
-    private HashMap<ru.timelimit.client.game.Behaviours.BehaviourModel.Command, String> commandToString = new HashMap<>();
+    private HashMap<BehaviourModel.Command, String> commandToString = new HashMap<>();
 
     private boolean initCalled = false;
     private void init() {
-        commandToString.put(ru.timelimit.client.game.Behaviours.BehaviourModel.Command.JUMP, "JumpBtn");
-        commandToString.put(ru.timelimit.client.game.Behaviours.BehaviourModel.Command.SLIP, "SlipBtn");
-
-        GameClient.ActionClient actionClient = new GameClient.ActionClient();
-        actionClient.accessToken = "Some USER";
-        actionClient.actionType = GameClient.ActionClientEnum.CONNECT;
-
-        if (GameClient.client.isConnected()) {
-            GameClient.client.sendTCP(actionClient);
-            System.out.println("SEND");
-        }
+        commandToString.put(BehaviourModel.Command.JUMP, "JumpBtn");
+        commandToString.put(BehaviourModel.Command.SLIP, "SlipBtn");
     }
 
     @Override
@@ -156,7 +147,7 @@ public final class Entity extends GameObject {
         }
     }
 
-    public void setBehaviour(ru.timelimit.client.game.Behaviours.BehaviourModel model){
+    public void setBehaviour(BehaviourModel model){
         bm = model;
     }
 

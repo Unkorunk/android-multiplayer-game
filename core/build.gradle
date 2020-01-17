@@ -11,4 +11,5 @@ dependencies {
         exclude group: 'com.esotericsoftware.minlog', module: 'minlog'
     }
     implementation group: 'com.esotericsoftware', 'name': 'kryo', version: '5.0.0-RC4'
+    implementation project(":network")
 }
