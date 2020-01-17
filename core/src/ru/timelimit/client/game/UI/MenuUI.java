@@ -102,7 +102,7 @@ public class MenuUI extends UI {
 
             var req = new ConnectRequest();
             req.password = passwordInput.origin.getText();
-            req.username = passwordInput.origin.getText();
+            req.username = nicknameInput.origin.getText();
 
             actionClient.request = req;
 
