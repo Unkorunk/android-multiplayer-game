@@ -1,15 +1,15 @@
 package ru.timelimit.client.game.UI;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Align;
 import ru.timelimit.client.game.GameClient;
 import ru.timelimit.client.game.ResourceManager;
+import ru.timelimit.network.ActionClient;
+import ru.timelimit.network.ActionClientEnum;
+import ru.timelimit.network.ConnectRequest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +28,10 @@ public class MenuUI extends UI {
     int curLobby = 0;
 
     private Label lobbyChooserLabel;
-    public TextFieldWrapper nicknameInput;
+
+    public TextFieldWrapper activeField = null;
+    private TextFieldWrapper nicknameInput;
+    private TextFieldWrapper passwordInput;
 
     private void updateLobbyChooser() {
         if (lobbyList.size() == 0) {
@@ -88,19 +91,29 @@ public class MenuUI extends UI {
         var cameraWidth = GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth;
         var cameraHeight = GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight;
 
-        var title = new Label(cameraWidth  / 2, cameraHeight - 50,
+        var title = new Label(cameraWidth  / 2, cameraHeight - 40,
                 100,10, "KILL YOUR FRIENDS");
         title.setBackground(new Sprite(ResourceManager.getTexture("BtnEmpty")));
-        var createLobbyBtn = new Button(cameraWidth / 2 - 75, cameraHeight - 130,
+        var createLobbyBtn = new Button(cameraWidth / 2 - 75, cameraHeight - 220,
                 150, 40,  () -> {
             System.out.println("MenuScene: Creating lobby");
+            var actionClient = new ActionClient();
+            actionClient.actionType = ActionClientEnum.CONNECT;
+
+            var req = new ConnectRequest();
+            req.password = passwordInput.origin.getText();
+            req.username = passwordInput.origin.getText();
+
+            actionClient.request = req;
+
+            GameClient.client.sendTCP(actionClient);
         });
 
-        var createLobbyLbl = new Label(cameraWidth / 2,cameraHeight - 130 + 20, 0, 0, "Create Lobby");
+        var createLobbyLbl = new Label(cameraWidth / 2,cameraHeight - 220 + 20, 0, 0, "Create Lobby");
         createLobbyLbl.background = null;
         createLobbyBtn.addChildren(createLobbyLbl);
 
-        var btnExit = new Button(cameraWidth - 60, cameraHeight - 60,
+        var btnExit = new Button(cameraWidth - 60, cameraHeight - 50,
                 40, 40,  () -> System.exit(0));
 
         btnExit.setBackground(new Sprite(ResourceManager.getTexture("BtnExit")));
@@ -111,14 +124,20 @@ public class MenuUI extends UI {
         textFieldStyle.background = new SpriteDrawable(new Sprite(ResourceManager.getTexture("TextField")));
 
         nicknameInput = new TextFieldWrapper(new TextField("YourNickname", textFieldStyle));
-        nicknameInput.origin.setPosition(cameraWidth / 2 - 125, cameraHeight - 190);
+        nicknameInput.origin.setPosition(cameraWidth / 2 - 125, cameraHeight - 120);
         nicknameInput.origin.setWidth(250);
         nicknameInput.origin.setAlignment(Align.center);
+
+        passwordInput = new TextFieldWrapper(new TextField("Password", textFieldStyle));
+        passwordInput.origin.setPosition(cameraWidth / 2 - 125, cameraHeight - 170);
+        passwordInput.origin.setWidth(250);
+        passwordInput.origin.setAlignment(Align.center);
 
         btnMap.put("createLobbyBtn", createLobbyBtn);
         btnMap.put("ExitBtn", btnExit);
         btnMap.put("MainTitle", title);
-        btnMap.put("inputField", nicknameInput);
+        btnMap.put("nicknameInput", nicknameInput);
+        btnMap.put("passwordInput", passwordInput);
 
         lobbyChooserInit();
     }

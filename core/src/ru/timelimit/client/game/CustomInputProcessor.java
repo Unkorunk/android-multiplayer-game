@@ -32,10 +32,12 @@ public final class CustomInputProcessor implements InputProcessor, GestureDetect
     @Override
     public boolean keyTyped(char character) {
         if (GlobalSettings.checkForType(GameClient.instance.sceneManager.currentScene, MenuScene.class)) {
-            var tf = ((MenuUI)GameClient.instance.sceneManager.currentScene.getUI()).nicknameInput.origin;
+            var tf = ((MenuUI)GameClient.instance.sceneManager.currentScene.getUI()).activeField.origin;
 
-            if (character == 8 && tf.getText().length() > 0) {
-                tf.setText(tf.getText().substring(0, tf.getText().length() - 1));
+            if (character == 8){
+                if (tf.getText().length() > 0) {
+                    tf.setText(tf.getText().substring(0, tf.getText().length() - 1));
+                }
             } else if (tf.getText().length() < 20) {
                 tf.setText(tf.getText() + character);
             }
