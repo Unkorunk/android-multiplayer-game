@@ -32,6 +32,7 @@ public class PreparationScene implements Scene {
         trapTypes = new ArrayList<>();
 
         trapTypes.add(Trap.laserTrap.clone());
+        trapTypes.add(Trap.flyTrap.clone());
     }
 
     @Override
@@ -77,7 +78,7 @@ public class PreparationScene implements Scene {
 
         var finishObj = new Finish();
         finishObj.position = new Vector2(GlobalSettings.WORLD_WIDTH - 30, GlobalSettings.HEIGHT_CELL * 1.5f);
-        finishObj.sprite = new Sprite(TextureManager.getTexture("Finish"));
+        finishObj.setSprite(new Sprite(TextureManager.getTexture("Finish")), true);
 
         GlobalSettings.gameObjects.add(finishObj);
     }
@@ -132,10 +133,10 @@ public class PreparationScene implements Scene {
             System.out.println(2);
         }
         if (clickedBtn == null && currentTrap != null && Gdx.input.justTouched()) {
-            var pos = Pair.vectorToCell(GameClient.lastClick);
-            if (pos.y > 0 && pos.y < 2 && pos.x > 0 && pos.x < GlobalSettings.WORLD_WIDTH / GlobalSettings.WIDTH_CELL){
+            var pos = Pair.vectorToPair(GameClient.lastClick);
+            if (currentTrap.validator(pos) && pos.x > 0 && pos.x < GlobalSettings.WORLD_WIDTH / GlobalSettings.WIDTH_CELL){
                 var newTrap = currentTrap.clone();
-                newTrap.setCell(Pair.vectorToCell(GameClient.lastClick));
+                newTrap.setCell(Pair.vectorToPair(GameClient.lastClick));
                 GlobalSettings.gameObjects.add(newTrap);
             }
         }

@@ -9,7 +9,18 @@ import com.badlogic.gdx.math.Vector2;
 
 public abstract class GameObject {
     public Vector2 position = new Vector2();
-    public Sprite sprite;
+    protected Sprite objSprite;
+
+    public void setSprite(Sprite sprite, boolean fixSize) {
+        if (fixSize) {
+            sprite.setSize(64, 64);
+        }
+        objSprite = sprite;
+    }
+
+    public Sprite getSprite() {
+        return objSprite;
+    }
 
     public boolean isEnabled = true;
 
@@ -19,8 +30,8 @@ public abstract class GameObject {
         if (!isEnabled)
             return;
 
-        sprite.setPosition(position.x - sprite.getWidth() / 2.0f, position.y - sprite.getHeight() / 2.0f);
-        sprite.draw(spriteBatch);
+        objSprite.setPosition(position.x - objSprite.getWidth() / 2.0f, position.y - objSprite.getHeight() / 2.0f);
+        objSprite.draw(spriteBatch);
 
         // TODO: comment that
         var nowCell = getCell();
@@ -33,8 +44,8 @@ public abstract class GameObject {
 
     public void setCell(Pair pair) {
         position = new Vector2(
-                pair.x * GlobalSettings.WIDTH_CELL + sprite.getWidth() / 2.0f,
-                pair.y * GlobalSettings.HEIGHT_CELL + sprite.getHeight() / 2.0f
+                pair.x * GlobalSettings.WIDTH_CELL + objSprite.getWidth() / 2.0f,
+                pair.y * GlobalSettings.HEIGHT_CELL + objSprite.getHeight() / 2.0f
         );
     }
 

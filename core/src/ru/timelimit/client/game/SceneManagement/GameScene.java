@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import ru.timelimit.client.game.*;
+import ru.timelimit.client.game.Behaviours.PlayerBehaviour;
 import ru.timelimit.client.game.UI.GameUI;
 import ru.timelimit.client.game.UI.UI;
 
@@ -24,8 +25,8 @@ public class GameScene implements Scene {
     private void objectsInit() {
         player = new Entity();
         player.setBehaviour(new PlayerBehaviour());
-        player.sprite = new Sprite(TextureManager.getTexture("Character"));
-        player.setCell(new Pair(1, 1));
+        player.setSprite(new Sprite(TextureManager.getTexture("Character")), true);
+        player.setCell(new Pair(0, 1));
 
         GlobalSettings.gameObjects.add(player);
     }

@@ -38,6 +38,7 @@ public final class GameClient extends ApplicationAdapter {
 		TextureManager.addTexture("BackgroundGround", "Background/New_Ground.png");
 		TextureManager.addTexture("Character", "Character/idle.gif");
 		TextureManager.addTexture("Laser", "Sprites/Trap.png");
+		TextureManager.addTexture("FlyTrap", "Sprites/Fly_trap.gif");
 		TextureManager.addTexture("PlatformL", "Sprites/PlatformLeft.png");
 		TextureManager.addTexture("PlatformM", "Sprites/PlatformMiddle.png");
 		TextureManager.addTexture("PlatformR", "Sprites/PlatformRight.png");
@@ -104,7 +105,7 @@ public final class GameClient extends ApplicationAdapter {
 				client.connect(5000, "194.67.87.216", 25567);
 			} catch (IOException e) {
 				e.printStackTrace();
-				System.exit(1);
+				//System.exit(1);
 			}
 		}).start();
 
