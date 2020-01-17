@@ -26,7 +26,7 @@ public class PreparationScene implements Scene {
 
     private ArrayList<Trap> trapTypes;
 
-    private Trap currentTrap = null;
+    public Trap currentTrap = null;
 
     private void trapInit() {
         trapTypes = new ArrayList<>();

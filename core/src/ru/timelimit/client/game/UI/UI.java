@@ -10,11 +10,17 @@ public abstract class UI {
     public abstract void init();
 
     public boolean isClicked(String elementName) {
-        if (!btnMap.containsKey(elementName) || !GlobalSettings.checkForType(btnMap.get(elementName), Button.class)) {
+        if (!btnMap.containsKey(elementName)) {
             return false;
         }
 
-        return ((Button)btnMap.get(elementName)).checkClick(GameClient.lastClick);
+        if (GlobalSettings.checkForType(btnMap.get(elementName), Button.class)) {
+            return ((Button)btnMap.get(elementName)).checkClick(GameClient.lastClick);
+        }
+        if (GlobalSettings.checkForType(btnMap.get(elementName), TextFieldWrapper.class)) {
+            return ((TextFieldWrapper)btnMap.get(elementName)).checkClick(GameClient.lastClick);
+        }
+        return false;
     }
 
     public String findClicked() {

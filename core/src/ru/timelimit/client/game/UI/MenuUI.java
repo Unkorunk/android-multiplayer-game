@@ -1,6 +1,13 @@
 package ru.timelimit.client.game.UI;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.utils.Align;
 import ru.timelimit.client.game.GameClient;
 import ru.timelimit.client.game.ResourceManager;
 
@@ -21,6 +28,7 @@ public class MenuUI extends UI {
     int curLobby = 0;
 
     private Label lobbyChooserLabel;
+    public TextFieldWrapper nicknameInput;
 
     private void updateLobbyChooser() {
         if (lobbyList.size() == 0) {
@@ -34,9 +42,9 @@ public class MenuUI extends UI {
         var cameraWidth = GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth;
         var cameraHeight = GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight;
 
-        var lobbyChooserTitle = new Label(cameraWidth / 2, cameraHeight - 230, 0, 0, "Choose Game to Join");
+        var lobbyChooserTitle = new Label(cameraWidth / 2, cameraHeight - 250, 0, 0, "Choose Game to Join");
 
-        var lobbyChooserButton = new Button(cameraWidth / 2 - 150, cameraHeight - 300, 300, 40, () -> {
+        var lobbyChooserButton = new Button(cameraWidth / 2 - 150, cameraHeight - 320, 300, 40, () -> {
             if (lobbyList.size() != 0) {
                 System.out.println("MenuScene: Connecting to lobby " + lobbyList.get(curLobby).name);
                 GameClient.instance.sceneManager.currentScene.setState(2);
@@ -45,11 +53,11 @@ public class MenuUI extends UI {
                 GameClient.instance.sceneManager.currentScene.setState(2);
             }
         });
-        lobbyChooserLabel = new Label(cameraWidth / 2, cameraHeight - 300 + 20, 0, 0, "No lobbies :(");
+        lobbyChooserLabel = new Label(cameraWidth / 2, cameraHeight - 320 + 20, 0, 0, "No lobbies :(");
         lobbyChooserLabel.background = null;
         lobbyChooserButton.addChildren(lobbyChooserLabel);
 
-        var prevLobby = new Button(cameraWidth / 2 - 200, cameraHeight - 300, 40, 40, () -> {
+        var prevLobby = new Button(cameraWidth / 2 - 200, cameraHeight - 320, 40, 40, () -> {
             if (curLobby > 0){
                 curLobby--;
                 updateLobbyChooser();
@@ -58,7 +66,7 @@ public class MenuUI extends UI {
         prevLobby.setSprite(new Sprite(ResourceManager.getTexture("BtnUp")));
         prevLobby.getSprite().rotate90(false);
 
-        var nextLobby = new Button(cameraWidth / 2 + 160, cameraHeight - 300, 40, 40, () -> {
+        var nextLobby = new Button(cameraWidth / 2 + 160, cameraHeight - 320, 40, 40, () -> {
             if (curLobby < lobbyList.size() - 1){
                 curLobby++;
                 updateLobbyChooser();
@@ -97,11 +105,21 @@ public class MenuUI extends UI {
 
         btnExit.setBackground(new Sprite(ResourceManager.getTexture("BtnExit")));
 
+        var textFieldStyle = new TextField.TextFieldStyle();
+        textFieldStyle.font = ResourceManager.getFont("defaultFont");
+        textFieldStyle.fontColor = new Color(1f, 1f, 1f, 1f);
+        textFieldStyle.background = new SpriteDrawable(new Sprite(ResourceManager.getTexture("TextField")));
+
+        nicknameInput = new TextFieldWrapper(new TextField("YourNickname", textFieldStyle));
+        nicknameInput.origin.setPosition(cameraWidth / 2 - 125, cameraHeight - 190);
+        nicknameInput.origin.setWidth(250);
+        nicknameInput.origin.setAlignment(Align.center);
+
         btnMap.put("createLobbyBtn", createLobbyBtn);
         btnMap.put("ExitBtn", btnExit);
         btnMap.put("MainTitle", title);
+        btnMap.put("inputField", nicknameInput);
 
         lobbyChooserInit();
-
     }
 }
