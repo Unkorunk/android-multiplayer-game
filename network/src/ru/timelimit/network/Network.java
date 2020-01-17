@@ -21,5 +21,9 @@ public class Network {
         kryo.register(ru.timelimit.network.ConnectRequest.class);
         kryo.register(int[].class);
         kryo.register(Trap[].class);
+        kryo.register(Lobby[].class);
+        kryo.register(Lobby.class);
+        kryo.register(JoinRequest.class);
+        kryo.register(GameUser.class);
     }
 }

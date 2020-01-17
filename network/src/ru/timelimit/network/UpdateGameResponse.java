@@ -1,7 +1,6 @@
 package ru.timelimit.network;
 
 public class UpdateGameResponse extends Response {
-    public int[] targetX;
-    public int[] targetY;
+    public GameUser[] users;
     public Trap[] traps;
 }

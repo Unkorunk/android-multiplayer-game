@@ -7,5 +7,6 @@ public enum ActionClientEnum {
     UPDATE_GAME,
     JOIN,
     FINISH,
-    CONNECT
+    CONNECT,
+    CREATE_LOBBY
 }

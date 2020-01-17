@@ -6,11 +6,10 @@ import java.util.ArrayList;
 import java.util.Timer;
 
 public class Room {
-    public int countInRoom = 0;
-    public int[] usersInRoom = {-1, -1};
+    public ArrayList<User> users = new ArrayList<>();
     public boolean gameInProcess = false;
 
     public ArrayList<Trap> traps = new ArrayList<>();
 
-    public Timer preparationTimer;
+    public Timer preparationTimer = new Timer();
 }
