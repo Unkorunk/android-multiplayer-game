@@ -60,7 +60,7 @@ public class GameServer {
                                 LOG.info("room ready for next game");
                             }
                         }
-                    } else if (actionClient.actionType == ActionClientEnum.CONNECT) {
+                    } else if (actionClient.actionType == ActionClientEnum.JOIN) {
                         if (room.countInRoom < 2 && !room.gameInProcess) {
                             users.get(connection.getID()).slotRoom = room.countInRoom;
                             room.usersInRoom[room.countInRoom] = connection.getID();
