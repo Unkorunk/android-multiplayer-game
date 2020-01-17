@@ -36,7 +36,8 @@ public class Trap extends GameObject implements Cloneable {
 
     public boolean validator(Pair pos) {
         boolean verdict = true;
-        if (GlobalSettings.checkObjectOnCell(new Pair(pos.x + 1, pos.y)) ||
+        if (GlobalSettings.checkObjectOnCell(pos) ||
+                GlobalSettings.checkObjectOnCell(new Pair(pos.x + 1, pos.y)) ||
                 GlobalSettings.checkObjectOnCell(new Pair(pos.x - 1, pos.y)) ||
                 GlobalSettings.checkObjectOnCell(new Pair(pos.x, pos.y + 1)) ||
                 GlobalSettings.checkObjectOnCell(new Pair(pos.x, pos.y - 1))) {
