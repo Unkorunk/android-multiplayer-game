@@ -67,6 +67,27 @@ public final class GameClient extends ApplicationAdapter {
 
 	public static Client client = null;
 
+	public static void sendConnect(String login, String password) {
+		var actionClient = new ActionClient();
+		actionClient.actionType = ActionClientEnum.CONNECT;
+
+		var req = new ConnectRequest();
+		req.password = login;
+		req.username = password;
+
+		actionClient.request = req;
+
+		GameClient.client.sendTCP(actionClient);
+	}
+
+	public static void join() {
+		var actionClient = new ActionClient();
+		actionClient.actionType = ActionClientEnum.CONNECT;
+		actionClient.accessToken = GameClient.instance.token;
+
+		GameClient.client.sendTCP(actionClient);
+	}
+
 	@Override
 	public void create() {
 		instance = this;

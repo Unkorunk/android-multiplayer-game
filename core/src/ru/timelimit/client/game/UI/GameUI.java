@@ -16,13 +16,15 @@ public final class GameUI extends UI {
         btnMap = new HashMap<>();
         btnSettings = new HashMap<>();
 
-        errorLabel = new Label(100, GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight - 20, 0, 0, "");
+        errorLabel = new Label(100, height - 20, 0, 0, "");
         errorLabel.background = null;
         btnMap.put("errorLabel", errorLabel);
 
         var jumpBtn = new Button(30, 10, 40, 40, () -> {});
-        var slipBtn = new Button(GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth - 70, 10, 40, 40, () -> {});
-        var menuBtn = new Button(width - 40, GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight - 50, 40, 40, () -> {});
+        var slipBtn = new Button(width - 70, 10, 40, 40, () -> {});
+        var menuBtn = new Button(width - 40, height - 50, 40, 40, () -> {
+            GameClient.instance.sceneManager.currentScene.setState(1);
+        });
 
 
         jumpBtn.setSprite(new Sprite(ResourceManager.getTexture("BtnUp")));
