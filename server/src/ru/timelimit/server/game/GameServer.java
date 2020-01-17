@@ -119,6 +119,15 @@ public class GameServer {
                             }
                         }
 
+                        if (gameInProcess) {
+                            for (int id : usersInRoom) {
+                                ActionServer actionServer = new ActionServer();
+                                actionServer.actionType = ActionServerEnum.START_GAME;
+
+                                server.sendToTCP(id, actionServer);
+                            }
+                        }
+
                         server.sendToAllTCP(updateLobby());
                     } else if (actionClient.actionType == ActionClientEnum.SELECT_TARGET) {
                         User user = users.get(connection.getID());
