@@ -56,6 +56,7 @@ public final class Entity extends GameObject {
         var nowCell = getCell();
         if (stateNow == TaskState.UNLOCKED) {
             if (nowCell.equals(targetCell)) {
+                position = Pair.pairToVector(targetCell); // TODO: Create normal fix
                 if (nowCell.y > 1 && !GlobalSettings.checkObjectOnCell(new Pair(nowCell.x, nowCell.y - 1))) {
                     targetCell = new Pair(nowCell.x, nowCell.y - 1);
                 } else if (chooseTimer == 0 && GlobalSettings.checkObjectOnCell(new Pair(nowCell.x + 1, nowCell.y))) {
