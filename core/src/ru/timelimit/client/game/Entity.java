@@ -53,6 +53,17 @@ public final class Entity extends GameObject {
             targetCell = getCell();
         }
 
+        var color = getSprite().getColor();
+        if (color.b < 1) {
+            color.b += 0.025;
+            color.g += 0.025;
+            if (color.b > 1f) {
+                color.b = 1f;
+                color.g = 1f;
+            }
+        }
+        getSprite().setColor(color);
+
         var nowCell = getCell();
         if (stateNow == TaskState.UNLOCKED) {
             if (nowCell.equals(targetCell)) {
@@ -93,8 +104,9 @@ public final class Entity extends GameObject {
                 stateNow = TaskState.UNLOCK;
 
                 if (!trapObj.commands.contains(cmd)) {
-                    cmd = trapObj.commands.get(0);
+                    //cmd = BehaviourModel.Command.RUN;
                     hp -= trapObj.dmg;
+                    getSprite().setColor(1, 0, 0, 1);
                     if (hp <= 0) {
                         isEnabled = false;
                     }
@@ -142,17 +154,21 @@ public final class Entity extends GameObject {
             targetCell = new Pair(nowCell.x + 1, nowCell.y);
         }
 
+        Vector2 curSpeed = new Vector2(targetCell.x - nowCell.x, targetCell.y - nowCell.y);
+
+        if (curSpeed.y == 0 && Math.abs(position.y - Pair.pairToVector(getCell()).y) > GlobalSettings.gravitySpeed / 2f)  {
+            curSpeed.y = Pair.pairToVector(getCell()).y - position.y;
+        }
+
+        curSpeed = curSpeed.nor();
+
+
         if (stateNow == TaskState.UNLOCKED) {
-            Vector2 curSpeed = new Vector2(targetCell.x - nowCell.x, targetCell.y - nowCell.y);
-
-            if (curSpeed.y == 0 && Math.abs(position.y - Pair.pairToVector(getCell()).y) > GlobalSettings.gravitySpeed / 2f)  {
-                curSpeed.y = Pair.pairToVector(getCell()).y - position.y;
-            }
-
-            curSpeed = curSpeed.nor();
-
             position.x += curSpeed.x * speed;
             position.y += curSpeed.y * GlobalSettings.gravitySpeed;
+        } else {
+            position.x += curSpeed.x * speed * 0.1f;
+            position.y += curSpeed.y * GlobalSettings.gravitySpeed * 0.1f;
         }
     }
 
