@@ -1,54 +1,37 @@
 package ru.timelimit.client.game.UI;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import ru.timelimit.client.game.TextureManager;
 import ru.timelimit.client.game.GameClient;
+import ru.timelimit.client.game.ResourceManager;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 
 public class MenuUI extends UI {
     @Override
     public void init() {
-        var table = new Table();
-
-        btnMap = new HashMap<String, UIElement>();
+        btnMap = new HashMap<>();
 
         var cameraWidth = GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth;
         var cameraHeight = GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight;
 
-        var title = new Label(cameraWidth / 2,
-                cameraHeight - 50,
+        var title = new Label(cameraWidth  / 2, cameraHeight - 50,
                 100,10, "KILL YOUR FRIENDS");
+        title.setBackground(new Sprite(ResourceManager.getTexture("BtnEmpty")));
+        var createLobbyBtn = new Button(cameraWidth / 2 - 75, cameraHeight - 150,
+                150, 40,  () -> GameClient.instance.sceneManager.currentScene.setState(2));
 
-        var createLobbyBtn = new Button((float)(cameraWidth * 0.15), (float)(cameraHeight * 0.4),
-                (float)(cameraWidth * 0.3), (float)(cameraHeight * 0.3),  () -> { });
+        var createLobbyLbl = new Label(cameraWidth / 2,cameraHeight - 150 + 20, 0, 0, "Create Lobby");
+        createLobbyLbl.background = null;
+        createLobbyBtn.addChildren(createLobbyLbl);
 
-        //createLobbyBtn.setSprite(new Sprite(Objects.requireNonNull(TextureManager.getTexture("BtnEmpty"))));
-      //  btnMap.keySet().add("createLobbyBtn");
+        var btnExit = new Button(cameraWidth - 60, cameraHeight - 60,
+                40, 40,  () -> System.exit(0));
 
-       /* var CreateLobbyLbl = new Label((float)(cameraWidth * 0.15), (float)(cameraHeight * 0.4),
-                (float)(cameraWidth * 0.3), (float)(cameraHeight * 0.3), "Create Lobby");*/
-
-
-        var joinLobbyBtn = new Button((float)(cameraWidth * 0.15) + (float)(cameraWidth * 0.3) + (float)( cameraWidth * 0.1), (float)(cameraHeight * 0.4),
-                (float)(cameraWidth * 0.3), (float)(cameraHeight * 0.3), () -> {});
-        //joinLobbyBtn.setSprite(new Sprite(Objects.requireNonNull(TextureManager.getTexture("BtnEmpty"))));
-
-       /* var joinLobbyLbl = new Label((float)(cameraWidth * 0.15) + (float)(cameraWidth * 0.3) + (float)( cameraWidth * 0.1), (float)(cameraHeight * 0.4),
-                (float)(cameraWidth * 0.3), (float)(cameraHeight * 0.3), "Join Lobby");*/
+        btnExit.setBackground(new Sprite(ResourceManager.getTexture("BtnExit")));
 
         btnMap.put("createLobbyBtn", createLobbyBtn);
-        //btnMap.put("CreateLobbyLbl", CreateLobbyLbl);
+        btnMap.put("ExitBtn", btnExit);
         btnMap.put("MainTitle", title);
-        btnMap.put("joinLobbyBtn", joinLobbyBtn);
-        //btnMap.put("joinLobbyLbl", joinLobbyLbl);
-
-        //var settingsBtn = new Button("Settings", btnBackground);
-       // var exitBtn = new Button("Exit", btnBackground);
-
     }
 }

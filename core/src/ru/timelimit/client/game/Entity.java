@@ -86,9 +86,9 @@ public final class Entity extends GameObject {
         }
 
         if (stateNow == TaskState.LOCKED) {
-            ru.timelimit.client.game.Behaviours.BehaviourModel.Command cmd = bm.update();
+            BehaviourModel.Command cmd = bm.update();
 
-            if (chooseTimer == 0 || cmd != ru.timelimit.client.game.Behaviours.BehaviourModel.Command.RUN) {
+            if (chooseTimer == 0 || cmd != BehaviourModel.Command.RUN) {
                 chooseTimer = 0;
                 stateNow = TaskState.UNLOCK;
 

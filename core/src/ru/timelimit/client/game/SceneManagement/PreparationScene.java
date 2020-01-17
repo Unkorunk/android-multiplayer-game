@@ -47,7 +47,7 @@ public class PreparationScene implements Scene {
         camera.update();
         gui.init();
 
-        background = new Sprite(TextureManager.getTexture("BackgroundSky"));
+        background = new Sprite(ResourceManager.getTexture("BackgroundSky"));
         background.setSize(camera.viewportWidth * 1.5f, camera.viewportHeight);
         background.setPosition(camera.viewportWidth * (1.0f - 1.5f) / 2, 0);
 
@@ -55,8 +55,8 @@ public class PreparationScene implements Scene {
         ground = new ArrayList<>();
         parallaxCity = new ArrayList<>();
         while (x < GlobalSettings.WORLD_WIDTH) {
-            var gSprite = new Sprite(TextureManager.getTexture("BackgroundGround"));
-            var cSprite = new Sprite(TextureManager.getTexture("BackgroundCity"));
+            var gSprite = new Sprite(ResourceManager.getTexture("BackgroundGround"));
+            var cSprite = new Sprite(ResourceManager.getTexture("BackgroundCity"));
             gSprite.setPosition(x, -1);
             cSprite.setPosition(x, 16);
             ground.add(gSprite);
@@ -78,7 +78,7 @@ public class PreparationScene implements Scene {
 
         var finishObj = new Finish();
         finishObj.position = new Vector2(GlobalSettings.WORLD_WIDTH - 30, GlobalSettings.HEIGHT_CELL * 1.5f);
-        finishObj.setSprite(new Sprite(TextureManager.getTexture("Finish")), true);
+        finishObj.setSprite(new Sprite(ResourceManager.getTexture("Finish")), true);
 
         GlobalSettings.gameObjects.add(finishObj);
     }
@@ -149,5 +149,10 @@ public class PreparationScene implements Scene {
     @Override
     public int isOver() {
         return exitCode;
+    }
+
+    @Override
+    public void setState(int state) {
+        exitCode = state;
     }
 }

@@ -1,10 +1,8 @@
 package ru.timelimit.client.game.UI;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import ru.timelimit.client.game.GameClient;
-import ru.timelimit.client.game.GlobalSettings;
-import ru.timelimit.client.game.TextureManager;
+import ru.timelimit.client.game.ResourceManager;
 import ru.timelimit.client.game.Trap;
 
 import java.util.ArrayList;
@@ -16,8 +14,8 @@ public final class PreparationUI extends UI {
     public void init() {
         btnMap = new HashMap<>();
 
-        var menuBtn = new Button(50, 10, 40, 40, () -> {});
-        menuBtn.setSprite(new Sprite(TextureManager.getTexture("BtnMenu")));
+        var menuBtn = new Button(10, GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight - 50, 40, 40, () -> {});
+        menuBtn.setSprite(new Sprite(ResourceManager.getTexture("BtnExit")));
 
         var title = new Label(GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth / 2,
                 GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight - 50,

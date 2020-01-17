@@ -25,7 +25,7 @@ public class GameScene implements Scene {
     private void objectsInit() {
         player = new Entity();
         player.setBehaviour(new PlayerBehaviour());
-        player.setSprite(new Sprite(TextureManager.getTexture("Character")), true);
+        player.setSprite(new Sprite(ResourceManager.getTexture("Character")), true);
         player.setCell(new Pair(0, 1));
 
         GlobalSettings.gameObjects.add(player);
@@ -37,12 +37,11 @@ public class GameScene implements Scene {
         float height = Gdx.graphics.getHeight();
 
         camera = new OrthographicCamera(600, 600 * (height / width));
-        // camera.setToOrtho(false, 600, 600 * (height / width));
         camera.position.set(0 + camera.viewportWidth / 2, 0 + camera.viewportHeight / 2, 0);
         camera.update();
         gui.init();
 
-        background = new Sprite(TextureManager.getTexture("BackgroundSky"));
+        background = new Sprite(ResourceManager.getTexture("BackgroundSky"));
         background.setSize(camera.viewportWidth * 1.5f, camera.viewportHeight);
         background.setPosition(camera.viewportWidth * (1.0f - 1.5f) / 2, 0);
 
@@ -50,8 +49,8 @@ public class GameScene implements Scene {
         ground = new ArrayList<>();
         parallaxCity = new ArrayList<>();
         while (x < GlobalSettings.WORLD_WIDTH) {
-            var gSprite = new Sprite(TextureManager.getTexture("BackgroundGround"));
-            var cSprite = new Sprite(TextureManager.getTexture("BackgroundCity"));
+            var gSprite = new Sprite(ResourceManager.getTexture("BackgroundGround"));
+            var cSprite = new Sprite(ResourceManager.getTexture("BackgroundCity"));
             gSprite.setPosition(x, -1);
             cSprite.setPosition(x, 16);
             ground.add(gSprite);
@@ -127,5 +126,10 @@ public class GameScene implements Scene {
     @Override
     public int isOver() {
         return exitCode;
+    }
+
+    @Override
+    public void setState(int state) {
+        exitCode = state;
     }
 }

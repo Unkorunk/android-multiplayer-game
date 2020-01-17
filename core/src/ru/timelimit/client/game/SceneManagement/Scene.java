@@ -19,4 +19,6 @@ public interface Scene {
     void render(SpriteBatch batch);
 
     int isOver();
+
+    void setState(int state);
 }
