@@ -4,7 +4,7 @@ public class SceneManager {
     public Scene currentScene;
 
     public void setup() {
-        currentScene = new MenuScene();
+        currentScene = new PreparationScene();
         currentScene.instantiate();
     }
 

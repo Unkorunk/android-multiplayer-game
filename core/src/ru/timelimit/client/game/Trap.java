@@ -11,7 +11,7 @@ public class Trap extends GameObject implements Cloneable {
 
     protected Trap(ArrayList<ru.timelimit.client.game.Behaviours.BehaviourModel.Command> commands, Sprite sprite) {
         this.commands = commands;
-        this.sprite = sprite;
+        this.objSprite = sprite;
     }
 
     public static final Trap laserTrap = new Trap(
