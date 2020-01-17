@@ -3,9 +3,12 @@ package ru.timelimit.client.game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public final class ResourceManager {
+
+    private static ArrayList<BitmapFont> tempFonts = new ArrayList<>();
 
     public static Texture addTexture (String textureName, String path) {
         if (textureMap.containsKey(textureName)) {
@@ -30,7 +33,16 @@ public final class ResourceManager {
         }
 
         BitmapFont font = fonts.get(fontName);
-        return new BitmapFont(font.getData(), font.getRegion(), font.usesIntegerPositions());
+        BitmapFont tempFont = new BitmapFont(font.getData(), font.getRegion(), font.usesIntegerPositions());
+        tempFonts.add(tempFont);
+        return tempFont;
+    }
+
+    public static void disposeTempFonts() {
+        for (BitmapFont font : tempFonts) {
+            font.dispose();
+        }
+        tempFonts.clear();
     }
 
     public static void dispose(String textureName) {
