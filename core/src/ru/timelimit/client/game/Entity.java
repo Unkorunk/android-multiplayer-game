@@ -19,6 +19,8 @@ public final class Entity extends GameObject {
 
     private int speed = 4;
 
+    private boolean fallDown = false;
+
     private enum TaskState {
         UNLOCK,
         UNLOCKED,
@@ -48,95 +50,101 @@ public final class Entity extends GameObject {
         }
 
         var nowCell = getCell();
-        if (stateNow == TaskState.UNLOCKED) {
-            if (nowCell.equals(targetCell)) {
-                if (nowCell.y > 1 && !GlobalSettings.checkObjectOnCell(new Pair(nowCell.x, nowCell.y - 1))) {
-                    targetCell = new Pair(nowCell.x, nowCell.y - 1);
-                    position.x--;
-                } else if (Math.abs(position.y - Pair.pairToVector(getCell()).y) > GlobalSettings.gravitySpeed / 2f) {
 
-                } else if (chooseTimer == 0 && GlobalSettings.checkObjectOnCell(new Pair(nowCell.x + 1, nowCell.y))) {
-                    for (var gameObj : GlobalSettings.getObjectsOnCell(new Pair(nowCell.x + 1, nowCell.y))) {
-                        if (gameObj instanceof Trap) {
-                            trapObj = (Trap) gameObj;
-                            stateNow = TaskState.LOCK;
-                            break;
+        if (Math.abs(position.y - Pair.pairToVector(getCell()).y) <= GlobalSettings.gravitySpeed / 2f) {
+            fallDown = false;
+        }
+
+        if (!fallDown) {
+            if (stateNow == TaskState.UNLOCKED) {
+                if (nowCell.equals(targetCell)) {
+                    if (nowCell.y > 1 && !GlobalSettings.checkObjectOnCell(new Pair(nowCell.x, nowCell.y - 1))) {
+                        targetCell = new Pair(nowCell.x, nowCell.y - 1);
+                        fallDown = true;
+                    } else if (chooseTimer == 0 && GlobalSettings.checkObjectOnCell(new Pair(nowCell.x + 1, nowCell.y))) {
+                        for (var gameObj : GlobalSettings.getObjectsOnCell(new Pair(nowCell.x + 1, nowCell.y))) {
+                            if (gameObj instanceof Trap) {
+                                trapObj = (Trap) gameObj;
+                                stateNow = TaskState.LOCK;
+                                break;
+                            }
                         }
                     }
                 }
             }
-        }
 
-        if (stateNow == TaskState.LOCK) {
+            if (stateNow == TaskState.LOCK) {
 //            for (var cmd : trapObj.commands) {
 //                if (commandToString.containsKey(cmd)) {
 //                    GameClient.instance.sceneManager.currentScene.getUI().showElement(commandToString.get(cmd));
 //                }
 //            }
-            for (var cmd : commandToString.values()) {
-                GameClient.instance.sceneManager.currentScene.getUI().showElement(cmd);
+                for (var cmd : commandToString.values()) {
+                    GameClient.instance.sceneManager.currentScene.getUI().showElement(cmd);
+                }
+                chooseTimer = delaySeconds * 1000;
+                lastTime = System.currentTimeMillis();
+                stateNow = TaskState.LOCKED;
             }
-            chooseTimer = delaySeconds * 1000;
-            lastTime = System.currentTimeMillis();
-            stateNow = TaskState.LOCKED;
-        }
 
-        if (stateNow == TaskState.LOCKED) {
-            BehaviourModel.Command cmd = bm.update();
+            if (stateNow == TaskState.LOCKED) {
+                BehaviourModel.Command cmd = bm.update();
 
-            if (chooseTimer == 0 || cmd != BehaviourModel.Command.RUN) {
-                chooseTimer = 0;
-                stateNow = TaskState.UNLOCK;
-
-                if (!trapObj.commands.contains(cmd)) {
-                    cmd = trapObj.commands.get(0);
-                    hp -= trapObj.dmg;
-                    if (hp <= 0) {
-                        isEnabled = false;
-                    }
-                }
-
-                switch (cmd) {
-                    case JUMP:
-                        targetCell = new Pair(nowCell.x + 1, nowCell.y + 1);
-                        break;
-                    case SLIP:
-                        targetCell = new Pair(nowCell.x + 2, nowCell.y);
-                        break;
-                    case RUN:
-                        targetCell = new Pair(nowCell.x + 1, nowCell.y);
-                        break;
-                    default:
-                        System.err.println("No handler for this command");
-                        break;
-                }
-            } else {
-                var nowTime = System.currentTimeMillis();
-
-                var deltaTime = nowTime - lastTime;
-                if (deltaTime >= chooseTimer) {
+                if (chooseTimer == 0 || cmd != BehaviourModel.Command.RUN) {
                     chooseTimer = 0;
+                    stateNow = TaskState.UNLOCK;
+
+                    if (!trapObj.commands.contains(cmd)) {
+                        cmd = trapObj.commands.get(0);
+                        hp -= trapObj.dmg;
+                        if (hp <= 0) {
+                            isEnabled = false;
+                        }
+                    }
+
+                    switch (cmd) {
+                        case JUMP:
+                            targetCell = new Pair(nowCell.x + 1, nowCell.y + 1);
+                            break;
+                        case SLIP:
+                            targetCell = new Pair(nowCell.x + 2, nowCell.y);
+                            break;
+                        case RUN:
+                            targetCell = new Pair(nowCell.x + 1, nowCell.y);
+                            break;
+                        default:
+                            System.err.println("No handler for this command");
+                            break;
+                    }
                 } else {
-                    chooseTimer -= deltaTime;
+                    var nowTime = System.currentTimeMillis();
+
+                    var deltaTime = nowTime - lastTime;
+                    if (deltaTime >= chooseTimer) {
+                        chooseTimer = 0;
+                    } else {
+                        chooseTimer -= deltaTime;
+                    }
+
+                    lastTime = nowTime;
                 }
-
-                lastTime = nowTime;
             }
-        }
 
-        if (stateNow == TaskState.UNLOCK) {
+            if (stateNow == TaskState.UNLOCK) {
 //            for (var cmd : trapObj.commands) {
 //                if (commandToString.containsKey(cmd)) {
 //                    GameClient.instance.sceneManager.currentScene.getUI().hideElement(commandToString.get(cmd));
 //                }
 //            }
-            for (var cmd : commandToString.values()) {
-                GameClient.instance.sceneManager.currentScene.getUI().hideElement(cmd);
+                for (var cmd : commandToString.values()) {
+                    GameClient.instance.sceneManager.currentScene.getUI().hideElement(cmd);
+                }
+                stateNow = TaskState.UNLOCKED;
+            } else if (nowCell.equals(targetCell)) {
+                targetCell = new Pair(nowCell.x + 1, nowCell.y);
             }
-            stateNow = TaskState.UNLOCKED;
-        } else if (nowCell.equals(targetCell)) {
-            targetCell = new Pair(nowCell.x + 1, nowCell.y);
         }
+
 
         if (stateNow == TaskState.UNLOCKED) {
             Vector2 curSpeed = new Vector2(targetCell.x - nowCell.x, targetCell.y - nowCell.y);
