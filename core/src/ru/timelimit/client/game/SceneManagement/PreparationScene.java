@@ -150,4 +150,9 @@ public class PreparationScene implements Scene {
     public int isOver() {
         return exitCode;
     }
+
+    @Override
+    public void setState(int state) {
+        exitCode = state;
+    }
 }

@@ -20,8 +20,6 @@ public class MenuScene implements Scene {
     private Sprite backgroundCity1;
     private Sprite backgroundCity2;
 
-
-
     private float flowSpeed = 0.5f;
 
     @Override
@@ -70,8 +68,13 @@ public class MenuScene implements Scene {
 
     @Override
     public void render(SpriteBatch batch) {
+        if (Gdx.input.justTouched()) {
+            gui.findClicked();
+        }
+
         backgroundCity1.translate(flowSpeed, 0);
         backgroundCity2.translate(flowSpeed, 0);
+
         if (backgroundCity1.getBoundingRectangle().x > camera.viewportWidth) {
             backgroundCity1.setX(-camera.viewportWidth + 1);
         } else if (backgroundCity2.getBoundingRectangle().x > camera.viewportWidth) {
@@ -87,5 +90,10 @@ public class MenuScene implements Scene {
     @Override
     public int isOver() {
         return exitCode;
+    }
+
+    @Override
+    public void setState(int state) {
+        exitCode = state;
     }
 }
