@@ -10,6 +10,9 @@ public final class GameUI extends UI {
 
     @Override
     public void init() {
+        var width = GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth;
+        var height = GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight;
+
         btnMap = new HashMap<>();
         btnSettings = new HashMap<>();
 
@@ -19,7 +22,7 @@ public final class GameUI extends UI {
 
         var jumpBtn = new Button(30, 10, 40, 40, () -> {});
         var slipBtn = new Button(GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth - 70, 10, 40, 40, () -> {});
-        var menuBtn = new Button(10, GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight - 50, 40, 40, () -> {});
+        var menuBtn = new Button(width - 40, GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight - 50, 40, 40, () -> {});
 
 
         jumpBtn.setSprite(new Sprite(ResourceManager.getTexture("BtnUp")));

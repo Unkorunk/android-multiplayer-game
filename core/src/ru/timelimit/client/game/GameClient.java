@@ -26,6 +26,8 @@ public final class GameClient extends ApplicationAdapter {
 
 	public static GameClient instance;
 
+	public String token = null;
+
 	private CustomInputProcessor inputProcessor;
 	private InputMultiplexer im;
 
@@ -88,6 +90,7 @@ public final class GameClient extends ApplicationAdapter {
 							if (response.accessToken.equals("FAILED") || response.accessToken.equals("INCORRECT PASSWORD")) {
 								sceneManager.currentScene.getUI().errorLabel.setText(response.accessToken);
 							} else {
+								token = response.accessToken;
 								var ui = (MenuUI)sceneManager.currentScene.getUI();
 								ui.startTimer = 10;
 								((Label)ui.getElement("createLobbyBtn").getChildren(Label.class)).setText("Waiting for game (Click to leave)");
@@ -105,15 +108,6 @@ public final class GameClient extends ApplicationAdapter {
 			}
 		});
 
-		new Thread(() -> {
-			try {
-				client.connect(5000, "194.67.87.216", 25568);
-			} catch (IOException e) {
-				e.printStackTrace();
-				sceneManager.currentScene.getUI().errorLabel.setText("Couldnt connect to server");
-			}
-		}).start();
-
 		//~~~
 
 		batch = new SpriteBatch();
@@ -125,6 +119,15 @@ public final class GameClient extends ApplicationAdapter {
 
 		sceneManager = new SceneManager();
 		sceneManager.setup();
+
+		new Thread(() -> {
+			try {
+				client.connect(5000, "194.67.87.216", 25568);
+			} catch (IOException e) {
+				e.printStackTrace();
+				sceneManager.currentScene.getUI().errorLabel.setText("Couldnt connect to server");
+			}
+		}).start();
 
 		inputProcessor.updateCamera(sceneManager.currentScene.getCamera(), sceneManager.currentScene.getBackground());
 

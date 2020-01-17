@@ -1,5 +1,6 @@
 package ru.timelimit.client.game.UI;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -10,6 +11,7 @@ import ru.timelimit.client.game.ResourceManager;
 import ru.timelimit.network.ActionClient;
 import ru.timelimit.network.ActionClientEnum;
 import ru.timelimit.network.ConnectRequest;
+import ru.timelimit.network.Request;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -106,6 +108,7 @@ public class MenuUI extends UI {
                 System.out.println("MenuScene: disconnect from lobby");
                 var actionClient = new ActionClient();
                 actionClient.actionType = ActionClientEnum.FINISH;
+                actionClient.accessToken = GameClient.instance.token;
                 GameClient.client.sendTCP(actionClient);
             } else {
                 System.out.println("MenuScene: Creating lobby");
