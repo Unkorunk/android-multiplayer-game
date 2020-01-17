@@ -5,6 +5,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -12,6 +13,7 @@ import java.util.TimerTask;
 public class GameServer {
     public enum ActionClientEnum {
         SELECT_TARGET,
+        SET_TRAP,
         UPDATE_LOBBY,
         UPDATE_GAME,
         CONNECT,
@@ -37,11 +39,15 @@ public class GameServer {
     public static class UpdateGameResponse extends Response {
         public int[] targetX;
         public int[] targetY;
+        public Trap[] traps;
     }
 
     public static class SelectTargetRequest extends Request {
         public int targetX;
         public int targetY;
+    }
+    public static class SetTrapRequest extends Request {
+        public int x, y, trapId;
     }
 
     public static class ActionClient {
@@ -63,9 +69,14 @@ public class GameServer {
             targetY = 0;
         }
     }
+    public static class Trap {
+        public int x, y, trapId;
+    }
+
     static int countInRoom = 0;
     static int[] usersInRoom = {-1, -1};
     static boolean gameInProcess = false;
+    static ArrayList<Trap> traps = new ArrayList<>();
 
     private static int preparationTime = 10 * 1000;
     private static Timer preparationTimer;
@@ -85,6 +96,8 @@ public class GameServer {
         server.getKryo().register(ru.timelimit.server.game.GameServer.UpdateLobbyResponse.class);
         server.getKryo().register(ru.timelimit.server.game.GameServer.UpdateGameResponse.class);
         server.getKryo().register(ru.timelimit.server.game.GameServer.SelectTargetRequest.class);
+        server.getKryo().register(ru.timelimit.server.game.GameServer.SetTrapRequest.class);
+        server.getKryo().register(ru.timelimit.server.game.GameServer.Trap.class);
 
         server.addListener(new Listener() {
             @Override
@@ -113,6 +126,7 @@ public class GameServer {
                             if (countInRoom == 0) {
                                 server.sendToAllTCP(updateLobby());
                                 gameInProcess = false;
+                                traps.clear();
                             }
                         }
                     } else if (actionClient.actionType == ActionClientEnum.CONNECT) {
@@ -172,6 +186,23 @@ public class GameServer {
                         } else {
                             updateGame(server);
                         }
+                    } else if (actionClient.actionType == ActionClientEnum.SET_TRAP) {
+                        User user = users.get(connection.getID());
+                        if (user.slotRoom == -1) {
+                            System.out.println("kick: " + connection.getID());
+                            users.remove(connection.getID());
+                            connection.close();
+                        } else {
+                            Trap trap = new Trap();
+                            SetTrapRequest setTrapRequest = (SetTrapRequest) actionClient.request;
+                            trap.trapId = setTrapRequest.trapId;
+                            trap.x = setTrapRequest.x;
+                            trap.y = setTrapRequest.y;
+                            // TODO: check exist on x, y other trap
+                            traps.add(trap);
+
+                            updateGame(server);
+                        }
                     }
 
                 }
@@ -223,6 +254,7 @@ public class GameServer {
         ((UpdateGameResponse)actionServer.response).targetY = new int[]{
                 users.get(usersInRoom[0]).targetY, users.get(usersInRoom[1]).targetY,
         };
+        ((UpdateGameResponse)actionServer.response).traps = (Trap[]) traps.toArray();
 
         for (int value : usersInRoom) {
             server.sendToTCP(value, actionServer);
