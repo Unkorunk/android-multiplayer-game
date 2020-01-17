@@ -25,7 +25,7 @@ public class GameScene implements Scene {
         player = new Entity();
         player.setBehaviour(new PlayerBehaviour());
         player.sprite = new Sprite(TextureManager.getTexture("Character"));
-        player.setCell(new Pair(1, 1));
+        player.setCell(new Pair(0, 1));
 
         GlobalSettings.gameObjects.add(player);
     }

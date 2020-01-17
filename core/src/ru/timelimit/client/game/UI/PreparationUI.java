@@ -34,9 +34,9 @@ public final class PreparationUI extends UI {
             var trapBtn = new Button(startX, 10, 40, 40, () -> {
                 cb.accept(trapList.get(finalI));
             });
-            trapBtn.setSprite(new Sprite(TextureManager.getTexture("Laser")));
+            trapBtn.setSprite(new Sprite(trapList.get(finalI).sprite.getTexture()));
             btnMap.put("trapBtn" + i, trapBtn);
-            startX += 40;
+            startX += 50;
         }
     }
 

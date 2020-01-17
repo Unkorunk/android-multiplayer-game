@@ -38,6 +38,7 @@ public final class GameClient extends ApplicationAdapter {
 		TextureManager.addTexture("BackgroundGround", "Background/New_Ground.png");
 		TextureManager.addTexture("Character", "Character/idle.gif");
 		TextureManager.addTexture("Laser", "Sprites/Trap.png");
+		TextureManager.addTexture("FlyTrap", "Sprites/Fly_trap.gif");
 		TextureManager.addTexture("PlatformL", "Sprites/PlatformLeft.png");
 		TextureManager.addTexture("PlatformM", "Sprites/PlatformMiddle.png");
 		TextureManager.addTexture("PlatformR", "Sprites/PlatformRight.png");

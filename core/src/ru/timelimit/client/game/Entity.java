@@ -69,10 +69,13 @@ public final class Entity extends GameObject {
         }
 
         if (stateNow == TaskState.LOCK) {
-            for (var cmd : trapObj.commands) {
-                if (commandToString.containsKey(cmd)) {
-                    GameClient.instance.sceneManager.currentScene.getUI().showElement(commandToString.get(cmd));
-                }
+//            for (var cmd : trapObj.commands) {
+//                if (commandToString.containsKey(cmd)) {
+//                    GameClient.instance.sceneManager.currentScene.getUI().showElement(commandToString.get(cmd));
+//                }
+//            }
+            for (var cmd : commandToString.values()) {
+                GameClient.instance.sceneManager.currentScene.getUI().showElement(cmd);
             }
             chooseTimer = delaySeconds * 1000;
             lastTime = System.currentTimeMillis();
@@ -85,21 +88,27 @@ public final class Entity extends GameObject {
             if (chooseTimer == 0 || cmd != BehaviourModel.Command.RUN) {
                 chooseTimer = 0;
                 stateNow = TaskState.UNLOCK;
+
+                if (!trapObj.commands.contains(cmd)) {
+                    cmd = trapObj.commands.get(0);
+                    hp -= trapObj.dmg;
+                    if (hp <= 0) {
+                        isEnabled = false;
+                    }
+                }
+
                 switch (cmd) {
                     case JUMP:
                         targetCell = new Pair(nowCell.x + 1, nowCell.y + 1);
                         break;
-
                     case SLIP:
                         targetCell = new Pair(nowCell.x + 2, nowCell.y);
                         break;
-
+                    case RUN:
+                        targetCell = new Pair(nowCell.x + 1, nowCell.y);
+                        break;
                     default:
-                        targetCell = new Pair(nowCell.x + 1, nowCell.y); // TODO: Lose or minus health
-                        hp -= trapObj.dmg;
-                        if (hp <= 0) {
-                            isEnabled = false;
-                        }
+                        System.err.println("No handler for this command");
                         break;
                 }
             } else {
@@ -117,10 +126,13 @@ public final class Entity extends GameObject {
         }
 
         if (stateNow == TaskState.UNLOCK) {
-            for (var cmd : trapObj.commands) {
-                if (commandToString.containsKey(cmd)) {
-                    GameClient.instance.sceneManager.currentScene.getUI().hideElement(commandToString.get(cmd));
-                }
+//            for (var cmd : trapObj.commands) {
+//                if (commandToString.containsKey(cmd)) {
+//                    GameClient.instance.sceneManager.currentScene.getUI().hideElement(commandToString.get(cmd));
+//                }
+//            }
+            for (var cmd : commandToString.values()) {
+                GameClient.instance.sceneManager.currentScene.getUI().hideElement(cmd);
             }
             stateNow = TaskState.UNLOCKED;
         } else if (nowCell.equals(targetCell)) {
