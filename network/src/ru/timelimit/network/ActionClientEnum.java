@@ -5,6 +5,6 @@ public enum ActionClientEnum {
     SET_TRAP,
     UPDATE_LOBBY,
     UPDATE_GAME,
-    CONNECT,
+    JOIN,
     FINISH
 }
