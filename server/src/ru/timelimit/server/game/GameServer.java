@@ -212,7 +212,7 @@ public class GameServer {
                                 if (resultSet.getString("password").equals(connectRequest.password)) {
                                     ((ConnectResponse) actionServer.response).accessToken = accessToken.toString();
 
-                                    LOG.info(String.format("user %s success login; accessToken: %s", connectRequest.username, accessToken.toString()));
+                                    LOG.info(String.format("user %s success login", connectRequest.username));
 
                                     users.put(accessToken.toString(), new User());
                                     usersAuth.put(connection.getID(), accessToken.toString());
@@ -229,7 +229,7 @@ public class GameServer {
                                 preparedStatementRegister.setString(2, connectRequest.password);
 
                                 if (preparedStatementRegister.executeUpdate() > 0) {
-                                    LOG.info(String.format("user %s success reg; accessToken: %s", connectRequest.username, accessToken.toString()));
+                                    LOG.info(String.format("user %s success reg", connectRequest.username));
 
                                     ((ConnectResponse) actionServer.response).accessToken = accessToken.toString();
 
@@ -250,6 +250,7 @@ public class GameServer {
 
                         connection.sendTCP(actionServer);
                     } else if (actionClient.actionType == ActionClientEnum.CREATE_LOBBY) {
+                        LOG.info(String.format("create new room: %d", nextRoomId));
                         rooms.put(nextRoomId++, new Room());
                         server.sendToAllTCP(updateLobby());
                     }
