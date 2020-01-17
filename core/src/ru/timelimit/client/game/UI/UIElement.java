@@ -34,6 +34,8 @@ public abstract class UIElement {
         sprt = sprite;
     }
 
+    public Sprite getSprite() { return sprt; }
+
     public void addChildren(UIElement child) {
         children.add(child);
     }

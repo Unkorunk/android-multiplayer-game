@@ -26,6 +26,11 @@ public final class Label extends UIElement {
         margin = 10;
     }
 
+    public void setText(String text) {
+        labelText = text;
+        labelLayout.setText(bFont, labelText);
+    }
+
     public void setFont(BitmapFont font) {
         bFont = font;
         labelLayout.setText(bFont, labelText);

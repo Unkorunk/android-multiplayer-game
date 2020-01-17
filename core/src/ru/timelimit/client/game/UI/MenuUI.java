@@ -4,10 +4,75 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import ru.timelimit.client.game.GameClient;
 import ru.timelimit.client.game.ResourceManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
-
 public class MenuUI extends UI {
+    public final class Lobby {
+        public Lobby(String name, String connection) {
+            this.name = name;
+            this.connection = connection;
+        }
+        public String name;
+        public String connection;
+    }
+
+    public ArrayList<Lobby> lobbyList = new ArrayList<>();
+    int curLobby = 0;
+
+    private Label lobbyChooserLabel;
+
+    private void updateLobbyChooser() {
+        if (lobbyList.size() == 0) {
+            lobbyChooserLabel.setText("No lobbies :(");
+        } else {
+            lobbyChooserLabel.setText("Lobby: " + lobbyList.get(curLobby).name + ". Join!");
+        }
+    }
+
+    private void lobbyChooserInit() {
+        var cameraWidth = GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth;
+        var cameraHeight = GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight;
+
+        var lobbyChooserTitle = new Label(cameraWidth / 2, cameraHeight - 230, 0, 0, "Choose Game to Join");
+
+        var lobbyChooserButton = new Button(cameraWidth / 2 - 150, cameraHeight - 300, 300, 40, () -> {
+            if (lobbyList.size() != 0) {
+                System.out.println("MenuScene: Connecting to lobby " + lobbyList.get(curLobby).name);
+                GameClient.instance.sceneManager.currentScene.setState(2);
+            } else {
+                System.out.println("MenuScene: No lobbies to connect :(");
+                GameClient.instance.sceneManager.currentScene.setState(2);
+            }
+        });
+        lobbyChooserLabel = new Label(cameraWidth / 2, cameraHeight - 300 + 20, 0, 0, "No lobbies :(");
+        lobbyChooserLabel.background = null;
+        lobbyChooserButton.addChildren(lobbyChooserLabel);
+
+        var prevLobby = new Button(cameraWidth / 2 - 200, cameraHeight - 300, 40, 40, () -> {
+            if (curLobby > 0){
+                curLobby--;
+                updateLobbyChooser();
+            }
+        });
+        prevLobby.setSprite(new Sprite(ResourceManager.getTexture("BtnUp")));
+        prevLobby.getSprite().rotate90(false);
+
+        var nextLobby = new Button(cameraWidth / 2 + 160, cameraHeight - 300, 40, 40, () -> {
+            if (curLobby < lobbyList.size() - 1){
+                curLobby++;
+                updateLobbyChooser();
+            }
+        });
+        nextLobby.setSprite(new Sprite(ResourceManager.getTexture("BtnUp")));
+        nextLobby.getSprite().rotate90(true);
+
+        btnMap.put("LobbyChooseTitle", lobbyChooserTitle);
+        btnMap.put("LobbyChooser", lobbyChooserButton);
+        btnMap.put("prevLobby", prevLobby);
+        btnMap.put("nextLobby", nextLobby);
+    }
+
     @Override
     public void init() {
         btnMap = new HashMap<>();
@@ -18,10 +83,12 @@ public class MenuUI extends UI {
         var title = new Label(cameraWidth  / 2, cameraHeight - 50,
                 100,10, "KILL YOUR FRIENDS");
         title.setBackground(new Sprite(ResourceManager.getTexture("BtnEmpty")));
-        var createLobbyBtn = new Button(cameraWidth / 2 - 75, cameraHeight - 150,
-                150, 40,  () -> GameClient.instance.sceneManager.currentScene.setState(2));
+        var createLobbyBtn = new Button(cameraWidth / 2 - 75, cameraHeight - 130,
+                150, 40,  () -> {
+            System.out.println("MenuScene: Creating lobby");
+        });
 
-        var createLobbyLbl = new Label(cameraWidth / 2,cameraHeight - 150 + 20, 0, 0, "Create Lobby");
+        var createLobbyLbl = new Label(cameraWidth / 2,cameraHeight - 130 + 20, 0, 0, "Create Lobby");
         createLobbyLbl.background = null;
         createLobbyBtn.addChildren(createLobbyLbl);
 
@@ -33,5 +100,8 @@ public class MenuUI extends UI {
         btnMap.put("createLobbyBtn", createLobbyBtn);
         btnMap.put("ExitBtn", btnExit);
         btnMap.put("MainTitle", title);
+
+        lobbyChooserInit();
+
     }
 }
