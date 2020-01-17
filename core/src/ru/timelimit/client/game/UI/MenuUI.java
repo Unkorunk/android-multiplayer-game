@@ -112,16 +112,8 @@ public class MenuUI extends UI {
                 GameClient.client.sendTCP(actionClient);
             } else {
                 System.out.println("MenuScene: Creating lobby");
-                var actionClient = new ActionClient();
-                actionClient.actionType = ActionClientEnum.CONNECT;
-
-                var req = new ConnectRequest();
-                req.password = passwordInput.origin.getText();
-                req.username = nicknameInput.origin.getText();
-
-                actionClient.request = req;
-
-                GameClient.client.sendTCP(actionClient);
+                GameClient.sendConnect(nicknameInput.origin.getText(), passwordInput.origin.getText());
+                GameClient.join();
             }
 
         });
