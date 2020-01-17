@@ -56,8 +56,8 @@ public class PreparationScene implements Scene {
         while (x < GlobalSettings.WORLD_WIDTH) {
             var gSprite = new Sprite(TextureManager.getTexture("BackgroundGround"));
             var cSprite = new Sprite(TextureManager.getTexture("BackgroundCity"));
-            gSprite.setPosition(x, 0);
-            cSprite.setPosition(x, 0);
+            gSprite.setPosition(x, -1);
+            cSprite.setPosition(x, 16);
             ground.add(gSprite);
             parallaxCity.add(cSprite);
             x += gSprite.getWidth();

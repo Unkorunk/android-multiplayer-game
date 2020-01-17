@@ -4,7 +4,6 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -12,8 +11,6 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import ru.timelimit.client.game.SceneManagement.SceneManager;
-import ru.timelimit.client.game.UI.UI;
-import ru.timelimit.client.game.UI.GameUI;
 
 public final class GameClient extends ApplicationAdapter {
 	public static GameClient instance;
@@ -32,7 +29,7 @@ public final class GameClient extends ApplicationAdapter {
 
 		TextureManager.addTexture("BackgroundSky", "Background/Background_sky.png");
 		TextureManager.addTexture("BackgroundCity", "Background/Parallax_bg_city.png");
-		TextureManager.addTexture("BackgroundGround", "Background/Ground_1.png");
+		TextureManager.addTexture("BackgroundGround", "Background/New_Ground.png");
 		TextureManager.addTexture("Character", "Character/idle.gif");
 		TextureManager.addTexture("Laser", "Sprites/Trap.png");
 		TextureManager.addTexture("PlatformL", "Sprites/PlatformLeft.png");
