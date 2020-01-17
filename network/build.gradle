@@ -10,6 +10,9 @@ repositories {
 }
 
 dependencies {
-    compile group: 'kryonet', name: 'kryonet', version: '2.21'
-    compile group: 'com.esotericsoftware', 'name': 'kryo', version: '5.0.0-RC4'
+    implementation (group: 'kryonet', name: 'kryonet', version: '2.21') {
+        exclude group: 'com.esotericsoftware.reflectasm', module: 'reflectasm'
+        exclude group: 'com.esotericsoftware.minlog', module: 'minlog'
+    }
+    implementation group: 'com.esotericsoftware', 'name': 'kryo', version: '5.0.0-RC4'
 }
