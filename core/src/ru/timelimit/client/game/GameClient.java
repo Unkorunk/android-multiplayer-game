@@ -104,7 +104,7 @@ public final class GameClient extends ApplicationAdapter {
 				client.connect(5000, "194.67.87.216", 25567);
 			} catch (IOException e) {
 				e.printStackTrace();
-				System.exit(1);
+				//System.exit(1);
 			}
 		}).start();
 
