@@ -57,21 +57,46 @@ public final class GameClient extends ApplicationAdapter {
 	}
 
 	public enum ActionClientEnum {
+		SELECT_TARGET,
+		UPDATE_LOBBY,
+		UPDATE_GAME,
 		CONNECT,
-		DISCONNECT
+		FINISH
+	}
+	public enum ActionServerEnum {
+		UPDATE_LOBBY,
+		UPDATE_GAME,
+		START_GAME,
+		YOU_WIN,
+		YOU_LOSE
 	}
 
-	public enum ActionServerEnum {
-		OKAY
+	public abstract static class Request {}
+	public abstract static class Response {}
+
+	public static class UpdateLobbyResponse extends Response {
+		public int countInRoom;
+		public int[] usersInRoom;
+		public boolean gameInProcess;
+	}
+	public static class UpdateGameResponse extends Response {
+		public int[] targetX;
+		public int[] targetY;
+	}
+
+	public static class SelectTargetRequest extends Request {
+		public int targetX;
+		public int targetY;
 	}
 
 	public static class ActionClient {
-		public String accessToken;
 		ActionClientEnum actionType;
+		public Request request;
 	}
 
 	public static class ActionServer {
 		public ActionServerEnum actionType;
+		public Response response;
 	}
 
 	public static Client client = null;
@@ -89,6 +114,12 @@ public final class GameClient extends ApplicationAdapter {
 		client.getKryo().register(ru.timelimit.client.game.GameClient.ActionClient.class);
 		client.getKryo().register(ru.timelimit.client.game.GameClient.ActionServerEnum.class);
 		client.getKryo().register(ru.timelimit.client.game.GameClient.ActionServer.class);
+		client.getKryo().register(ru.timelimit.client.game.GameClient.Request.class);
+		client.getKryo().register(ru.timelimit.client.game.GameClient.Response.class);
+		client.getKryo().register(ru.timelimit.client.game.GameClient.UpdateLobbyResponse.class);
+		client.getKryo().register(ru.timelimit.client.game.GameClient.UpdateGameResponse.class);
+		client.getKryo().register(ru.timelimit.client.game.GameClient.SelectTargetRequest.class);
+
 
 		client.addListener(new Listener() {
 			public void received(Connection connection, Object object) {
@@ -101,7 +132,7 @@ public final class GameClient extends ApplicationAdapter {
 
 		new Thread(() -> {
 			try {
-				client.connect(5000, "194.67.87.216", 25567);
+				client.connect(5000, "194.67.87.216", 25568);
 			} catch (IOException e) {
 				e.printStackTrace();
 				System.exit(1);
