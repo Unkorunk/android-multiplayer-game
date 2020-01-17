@@ -182,7 +182,7 @@ public class GameServer {
                             LOG.info(String.format("user %s try log", connectRequest.username));
 
                             preparedStatementLogin.setString(1, connectRequest.username);
-                            ResultSet resultSet = preparedStatementLogin.getResultSet();
+                            ResultSet resultSet = preparedStatementLogin.executeQuery();
                             if (resultSet != null && resultSet.next()) {
                                 if (resultSet.getString("password").equals(connectRequest.password)) {
                                     ((ConnectResponse) actionServer.response).accessToken = accessToken.toString();
@@ -193,6 +193,7 @@ public class GameServer {
                                     usersAuth.put(connection.getID(), accessToken.toString());
                                 } else {
                                     ((ConnectResponse) actionServer.response).accessToken = "INCORRECT PASSWORD";
+                                    LOG.info(String.format("user %s incorrect password", connectRequest.username));
                                 }
                             } else {
                                 PreparedStatement preparedStatementRegister = finalDatabaseConnection.prepareStatement(
@@ -202,7 +203,7 @@ public class GameServer {
                                 preparedStatementRegister.setString(1, connectRequest.username);
                                 preparedStatementRegister.setString(2, connectRequest.password);
 
-                                if (preparedStatementRegister.execute()) {
+                                if (preparedStatementRegister.executeUpdate() > 0) {
                                     LOG.info(String.format("user %s success reg", connectRequest.username));
 
                                     ((ConnectResponse) actionServer.response).accessToken = accessToken.toString();

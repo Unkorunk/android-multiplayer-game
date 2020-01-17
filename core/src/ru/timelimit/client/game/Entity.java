@@ -34,19 +34,6 @@ public final class Entity extends GameObject {
     private void init() {
         commandToString.put(BehaviourModel.Command.JUMP, "JumpBtn");
         commandToString.put(BehaviourModel.Command.SLIP, "SlipBtn");
-
-        // TODO: remove that
-
-        ActionClient actionClient = new ActionClient();
-        actionClient.actionType = ActionClientEnum.CONNECT;
-        ConnectRequest connectRequest = new ConnectRequest();
-        connectRequest.username = "djeban";
-        connectRequest.password = "adminy5sek";
-        actionClient.request = connectRequest;
-
-        GameClient.client.sendTCP(actionClient);
-
-        // TODO: remove that
     }
 
     @Override
