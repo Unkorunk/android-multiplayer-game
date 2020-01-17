@@ -1,0 +1,15 @@
+plugins {
+    id 'java'
+}
+
+
+sourceCompatibility = 1.8
+sourceSets.main.java.srcDirs = ["src/"]
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'kryonet', name: 'kryonet', version: '2.21'
+    compile group: 'com.esotericsoftware', 'name': 'kryo', version: '5.0.0-RC4'
+}

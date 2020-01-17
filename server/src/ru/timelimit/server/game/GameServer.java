@@ -9,57 +9,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
+import ru.timelimit.network.*;
 
 public class GameServer {
-    public enum ActionClientEnum {
-        SELECT_TARGET,
-        SET_TRAP,
-        UPDATE_LOBBY,
-        UPDATE_GAME,
-        CONNECT,
-        FINISH
-    }
-    public enum ActionServerEnum {
-        UPDATE_LOBBY,
-        UPDATE_GAME,
-        START_PREPARATION,
-        START_GAME,
-        YOU_WIN,
-        YOU_LOSE
-    }
-
-    public abstract static class Request {}
-    public abstract static class Response {}
-
-    public static class UpdateLobbyResponse extends Response {
-        public int countInRoom;
-        public int[] usersInRoom;
-        public boolean gameInProcess;
-    }
-    public static class UpdateGameResponse extends Response {
-        public int[] targetX;
-        public int[] targetY;
-        public Trap[] traps;
-    }
-
-    public static class SelectTargetRequest extends Request {
-        public int targetX;
-        public int targetY;
-    }
-    public static class SetTrapRequest extends Request {
-        public int x, y, trapId;
-    }
-
-    public static class ActionClient {
-        ActionClientEnum actionType;
-        public Request request;
-    }
-
-    public static class ActionServer {
-        public ActionServerEnum actionType;
-        public Response response;
-    }
-
     public static class User {
         int slotRoom;
         int targetX, targetY;
@@ -68,9 +20,6 @@ public class GameServer {
             targetX = 0;
             targetY = 0;
         }
-    }
-    public static class Trap {
-        public int x, y, trapId;
     }
 
     static int countInRoom = 0;
@@ -87,17 +36,7 @@ public class GameServer {
         Server server = new Server();
         server.start();
 
-        server.getKryo().register(ru.timelimit.server.game.GameServer.ActionClientEnum.class);
-        server.getKryo().register(ru.timelimit.server.game.GameServer.ActionClient.class);
-        server.getKryo().register(ru.timelimit.server.game.GameServer.ActionServerEnum.class);
-        server.getKryo().register(ru.timelimit.server.game.GameServer.ActionServer.class);
-        server.getKryo().register(ru.timelimit.server.game.GameServer.Request.class);
-        server.getKryo().register(ru.timelimit.server.game.GameServer.Response.class);
-        server.getKryo().register(ru.timelimit.server.game.GameServer.UpdateLobbyResponse.class);
-        server.getKryo().register(ru.timelimit.server.game.GameServer.UpdateGameResponse.class);
-        server.getKryo().register(ru.timelimit.server.game.GameServer.SelectTargetRequest.class);
-        server.getKryo().register(ru.timelimit.server.game.GameServer.SetTrapRequest.class);
-        server.getKryo().register(ru.timelimit.server.game.GameServer.Trap.class);
+        Network.register(server);
 
         server.addListener(new Listener() {
             @Override

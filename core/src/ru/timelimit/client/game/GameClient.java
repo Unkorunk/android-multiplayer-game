@@ -14,6 +14,7 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import ru.timelimit.client.game.SceneManagement.SceneManager;
+import ru.timelimit.network.*;
 
 import java.io.IOException;
 
@@ -56,48 +57,6 @@ public final class GameClient extends ApplicationAdapter {
 		fontGen.dispose();
 	}
 
-	public enum ActionClientEnum {
-		SELECT_TARGET,
-		UPDATE_LOBBY,
-		UPDATE_GAME,
-		CONNECT,
-		FINISH
-	}
-	public enum ActionServerEnum {
-		UPDATE_LOBBY,
-		UPDATE_GAME,
-		START_PREPARATION,
-		START_GAME,
-		YOU_WIN,
-		YOU_LOSE
-	}
-	public abstract static class Request {}
-	public abstract static class Response {}
-
-	public static class UpdateLobbyResponse extends Response {
-		public int countInRoom;
-		public int[] usersInRoom;
-		public boolean gameInProcess;
-	}
-	public static class UpdateGameResponse extends Response {
-		public int[] targetX;
-		public int[] targetY;
-	}
-
-	public static class SelectTargetRequest extends Request {
-		public int targetX;
-		public int targetY;
-	}
-
-	public static class ActionClient {
-		ActionClientEnum actionType;
-		public Request request;
-	}
-
-	public static class ActionServer {
-		public ActionServerEnum actionType;
-		public Response response;
-	}
 
 	public static Client client = null;
 
@@ -110,15 +69,7 @@ public final class GameClient extends ApplicationAdapter {
 		client = new Client();
 		client.start();
 
-		client.getKryo().register(ru.timelimit.client.game.GameClient.ActionClientEnum.class);
-		client.getKryo().register(ru.timelimit.client.game.GameClient.ActionClient.class);
-		client.getKryo().register(ru.timelimit.client.game.GameClient.ActionServerEnum.class);
-		client.getKryo().register(ru.timelimit.client.game.GameClient.ActionServer.class);
-		client.getKryo().register(ru.timelimit.client.game.GameClient.Request.class);
-		client.getKryo().register(ru.timelimit.client.game.GameClient.Response.class);
-		client.getKryo().register(ru.timelimit.client.game.GameClient.UpdateLobbyResponse.class);
-		client.getKryo().register(ru.timelimit.client.game.GameClient.UpdateGameResponse.class);
-		client.getKryo().register(ru.timelimit.client.game.GameClient.SelectTargetRequest.class);
+		Network.register(client);
 
 
 		client.addListener(new Listener() {
