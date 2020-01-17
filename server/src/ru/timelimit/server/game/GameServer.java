@@ -167,6 +167,12 @@ public class GameServer {
                     } else if (actionClient.actionType == ActionClientEnum.CONNECT) {
                         ConnectRequest connectRequest = (ConnectRequest) actionClient.request;
 
+                        if (connectRequest == null || connectRequest.username == null || connectRequest.password == null) {
+                            LOG.info("username or password is null");
+                            connection.close();
+                            return;
+                        }
+
                         Random random = new Random();
                         StringBuilder accessToken;
                         do {

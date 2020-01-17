@@ -19,5 +19,7 @@ public class Network {
         kryo.register(ru.timelimit.network.Trap.class);
         kryo.register(ru.timelimit.network.ConnectResponse.class);
         kryo.register(ru.timelimit.network.ConnectRequest.class);
+        kryo.register(int[].class);
+        kryo.register(Trap[].class);
     }
 }
