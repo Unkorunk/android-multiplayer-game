@@ -7,8 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import ru.timelimit.client.game.GameClient;
 
 public final class TextFieldWrapper extends UIElement {
-    TextFieldWrapper(TextField textField) {
+    TextFieldWrapper(TextField textField, String message) {
         origin = textField;
+        origin.setMessageText(message);
     }
 
     public TextField origin;

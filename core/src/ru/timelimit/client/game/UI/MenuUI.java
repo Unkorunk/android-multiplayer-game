@@ -123,12 +123,12 @@ public class MenuUI extends UI {
         textFieldStyle.fontColor = new Color(1f, 1f, 1f, 1f);
         textFieldStyle.background = new SpriteDrawable(new Sprite(ResourceManager.getTexture("TextField")));
 
-        nicknameInput = new TextFieldWrapper(new TextField("YourNickname", textFieldStyle));
+        nicknameInput = new TextFieldWrapper(new TextField("", textFieldStyle), "Your Nickname");
         nicknameInput.origin.setPosition(cameraWidth / 2 - 125, cameraHeight - 120);
         nicknameInput.origin.setWidth(250);
         nicknameInput.origin.setAlignment(Align.center);
 
-        passwordInput = new TextFieldWrapper(new TextField("Password", textFieldStyle));
+        passwordInput = new TextFieldWrapper(new TextField("", textFieldStyle), "Password");
         passwordInput.origin.setPosition(cameraWidth / 2 - 125, cameraHeight - 170);
         passwordInput.origin.setWidth(250);
         passwordInput.origin.setAlignment(Align.center);
