@@ -1,6 +1,9 @@
 package ru.timelimit.client.game;
 
 import com.badlogic.gdx.math.Vector2;
+import ru.timelimit.network.ActionClient;
+import ru.timelimit.network.ActionClientEnum;
+import ru.timelimit.network.ConnectRequest;
 import ru.timelimit.client.game.Behaviours.BehaviourModel;
 
 import java.util.HashMap;
@@ -31,6 +34,19 @@ public final class Entity extends GameObject {
     private void init() {
         commandToString.put(BehaviourModel.Command.JUMP, "JumpBtn");
         commandToString.put(BehaviourModel.Command.SLIP, "SlipBtn");
+
+        // TODO: remove that
+
+        ActionClient actionClient = new ActionClient();
+        actionClient.actionType = ActionClientEnum.CONNECT;
+        ConnectRequest connectRequest = new ConnectRequest();
+        connectRequest.username = "djeban";
+        connectRequest.password = "adminy5sek";
+        actionClient.request = connectRequest;
+
+        GameClient.client.sendTCP(actionClient);
+
+        // TODO: remove that
     }
 
     @Override

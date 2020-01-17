@@ -172,15 +172,18 @@ public class GameServer {
 
                         ActionServer actionServer = new ActionServer();
                         actionServer.actionType = ActionServerEnum.CONNECT;
+                        actionServer.response = new ConnectResponse();
 
                         try {
                             PreparedStatement preparedStatementLogin = finalDatabaseConnection.prepareStatement(
                                             "SELECT * FROM users WHERE username=?"
                             );
 
-                            preparedStatementLogin.setString(0, connectRequest.username);
+                            LOG.info(String.format("user %s try log", connectRequest.username));
+
+                            preparedStatementLogin.setString(1, connectRequest.username);
                             ResultSet resultSet = preparedStatementLogin.getResultSet();
-                            if (resultSet.next()) {
+                            if (resultSet != null && resultSet.next()) {
                                 if (resultSet.getString("password").equals(connectRequest.password)) {
                                     ((ConnectResponse) actionServer.response).accessToken = accessToken.toString();
 
@@ -196,8 +199,8 @@ public class GameServer {
                                             "INSERT INTO users(username, password) VALUES(?, ?)"
                                 );
 
-                                preparedStatementRegister.setString(0, connectRequest.username);
-                                preparedStatementRegister.setString(1, connectRequest.password);
+                                preparedStatementRegister.setString(1, connectRequest.username);
+                                preparedStatementRegister.setString(2, connectRequest.password);
 
                                 if (preparedStatementRegister.execute()) {
                                     LOG.info(String.format("user %s success reg", connectRequest.username));
@@ -227,23 +230,25 @@ public class GameServer {
             public void disconnected(Connection connection) {
                 super.disconnected(connection);
                 LOG.info("disconnected: " + connection.getID());
-                User user = users.get(usersAuth.get(connection.getID()));
-                if (user.slotRoom != -1) {
-                    int otherUserId = room.usersInRoom[(user.slotRoom + 1) % 2];
+                if (usersAuth.containsKey(connection.getID())) {
+                    User user = users.get(usersAuth.get(connection.getID()));
+                    if (user.slotRoom != -1) {
+                        int otherUserId = room.usersInRoom[(user.slotRoom + 1) % 2];
 
-                    room.countInRoom = 0;
-                    room.usersInRoom[0] = -1;
-                    room.usersInRoom[1] = -1;
+                        room.countInRoom = 0;
+                        room.usersInRoom[0] = -1;
+                        room.usersInRoom[1] = -1;
 
-                    ActionServer actionServer = new ActionServer();
-                    actionServer.actionType = ActionServerEnum.YOU_WIN;
+                        ActionServer actionServer = new ActionServer();
+                        actionServer.actionType = ActionServerEnum.YOU_WIN;
 
-                    room.gameInProcess = false;
+                        room.gameInProcess = false;
 
-                    server.sendToTCP(otherUserId, actionServer);
-                    server.sendToAllTCP(updateLobby());
+                        server.sendToTCP(otherUserId, actionServer);
+                        server.sendToAllTCP(updateLobby());
+                    }
+                    users.remove(usersAuth.get(connection.getID()));
                 }
-                users.remove(usersAuth.get(connection.getID()));
             }
         });
         server.bind(25568);
