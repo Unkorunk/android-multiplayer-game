@@ -6,5 +6,6 @@ public enum ActionServerEnum {
     START_PREPARATION,
     START_GAME,
     YOU_WIN,
-    YOU_LOSE
+    YOU_LOSE,
+    CONNECT
 }
