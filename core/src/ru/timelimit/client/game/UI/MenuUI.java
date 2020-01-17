@@ -1,13 +1,9 @@
 package ru.timelimit.client.game.UI;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import ru.timelimit.client.game.TextureManager;
 import ru.timelimit.client.game.GameClient;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 
 public class MenuUI extends UI {

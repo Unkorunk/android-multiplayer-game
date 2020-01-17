@@ -31,27 +31,28 @@ public final class GameClient extends ApplicationAdapter {
 
 
 	private void texturesInit() {
-		TextureManager.addTexture("test", "badlogic.jpg");
+		ResourceManager.addTexture("test", "badlogic.jpg");
 
-		TextureManager.addTexture("BackgroundSky", "Background/Background_sky.png");
-		TextureManager.addTexture("BackgroundCity", "Background/Parallax_bg_city.png");
-		TextureManager.addTexture("BackgroundGround", "Background/New_Ground.png");
-		TextureManager.addTexture("Character", "Character/idle.gif");
-		TextureManager.addTexture("Laser", "Sprites/Trap.png");
-		TextureManager.addTexture("FlyTrap", "Sprites/Fly_trap.gif");
-		TextureManager.addTexture("PlatformL", "Sprites/PlatformLeft.png");
-		TextureManager.addTexture("PlatformM", "Sprites/PlatformMiddle.png");
-		TextureManager.addTexture("PlatformR", "Sprites/PlatformRight.png");
-		TextureManager.addTexture("BtnUp", "Sprites/Button_up.png");
-		TextureManager.addTexture("BtnDown", "Sprites/Button_down.png");
-		TextureManager.addTexture("BtnMenu", "Sprites/Button_menu.png");
-		TextureManager.addTexture("BtnEmpty", "Sprites/Button_empty.png");
-		TextureManager.addTexture("Finish", "Sprites/Finish.gif");
+		ResourceManager.addTexture("BackgroundSky", "Background/Background_sky.png");
+		ResourceManager.addTexture("BackgroundCity", "Background/Parallax_bg_city.png");
+		ResourceManager.addTexture("BackgroundGround", "Background/New_Ground.png");
+		ResourceManager.addTexture("Character", "Character/idle.gif");
+		ResourceManager.addTexture("Laser", "Sprites/Trap.png");
+		ResourceManager.addTexture("FlyTrap", "Sprites/Fly_trap.gif");
+		ResourceManager.addTexture("PlatformL", "Sprites/PlatformLeft.png");
+		ResourceManager.addTexture("PlatformM", "Sprites/PlatformMiddle.png");
+		ResourceManager.addTexture("PlatformR", "Sprites/PlatformRight.png");
+		ResourceManager.addTexture("BtnUp", "Sprites/Button_up.png");
+		ResourceManager.addTexture("BtnDown", "Sprites/Button_down.png");
+		ResourceManager.addTexture("BtnMenu", "Sprites/Button_menu.png");
+		ResourceManager.addTexture("BtnEmpty", "Sprites/Button_empty.png");
+		ResourceManager.addTexture("Finish", "Sprites/Finish.gif");
+		ResourceManager.addTexture("BtnExit", "Sprites/Button_exit.png");
 
 		var fontGen = new FreeTypeFontGenerator(Gdx.files.internal("Fonts/font.ttf"));
 		var fontParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		fontParam.size = 20;
-		TextureManager.addFont("defaultFont", fontGen.generateFont(fontParam));
+		ResourceManager.addFont("defaultFont", fontGen.generateFont(fontParam));
 
 		fontGen.dispose();
 	}
@@ -151,7 +152,7 @@ public final class GameClient extends ApplicationAdapter {
 
 	@Override
 	public void dispose() {
-		TextureManager.disposeAll();
+		ResourceManager.disposeAll();
 		batch.dispose();
 	}
 }

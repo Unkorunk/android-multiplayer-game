@@ -16,7 +16,7 @@ public class Trap extends GameObject implements Cloneable {
 
     public static final Trap laserTrap = new Trap(
             new ArrayList<>(Arrays.asList(ru.timelimit.client.game.Behaviours.BehaviourModel.Command.JUMP)),
-            new Sprite(TextureManager.getTexture("Laser"))
+            new Sprite(ResourceManager.getTexture("Laser"))
     ) {
         @Override
         public boolean validator(Pair pos) {
@@ -26,7 +26,7 @@ public class Trap extends GameObject implements Cloneable {
 
     public static final Trap flyTrap = new Trap(
             new ArrayList<>(Arrays.asList(BehaviourModel.Command.SLIP)),
-            new Sprite(TextureManager.getTexture("FlyTrap"))
+            new Sprite(ResourceManager.getTexture("FlyTrap"))
     );
 
     public int dmg = 25;

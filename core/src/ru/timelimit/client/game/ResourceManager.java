@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import java.util.HashMap;
 
-public final class TextureManager {
+public final class ResourceManager {
 
     public static Texture addTexture (String textureName, String path) {
         if (textureMap.containsKey(textureName)) {

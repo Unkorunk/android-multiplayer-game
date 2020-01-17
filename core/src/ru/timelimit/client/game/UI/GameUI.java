@@ -1,9 +1,8 @@
 package ru.timelimit.client.game.UI;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import ru.timelimit.client.game.GlobalSettings;
-import ru.timelimit.client.game.TextureManager;
+import ru.timelimit.client.game.GameClient;
+import ru.timelimit.client.game.ResourceManager;
 
 import java.util.HashMap;
 
@@ -14,13 +13,14 @@ public final class GameUI extends UI {
         btnMap = new HashMap<>();
         btnSettings = new HashMap<>();
 
-        var jumpBtn = new Button(50, 10, 40, 40, () -> {});
-        var slipBtn = new Button(90, 10, 40, 40, () -> {});
-        var menuBtn = new Button(130, 10, 40, 40, () -> {});
+        var jumpBtn = new Button(30, 10, 40, 40, () -> {});
+        var slipBtn = new Button(GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth - 70, 10, 40, 40, () -> {});
+        var menuBtn = new Button(10, GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight - 50, 40, 40, () -> {});
 
-        jumpBtn.setSprite(new Sprite(TextureManager.getTexture("BtnUp")));
-        slipBtn.setSprite(new Sprite(TextureManager.getTexture("BtnDown")));
-        menuBtn.setSprite(new Sprite(TextureManager.getTexture("BtnMenu")));
+
+        jumpBtn.setSprite(new Sprite(ResourceManager.getTexture("BtnUp")));
+        slipBtn.setSprite(new Sprite(ResourceManager.getTexture("BtnDown")));
+        menuBtn.setSprite(new Sprite(ResourceManager.getTexture("BtnExit")));
 
         btnMap.put("JumpBtn", jumpBtn);
         btnSettings.put("JumpBtn", false);
