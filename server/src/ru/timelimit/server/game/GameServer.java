@@ -26,9 +26,23 @@ public class GameServer {
 
     public static void main(String[] args) throws IOException {
         Server server = new Server();
+        server.start();
+
+        server.getKryo().register(ru.timelimit.server.game.GameServer.ActionClientEnum.class);
+        server.getKryo().register(ru.timelimit.server.game.GameServer.ActionClient.class);
+        server.getKryo().register(ru.timelimit.server.game.GameServer.ActionServerEnum.class);
+        server.getKryo().register(ru.timelimit.server.game.GameServer.ActionServer.class);
+
         server.addListener(new Listener() {
             @Override
+            public void connected(Connection connection) {
+                super.connected(connection);
+                System.out.println("connected: " + connection.getRemoteAddressTCP());
+            }
+
+            @Override
             public void received(Connection connection, Object object) {
+                super.received(connection, object);
                 if (object instanceof ActionClient) {
                     ActionClient actionClient = (ActionClient) object;
                     System.out.println("[" + actionClient.accessToken + "]: " + actionClient.actionType.name());
@@ -38,8 +52,13 @@ public class GameServer {
                     connection.sendTCP(actionServer);
                 }
             }
+
+            @Override
+            public void disconnected(Connection connection) {
+                super.disconnected(connection);
+                System.out.println("disconnected: " + connection.getRemoteAddressTCP());
+            }
         });
-        server.start();
         server.bind(25567);
     }
 }

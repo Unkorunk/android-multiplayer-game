@@ -9,9 +9,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.esotericsoftware.kryo.KryoSerializable;
+import com.esotericsoftware.kryo.Serializer;
+import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.KryoSerialization;
+import com.esotericsoftware.kryonet.Listener;
 import ru.timelimit.client.game.SceneManagement.SceneManager;
 import ru.timelimit.client.game.UI.UI;
 import ru.timelimit.client.game.UI.GameUI;
+
+import java.io.IOException;
 
 public class GameClient extends ApplicationAdapter {
 	public static GameClient instance;
@@ -35,10 +43,59 @@ public class GameClient extends ApplicationAdapter {
 		TextureManager.addTexture("PlatformR", "Sprites/PlatformRight.png");
 	}
 
+	public enum ActionClientEnum {
+		CONNECT,
+		DISCONNECT
+	}
+
+	public enum ActionServerEnum {
+		OKAY
+	}
+
+	public static class ActionClient {
+		public String accessToken;
+		ActionClientEnum actionType;
+	}
+
+	public static class ActionServer {
+		public ActionServerEnum actionType;
+	}
+
+	public static Client client = null;
+
 	@Override
-	public void create () {
+	public void create() {
 		instance = this;
 		texturesInit();
+
+		// TODO: remove that
+		client = new Client();
+		client.start();
+
+		client.getKryo().register(ru.timelimit.client.game.GameClient.ActionClientEnum.class);
+		client.getKryo().register(ru.timelimit.client.game.GameClient.ActionClient.class);
+		client.getKryo().register(ru.timelimit.client.game.GameClient.ActionServerEnum.class);
+		client.getKryo().register(ru.timelimit.client.game.GameClient.ActionServer.class);
+
+		client.addListener(new Listener() {
+			public void received(Connection connection, Object object) {
+				if (object instanceof ActionServer) {
+					ActionServer actionServer = (ActionServer) object;
+					System.out.println(actionServer.actionType.name());
+				}
+			}
+		});
+
+		new Thread(() -> {
+			try {
+				client.connect(5000, "194.67.87.216", 25567);
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.exit(1);
+			}
+		}).start();
+
+		//~~~
 
 		batch = new SpriteBatch();
 
@@ -59,7 +116,7 @@ public class GameClient extends ApplicationAdapter {
 	}
 
 	@Override
-	public void render () {
+	public void render() {
 		var touch = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
 		sceneManager.currentScene.getCamera().unproject(touch);
 		lastClick = new Vector2(touch.x, touch.y);
@@ -78,9 +135,9 @@ public class GameClient extends ApplicationAdapter {
 
 		sceneManager.checkScene();
 	}
-	
+
 	@Override
-	public void dispose () {
+	public void dispose() {
 		TextureManager.disposeAll();
 		batch.dispose();
 	}

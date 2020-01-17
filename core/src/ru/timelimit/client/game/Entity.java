@@ -27,6 +27,15 @@ public class Entity extends GameObject {
     private void init() {
         commandToString.put(BehaviourModel.Command.JUMP, "JumpBtn");
         commandToString.put(BehaviourModel.Command.SLIP, "SlipBtn");
+
+        GameClient.ActionClient actionClient = new GameClient.ActionClient();
+        actionClient.accessToken = "Some USER";
+        actionClient.actionType = GameClient.ActionClientEnum.CONNECT;
+
+        if (GameClient.client.isConnected()) {
+            GameClient.client.sendTCP(actionClient);
+            System.out.println("SEND");
+        }
     }
 
     @Override

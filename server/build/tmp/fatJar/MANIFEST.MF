@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Implementation-Title: GameServer
+Implementation-Version: 1.0
+Main-Class: ru.timelimit.server.game.GameServer
+

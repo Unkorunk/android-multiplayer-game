@@ -6,5 +6,9 @@ sourceCompatibility = '11'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 sourceSets.main.java.srcDirs = ["src/"]
 dependencies {
-    compile group: 'kryonet', name: 'kryonet', version: '2.21'
+    implementation (group: 'kryonet', name: 'kryonet', version: '2.21') {
+        exclude group: 'com.esotericsoftware.reflectasm', module: 'reflectasm'
+        exclude group: 'com.esotericsoftware.minlog', module: 'minlog'
+    }
+    implementation group: 'com.esotericsoftware', 'name': 'kryo', version: '5.0.0-RC4'
 }

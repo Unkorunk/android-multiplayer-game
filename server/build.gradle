@@ -9,7 +9,26 @@ repositories {
     mavenCentral()
 }
 
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'ru.timelimit.server.game.GameServer'
+        )
+    }
+}
+
 dependencies {
     compile group: 'kryonet', name: 'kryonet', version: '2.21'
     compile group: 'com.esotericsoftware', 'name': 'kryo', version: '5.0.0-RC4'
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'GameServer',
+                'Implementation-Version': version,
+                'Main-Class': 'ru.timelimit.server.game.GameServer'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
