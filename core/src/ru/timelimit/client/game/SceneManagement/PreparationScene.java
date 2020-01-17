@@ -32,7 +32,9 @@ public class PreparationScene implements Scene {
         trapTypes = new ArrayList<>();
 
         trapTypes.add(Trap.laserTrap.clone());
+
         trapTypes.add(Trap.flyTrap.clone());
+        trapTypes.get(1).setOffset(0, 32);
     }
 
     @Override
