@@ -107,6 +107,7 @@ public class GameScene implements Scene {
 
     @Override
     public void render(SpriteBatch batch) {
+        ((GameUI)gui).updateHp(player.hp);
         updateObjects();
 
         renderBackground(batch);

@@ -7,25 +7,36 @@ import ru.timelimit.client.game.ResourceManager;
 import java.util.HashMap;
 
 public final class GameUI extends UI {
+    private Label hpDisplay;
+
+    public void updateHp(int hp) {
+        hpDisplay.setText("HP: " + hp);
+    }
 
     @Override
     public void init() {
+        var width = GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth;
+        var height = GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight;
+
         btnMap = new HashMap<>();
         btnSettings = new HashMap<>();
 
         var jumpBtn = new Button(30, 10, 40, 40, () -> {});
-        var slipBtn = new Button(GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth - 70, 10, 40, 40, () -> {});
-        var menuBtn = new Button(10, GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight - 50, 40, 40, () -> {});
+        var slipBtn = new Button(width - 70, 10, 40, 40, () -> {});
+        var menuBtn = new Button(10, height - 50, 40, 40, () -> {});
 
 
         jumpBtn.setSprite(new Sprite(ResourceManager.getTexture("BtnUp")));
         slipBtn.setSprite(new Sprite(ResourceManager.getTexture("BtnDown")));
         menuBtn.setSprite(new Sprite(ResourceManager.getTexture("BtnExit")));
 
+        hpDisplay = new Label(width - 70 - 20, height - 50 - 20, 0, 0, "HP: ");
+
         btnMap.put("JumpBtn", jumpBtn);
         btnSettings.put("JumpBtn", false);
         btnMap.put("SlipBtn", slipBtn);
         btnSettings.put("SlipBtn", false);
         btnMap.put("MenuBtn", menuBtn);
+        btnMap.put("HpBar", hpDisplay);
     }
 }

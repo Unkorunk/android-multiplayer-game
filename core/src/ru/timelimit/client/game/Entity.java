@@ -8,7 +8,7 @@ import java.util.HashMap;
 public final class Entity extends GameObject {
     public Pair targetCell = null;
 
-    private int hp = GlobalSettings.defaultHP;
+    public int hp = GlobalSettings.defaultHP;
 
     private long lastTime = 0;
     private long chooseTimer = 0;
