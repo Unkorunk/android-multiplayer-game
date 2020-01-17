@@ -113,7 +113,6 @@ public class MenuUI extends UI {
             } else {
                 System.out.println("MenuScene: Creating lobby");
                 GameClient.sendConnect(nicknameInput.origin.getText(), passwordInput.origin.getText());
-                GameClient.join();
             }
 
         });

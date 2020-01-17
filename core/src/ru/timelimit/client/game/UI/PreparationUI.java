@@ -12,13 +12,18 @@ import java.util.function.Consumer;
 public final class PreparationUI extends UI {
     @Override
     public void init() {
+        var width = GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth;
+        var height = GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth;
+
         btnMap = new HashMap<>();
 
         errorLabel = new Label(100, GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight - 20, 0, 0, "");
         errorLabel.background = null;
         btnMap.put("errorLabel", errorLabel);
 
-        var menuBtn = new Button(10, GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight - 50, 40, 40, () -> {});
+        var menuBtn = new Button(width - 40, height - 50, 40, 40, () -> {
+            GameClient.instance.sceneManager.currentScene.setState(1);
+        });
         menuBtn.setSprite(new Sprite(ResourceManager.getTexture("BtnExit")));
 
         var title = new Label(GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth / 2,

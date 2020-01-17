@@ -110,6 +110,7 @@ public final class GameClient extends ApplicationAdapter {
 								sceneManager.currentScene.getUI().errorLabel.setText(response.accessToken);
 							} else {
 								token = response.accessToken;
+								GameClient.join();
 								var ui = (MenuUI)sceneManager.currentScene.getUI();
 								ui.startTimer = 10;
 								((Label)ui.getElement("createLobbyBtn").getChildren(Label.class)).setText("Waiting for game (Click to leave)");
