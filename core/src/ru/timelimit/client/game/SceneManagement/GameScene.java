@@ -121,6 +121,7 @@ public class GameScene implements Scene {
         if (player.position.x >= GlobalSettings.gameObjects.get(0).position.x || !player.isEnabled){
             exitCode = 2;
         }
+        String clickedBtn = gui.findClicked();
     }
 
     @Override

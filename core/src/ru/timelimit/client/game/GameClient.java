@@ -82,7 +82,7 @@ public final class GameClient extends ApplicationAdapter {
 
 	public static void join() {
 		var actionClient = new ActionClient();
-		actionClient.actionType = ActionClientEnum.CONNECT;
+		actionClient.actionType = ActionClientEnum.JOIN;
 		actionClient.accessToken = GameClient.instance.token;
 
 		GameClient.client.sendTCP(actionClient);

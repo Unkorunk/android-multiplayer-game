@@ -13,11 +13,11 @@ public final class PreparationUI extends UI {
     @Override
     public void init() {
         var width = GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth;
-        var height = GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth;
+        var height = GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight;
 
         btnMap = new HashMap<>();
 
-        errorLabel = new Label(100, GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight - 20, 0, 0, "");
+        errorLabel = new Label(100, height - 20, 0, 0, "");
         errorLabel.background = null;
         btnMap.put("errorLabel", errorLabel);
 
