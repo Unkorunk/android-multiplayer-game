@@ -9,6 +9,8 @@ import java.util.HashMap;
 public abstract class UI {
     public abstract void init();
 
+    public Label errorLabel;
+
     public boolean isClicked(String elementName) {
         if (!btnMap.containsKey(elementName)) {
             return false;

@@ -91,6 +91,10 @@ public class MenuUI extends UI {
         var cameraWidth = GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth;
         var cameraHeight = GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight;
 
+        errorLabel = new Label( 100, GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight - 20, 0, 0, "");
+        errorLabel.background = null;
+        btnMap.put("errorLabel", errorLabel);
+
         var title = new Label(cameraWidth  / 2, cameraHeight - 40,
                 100,10, "KILL YOUR FRIENDS");
         title.setBackground(new Sprite(ResourceManager.getTexture("BtnEmpty")));

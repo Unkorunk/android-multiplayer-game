@@ -78,6 +78,15 @@ public final class GameClient extends ApplicationAdapter {
 				if (object instanceof ActionServer) {
 					ActionServer actionServer = (ActionServer) object;
 					System.out.println(actionServer.actionType.name());
+
+					if (actionServer.response instanceof ConnectResponse) {
+						var response = (ConnectResponse)actionServer.response;
+						if (response.accessToken.equals("FAILED") || response.accessToken.equals("INCORRECT PASSWORD")) {
+							sceneManager.currentScene.getUI().errorLabel.setText(response.accessToken);
+						} else {
+							sceneManager.currentScene.setState(2);
+						}
+					}
 				}
 			}
 		});

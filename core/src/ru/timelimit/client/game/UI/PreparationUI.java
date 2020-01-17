@@ -14,6 +14,10 @@ public final class PreparationUI extends UI {
     public void init() {
         btnMap = new HashMap<>();
 
+        errorLabel = new Label(100, GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight - 20, 0, 0, "");
+        errorLabel.background = null;
+        btnMap.put("errorLabel", errorLabel);
+
         var menuBtn = new Button(10, GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight - 50, 40, 40, () -> {});
         menuBtn.setSprite(new Sprite(ResourceManager.getTexture("BtnExit")));
 
