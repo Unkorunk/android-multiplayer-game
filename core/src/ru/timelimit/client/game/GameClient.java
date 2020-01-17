@@ -8,12 +8,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import ru.timelimit.client.game.SceneManagement.SceneManager;
+import ru.timelimit.client.game.UI.Button;
+import ru.timelimit.client.game.UI.Label;
+import ru.timelimit.client.game.UI.MenuUI;
 import ru.timelimit.network.*;
 
 import java.io.IOException;
@@ -78,15 +82,25 @@ public final class GameClient extends ApplicationAdapter {
 				if (object instanceof ActionServer) {
 					ActionServer actionServer = (ActionServer) object;
 					System.out.println(actionServer.actionType.name());
-
-					if (actionServer.response instanceof ConnectResponse) {
-						var response = (ConnectResponse)actionServer.response;
-						if (response.accessToken.equals("FAILED") || response.accessToken.equals("INCORRECT PASSWORD")) {
-							sceneManager.currentScene.getUI().errorLabel.setText(response.accessToken);
-						} else {
-							sceneManager.currentScene.setState(2);
+					if (actionServer.actionType == ActionServerEnum.CONNECT) {
+						if (actionServer.response instanceof ConnectResponse) {
+							var response = (ConnectResponse)actionServer.response;
+							if (response.accessToken.equals("FAILED") || response.accessToken.equals("INCORRECT PASSWORD")) {
+								sceneManager.currentScene.getUI().errorLabel.setText(response.accessToken);
+							} else {
+								var ui = (MenuUI)sceneManager.currentScene.getUI();
+								ui.startTimer = 10;
+								((Label)ui.getElement("createLobbyBtn").getChildren(Label.class)).setText("Waiting for game (Click to leave)");
+								var bounds = ui.getElement("createLobbyBtn").getBounds();
+								ui.getElement("createLobbyBtn").setBounds(new Rectangle(bounds.x - 100, bounds.y, bounds.width + 200, bounds.height));
+							}
 						}
+					} else if (actionServer.actionType == ActionServerEnum.START_PREPARATION) {
+
+					} else if (actionServer.actionType == ActionServerEnum.START_GAME) {
+						sceneManager.currentScene.setState(2);
 					}
+
 				}
 			}
 		});
@@ -96,7 +110,7 @@ public final class GameClient extends ApplicationAdapter {
 				client.connect(5000, "194.67.87.216", 25568);
 			} catch (IOException e) {
 				e.printStackTrace();
-				//System.exit(1);
+				sceneManager.currentScene.getUI().errorLabel.setText("Couldnt connect to server");
 			}
 		}).start();
 

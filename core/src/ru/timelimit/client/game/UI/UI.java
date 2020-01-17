@@ -34,6 +34,13 @@ public abstract class UI {
         return null;
     }
 
+    public UIElement getElement(String name) {
+        if (btnMap.containsKey(name)) {
+            return btnMap.get(name);
+        }
+        return null;
+    }
+
     public void render(Batch batch) {
         for (HashMap.Entry<String, UIElement> it : btnMap.entrySet()) {
             if (btnSettings == null || btnSettings.getOrDefault(it.getKey(), true)) {

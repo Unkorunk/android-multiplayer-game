@@ -29,6 +29,8 @@ public class MenuUI extends UI {
 
     private Label lobbyChooserLabel;
 
+    public int startTimer = -1;
+
     public TextFieldWrapper activeField = null;
     private TextFieldWrapper nicknameInput;
     private TextFieldWrapper passwordInput;
@@ -100,17 +102,25 @@ public class MenuUI extends UI {
         title.setBackground(new Sprite(ResourceManager.getTexture("BtnEmpty")));
         var createLobbyBtn = new Button(cameraWidth / 2 - 75, cameraHeight - 220,
                 150, 40,  () -> {
-            System.out.println("MenuScene: Creating lobby");
-            var actionClient = new ActionClient();
-            actionClient.actionType = ActionClientEnum.CONNECT;
+            if (startTimer > 0) {
+                System.out.println("MenuScene: disconnect from lobby");
+                var actionClient = new ActionClient();
+                actionClient.actionType = ActionClientEnum.FINISH;
+                GameClient.client.sendTCP(actionClient);
+            } else {
+                System.out.println("MenuScene: Creating lobby");
+                var actionClient = new ActionClient();
+                actionClient.actionType = ActionClientEnum.CONNECT;
 
-            var req = new ConnectRequest();
-            req.password = passwordInput.origin.getText();
-            req.username = nicknameInput.origin.getText();
+                var req = new ConnectRequest();
+                req.password = passwordInput.origin.getText();
+                req.username = nicknameInput.origin.getText();
 
-            actionClient.request = req;
+                actionClient.request = req;
 
-            GameClient.client.sendTCP(actionClient);
+                GameClient.client.sendTCP(actionClient);
+            }
+
         });
 
         var createLobbyLbl = new Label(cameraWidth / 2,cameraHeight - 220 + 20, 0, 0, "Create Lobby");
