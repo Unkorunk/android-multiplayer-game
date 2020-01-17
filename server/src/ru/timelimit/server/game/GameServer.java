@@ -57,6 +57,12 @@ public class GameServer {
                 if (object instanceof ActionClient) {
                     ActionClient actionClient = (ActionClient) object;
 
+                    if (actionClient.actionType != ActionClientEnum.CONNECT && !users.containsKey(actionClient.accessToken)) {
+                        LOG.info(String.format("Invalid accessToken: %s", actionClient.accessToken));
+                        connection.close();
+                        return;
+                    }
+
                     if (actionClient.actionType == ActionClientEnum.FINISH) {
                         if (users.get(actionClient.accessToken).slotRoom != -1) {
                             room.usersInRoom[users.get(actionClient.accessToken).slotRoom] = -1;
@@ -187,7 +193,7 @@ public class GameServer {
                                 if (resultSet.getString("password").equals(connectRequest.password)) {
                                     ((ConnectResponse) actionServer.response).accessToken = accessToken.toString();
 
-                                    LOG.info(String.format("user %s success login", connectRequest.username));
+                                    LOG.info(String.format("user %s success login; accessToken: %s", connectRequest.username, accessToken.toString()));
 
                                     users.put(accessToken.toString(), new User());
                                     usersAuth.put(connection.getID(), accessToken.toString());
@@ -204,7 +210,7 @@ public class GameServer {
                                 preparedStatementRegister.setString(2, connectRequest.password);
 
                                 if (preparedStatementRegister.executeUpdate() > 0) {
-                                    LOG.info(String.format("user %s success reg", connectRequest.username));
+                                    LOG.info(String.format("user %s success reg; accessToken: %s", connectRequest.username, accessToken.toString()));
 
                                     ((ConnectResponse) actionServer.response).accessToken = accessToken.toString();
 

@@ -72,12 +72,10 @@ public final class GameClient extends ApplicationAdapter {
 		instance = this;
 		texturesInit();
 
-		// TODO: remove that
 		client = new Client();
 		client.start();
 
 		Network.register(client);
-
 
 		client.addListener(new Listener() {
 			public void received(Connection connection, Object object) {
