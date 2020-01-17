@@ -66,11 +66,11 @@ public final class GameClient extends ApplicationAdapter {
 	public enum ActionServerEnum {
 		UPDATE_LOBBY,
 		UPDATE_GAME,
+		START_PREPARATION,
 		START_GAME,
 		YOU_WIN,
 		YOU_LOSE
 	}
-
 	public abstract static class Request {}
 	public abstract static class Response {}
 

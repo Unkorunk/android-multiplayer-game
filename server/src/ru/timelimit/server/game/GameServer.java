@@ -6,6 +6,8 @@ import com.esotericsoftware.kryonet.Server;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameServer {
     public enum ActionClientEnum {
@@ -18,6 +20,7 @@ public class GameServer {
     public enum ActionServerEnum {
         UPDATE_LOBBY,
         UPDATE_GAME,
+        START_PREPARATION,
         START_GAME,
         YOU_WIN,
         YOU_LOSE
@@ -63,6 +66,10 @@ public class GameServer {
     static int countInRoom = 0;
     static int[] usersInRoom = {-1, -1};
     static boolean gameInProcess = false;
+
+    private static int preparationTime = 10 * 1000;
+    private static Timer preparationTimer;
+
     public static HashMap<Integer, User> users = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
@@ -122,10 +129,22 @@ public class GameServer {
                         if (gameInProcess) {
                             for (int id : usersInRoom) {
                                 ActionServer actionServer = new ActionServer();
-                                actionServer.actionType = ActionServerEnum.START_GAME;
+                                actionServer.actionType = ActionServerEnum.START_PREPARATION;
 
                                 server.sendToTCP(id, actionServer);
                             }
+
+                            preparationTimer.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    for (int id : usersInRoom) {
+                                        ActionServer actionServer = new ActionServer();
+                                        actionServer.actionType = ActionServerEnum.START_GAME;
+
+                                        server.sendToTCP(id, actionServer);
+                                    }
+                                }
+                            }, preparationTime);
                         }
 
                         server.sendToAllTCP(updateLobby());
@@ -196,7 +215,7 @@ public class GameServer {
 
     private static void updateGame(Server server) {
         ActionServer actionServer = new ActionServer();
-        actionServer.actionType = ActionServerEnum.UPDATE_LOBBY;
+        actionServer.actionType = ActionServerEnum.UPDATE_GAME;
         actionServer.response = new UpdateGameResponse();
         ((UpdateGameResponse)actionServer.response).targetX = new int[]{
                 users.get(usersInRoom[0]).targetX, users.get(usersInRoom[1]).targetX,
