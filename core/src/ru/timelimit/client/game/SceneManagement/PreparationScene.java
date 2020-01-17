@@ -46,7 +46,7 @@ public class PreparationScene implements Scene {
         camera.update();
         gui.init();
 
-        background = new Sprite(TextureManager.get("BackgroundSky"));
+        background = new Sprite(TextureManager.getTexture("BackgroundSky"));
         background.setSize(camera.viewportWidth * 1.5f, camera.viewportHeight);
         background.setPosition(camera.viewportWidth * (1.0f - 1.5f) / 2, 0);
 
@@ -54,8 +54,8 @@ public class PreparationScene implements Scene {
         ground = new ArrayList<>();
         parallaxCity = new ArrayList<>();
         while (x < GlobalSettings.WORLD_WIDTH) {
-            var gSprite = new Sprite(TextureManager.get("BackgroundGround"));
-            var cSprite = new Sprite(TextureManager.get("BackgroundCity"));
+            var gSprite = new Sprite(TextureManager.getTexture("BackgroundGround"));
+            var cSprite = new Sprite(TextureManager.getTexture("BackgroundCity"));
             gSprite.setPosition(x, 0);
             cSprite.setPosition(x, 0);
             ground.add(gSprite);
@@ -77,7 +77,7 @@ public class PreparationScene implements Scene {
 
         var finishObj = new Finish();
         finishObj.position = new Vector2(GlobalSettings.WORLD_WIDTH - 20, GlobalSettings.HEIGHT_CELL);
-        finishObj.sprite = new Sprite(TextureManager.get("test"));
+        finishObj.sprite = new Sprite(TextureManager.getTexture("test"));
 
         GlobalSettings.gameObjects.add(finishObj);
     }

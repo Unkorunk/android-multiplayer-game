@@ -1,6 +1,7 @@
 package ru.timelimit.client.game;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import java.util.HashMap;
 
@@ -15,12 +16,20 @@ public final class TextureManager {
         return textureMap.get(textureName);
     }
 
-    public static Texture get(String textureName) {
+    public static Texture getTexture(String textureName) {
         if (!textureMap.containsKey(textureName)) {
             return null;
         }
 
         return textureMap.get(textureName);
+    }
+
+    public static BitmapFont getFont(String fontName) {
+        if (!fonts.containsKey(fontName)) {
+            return null;
+        }
+
+        return fonts.get(fontName);
     }
 
     public static void dispose(String textureName) {
@@ -34,8 +43,17 @@ public final class TextureManager {
         for (HashMap.Entry<String, Texture> it : textureMap.entrySet()) {
             it.getValue().dispose();
         }
+        for (HashMap.Entry<String, BitmapFont> it : fonts.entrySet()) {
+            it.getValue().dispose();
+        }
         textureMap.clear();
     }
 
+    public static void addFont(String name, BitmapFont font){
+        fonts.put(name, font);
+    }
+
     private static HashMap<String, Texture> textureMap = new HashMap<>();
+
+    private static HashMap<String, BitmapFont> fonts = new HashMap<>();
 }

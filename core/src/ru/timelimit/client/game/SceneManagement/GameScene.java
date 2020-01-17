@@ -24,7 +24,7 @@ public class GameScene implements Scene {
     private void objectsInit() {
         player = new Entity();
         player.setBehaviour(new PlayerBehaviour());
-        player.sprite = new Sprite(TextureManager.get("Character"));
+        player.sprite = new Sprite(TextureManager.getTexture("Character"));
         player.setCell(new Pair(1, 1));
 
         GlobalSettings.gameObjects.add(player);
@@ -41,7 +41,7 @@ public class GameScene implements Scene {
         camera.update();
         gui.init();
 
-        background = new Sprite(TextureManager.get("BackgroundSky"));
+        background = new Sprite(TextureManager.getTexture("BackgroundSky"));
         background.setSize(camera.viewportWidth * 1.5f, camera.viewportHeight);
         background.setPosition(camera.viewportWidth * (1.0f - 1.5f) / 2, 0);
 
@@ -49,8 +49,8 @@ public class GameScene implements Scene {
         ground = new ArrayList<>();
         parallaxCity = new ArrayList<>();
         while (x < GlobalSettings.WORLD_WIDTH) {
-            var gSprite = new Sprite(TextureManager.get("BackgroundGround"));
-            var cSprite = new Sprite(TextureManager.get("BackgroundCity"));
+            var gSprite = new Sprite(TextureManager.getTexture("BackgroundGround"));
+            var cSprite = new Sprite(TextureManager.getTexture("BackgroundCity"));
             gSprite.setPosition(x, 0);
             cSprite.setPosition(x, 0);
             ground.add(gSprite);
@@ -118,7 +118,7 @@ public class GameScene implements Scene {
         GlobalSettings.translateCamera(player.position.x - camera.position.x,
                 player.position.y - camera.position.y, camera, background);
 
-        if (player.position.x >= GlobalSettings.gameObjects.get(0).position.x){
+        if (player.position.x >= GlobalSettings.gameObjects.get(0).position.x || !player.isEnabled){
             exitCode = 2;
         }
     }

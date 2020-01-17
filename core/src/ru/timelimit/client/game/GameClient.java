@@ -4,8 +4,10 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -13,7 +15,7 @@ import ru.timelimit.client.game.SceneManagement.SceneManager;
 import ru.timelimit.client.game.UI.UI;
 import ru.timelimit.client.game.UI.GameUI;
 
-public class GameClient extends ApplicationAdapter {
+public final class GameClient extends ApplicationAdapter {
 	public static GameClient instance;
 
 	private CustomInputProcessor inputProcessor;
@@ -27,6 +29,7 @@ public class GameClient extends ApplicationAdapter {
 
 	private void texturesInit() {
 		TextureManager.addTexture("test", "badlogic.jpg");
+
 		TextureManager.addTexture("BackgroundSky", "Background/Background_sky.png");
 		TextureManager.addTexture("BackgroundCity", "Background/Parallax_bg_city.png");
 		TextureManager.addTexture("BackgroundGround", "Background/Ground_1.png");
@@ -38,6 +41,14 @@ public class GameClient extends ApplicationAdapter {
 		TextureManager.addTexture("BtnUp", "Sprites/Button_up.png");
 		TextureManager.addTexture("BtnDown", "Sprites/Button_down.png");
 		TextureManager.addTexture("BtnMenu", "Sprites/Button_menu.png");
+		TextureManager.addTexture("BtnEmpty", "Sprites/Button_empty.png");
+
+		var fontGen = new FreeTypeFontGenerator(Gdx.files.internal("Fonts/font.ttf"));
+		var fontParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		fontParam.size = 20;
+		TextureManager.addFont("defaultFont", fontGen.generateFont(fontParam));
+
+		fontGen.dispose();
 	}
 
 	@Override

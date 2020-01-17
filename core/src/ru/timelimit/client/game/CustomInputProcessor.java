@@ -8,7 +8,7 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import ru.timelimit.client.game.SceneManagement.PreparationScene;
 
-public class CustomInputProcessor implements InputProcessor, GestureDetector.GestureListener {
+public final class CustomInputProcessor implements InputProcessor, GestureDetector.GestureListener {
     private OrthographicCamera cam;
     private Sprite bg;
 

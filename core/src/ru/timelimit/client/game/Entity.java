@@ -5,8 +5,10 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Entity extends GameObject {
+public final class Entity extends GameObject {
     public Pair targetCell = null;
+
+    private int hp = GlobalSettings.defaultHP;
 
     private long lastTime = 0;
     private long chooseTimer = 0;
@@ -85,6 +87,10 @@ public class Entity extends GameObject {
 
                     default:
                         targetCell = new Pair(nowCell.x + 1, nowCell.y); // TODO: Lose or minus health
+                        hp -= trapObj.dmg;
+                        if (hp <= 0) {
+                            isEnabled = false;
+                        }
                         break;
                 }
             } else {

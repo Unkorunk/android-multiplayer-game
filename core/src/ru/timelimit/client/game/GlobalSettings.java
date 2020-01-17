@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import java.util.ArrayList;
 
-public class GlobalSettings {
+public final class GlobalSettings {
     public static final int WORLD_HEIGHT = 360;
     public static final int WORLD_WIDTH = 1280;
 

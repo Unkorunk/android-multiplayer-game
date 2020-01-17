@@ -1,6 +1,8 @@
 package ru.timelimit.client.game.UI;
 
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import ru.timelimit.client.game.GlobalSettings;
 import ru.timelimit.client.game.TextureManager;
 
 import java.util.HashMap;
@@ -16,9 +18,9 @@ public final class GameUI extends UI {
         var slipBtn = new Button(90, 10, 40, 40, () -> {});
         var menuBtn = new Button(130, 10, 40, 40, () -> {});
 
-        jumpBtn.setSprite(new Sprite(TextureManager.get("BtnUp")));
-        slipBtn.setSprite(new Sprite(TextureManager.get("BtnDown")));
-        menuBtn.setSprite(new Sprite(TextureManager.get("BtnMenu")));
+        jumpBtn.setSprite(new Sprite(TextureManager.getTexture("BtnUp")));
+        slipBtn.setSprite(new Sprite(TextureManager.getTexture("BtnDown")));
+        menuBtn.setSprite(new Sprite(TextureManager.getTexture("BtnMenu")));
 
         btnMap.put("JumpBtn", jumpBtn);
         btnSettings.put("JumpBtn", false);
