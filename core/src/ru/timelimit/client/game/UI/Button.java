@@ -8,10 +8,10 @@ import ru.timelimit.client.game.GameClient;
 import ru.timelimit.client.game.TextureManager;
 
 public final class Button extends UIElement {
-    public Button(int x, int y, int width, int height, Runnable callback) {
+    public Button(float x, float y, float width, float height, Runnable callback) {
         btnRect = new Rectangle(x, y, width, height);
-        renderRect = new Rectangle((int)(GameClient.instance.sceneManager.currentScene.getCamera().position.x + x),
-                (int)(GameClient.instance.sceneManager.currentScene.getCamera().position.y + y),
+        renderRect = new Rectangle(GameClient.instance.sceneManager.currentScene.getCamera().position.x + x,
+                GameClient.instance.sceneManager.currentScene.getCamera().position.y + y,
                 width, height);
 
         cb = callback;

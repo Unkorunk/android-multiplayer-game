@@ -19,8 +19,8 @@ public final class PreparationUI extends UI {
         var menuBtn = new Button(50, 10, 40, 40, () -> {});
         menuBtn.setSprite(new Sprite(TextureManager.getTexture("BtnMenu")));
 
-        var title = new Label((int)(GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth / 2),
-                (int)(GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight - 50),
+        var title = new Label(GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth / 2,
+                GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight - 50,
                 100,10, "PREPARATION STAGE");
 
         btnMap.put("MenuBtn", menuBtn);

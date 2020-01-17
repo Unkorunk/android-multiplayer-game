@@ -7,10 +7,10 @@ import ru.timelimit.client.game.GameClient;
 
 public abstract class UIElement {
     public void render(Batch batch) {
-        renderRect.x = (int)(GameClient.instance.sceneManager.currentScene.getCamera().position.x
-                - GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth / 2 + btnRect.x);
-        renderRect.y = (int)(GameClient.instance.sceneManager.currentScene.getCamera().position.y
-                - GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight / 2 + btnRect.y);
+        renderRect.x = GameClient.instance.sceneManager.currentScene.getCamera().position.x
+                - GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth / 2 + btnRect.x;
+        renderRect.y = GameClient.instance.sceneManager.currentScene.getCamera().position.y
+                - GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight / 2 + btnRect.y;
 
         if (background != null) {
             background.setBounds(renderRect.x, renderRect.y, renderRect.width, renderRect.height);

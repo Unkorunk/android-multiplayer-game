@@ -9,10 +9,10 @@ import ru.timelimit.client.game.GameClient;
 import ru.timelimit.client.game.TextureManager;
 
 public final class Label extends UIElement {
-    public Label(int x, int y, int width, int height, String text) {
+    public Label(float x, float y, float width, float height, String text) {
         btnRect = new Rectangle(x, y, width, height);
-        renderRect = new Rectangle((int)(GameClient.instance.sceneManager.currentScene.getCamera().position.x + x),
-                (int)(GameClient.instance.sceneManager.currentScene.getCamera().position.y + y),
+        renderRect = new Rectangle(GameClient.instance.sceneManager.currentScene.getCamera().position.x + x,
+                GameClient.instance.sceneManager.currentScene.getCamera().position.y + y,
                 width, height);
 
         background = new Sprite(TextureManager.getTexture("BtnEmpty"));
@@ -33,10 +33,10 @@ public final class Label extends UIElement {
 
     @Override
     public void render(Batch batch) {
-        renderRect.x = (int)(GameClient.instance.sceneManager.currentScene.getCamera().position.x
-                - GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth / 2 + btnRect.x);
-        renderRect.y = (int)(GameClient.instance.sceneManager.currentScene.getCamera().position.y
-                - GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight / 2 + btnRect.y);
+        renderRect.x = GameClient.instance.sceneManager.currentScene.getCamera().position.x
+                - GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth / 2 + btnRect.x;
+        renderRect.y = GameClient.instance.sceneManager.currentScene.getCamera().position.y
+                - GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight / 2 + btnRect.y;
 
         renderRect.x -= labelLayout.width / 2 + margin;
         renderRect.y -= labelLayout.height / 2 + margin;
