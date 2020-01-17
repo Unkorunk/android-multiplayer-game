@@ -8,6 +8,8 @@ import com.badlogic.gdx.math.Rectangle;
 import ru.timelimit.client.game.GameClient;
 import ru.timelimit.client.game.TextureManager;
 
+import java.util.Objects;
+
 public final class Label extends UIElement {
     public Label(float x, float y, float width, float height, String text) {
         btnRect = new Rectangle(x, y, width, height);
@@ -15,7 +17,7 @@ public final class Label extends UIElement {
                 GameClient.instance.sceneManager.currentScene.getCamera().position.y + y,
                 width, height);
 
-        background = new Sprite(TextureManager.getTexture("BtnEmpty"));
+        background = new Sprite(Objects.requireNonNull(TextureManager.getTexture("BtnEmpty")));
 
         bFont = TextureManager.getFont("defaultFont");
 

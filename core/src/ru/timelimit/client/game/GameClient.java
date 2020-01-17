@@ -46,6 +46,7 @@ public final class GameClient extends ApplicationAdapter {
 		TextureManager.addTexture("BtnMenu", "Sprites/Button_menu.png");
 		TextureManager.addTexture("BtnEmpty", "Sprites/Button_empty.png");
 		TextureManager.addTexture("Finish", "Sprites/Finish.gif");
+		TextureManager.addTexture("ExitBtn", "Sprites/Exit.png");
 
 		var fontGen = new FreeTypeFontGenerator(Gdx.files.internal("Fonts/font.ttf"));
 		var fontParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
