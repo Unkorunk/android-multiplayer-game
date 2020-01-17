@@ -29,7 +29,8 @@ public final class ResourceManager {
             return null;
         }
 
-        return fonts.get(fontName);
+        BitmapFont font = fonts.get(fontName);
+        return new BitmapFont(font.getData(), font.getRegion(), font.usesIntegerPositions());
     }
 
     public static void dispose(String textureName) {
