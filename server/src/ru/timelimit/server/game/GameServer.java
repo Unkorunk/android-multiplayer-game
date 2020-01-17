@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
@@ -105,6 +106,7 @@ public class GameServer {
                                 server.sendToTCP(id, actionServer);
                             }
 
+                            room.preparationTimer = new Timer();
                             room.preparationTimer.schedule(new TimerTask() {
                                 @Override
                                 public void run() {
