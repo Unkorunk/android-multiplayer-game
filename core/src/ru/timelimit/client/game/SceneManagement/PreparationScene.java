@@ -25,7 +25,6 @@ public class PreparationScene implements Scene {
     private ArrayList<Sprite> parallaxCity;
 
     private ArrayList<Trap> trapTypes;
-    private ArrayList<Trap> trapList;
 
     private Trap currentTrap = null;
 
@@ -48,8 +47,8 @@ public class PreparationScene implements Scene {
         gui.init();
 
         background = new Sprite(TextureManager.get("BackgroundSky"));
-        background.setPosition(0, 0);
-        background.setSize(camera.viewportWidth, camera.viewportHeight);
+        background.setSize(camera.viewportWidth * 1.5f, camera.viewportHeight);
+        background.setPosition(camera.viewportWidth * (1.0f - 1.5f) / 2, 0);
 
         int x = 0;
         ground = new ArrayList<>();
@@ -133,9 +132,12 @@ public class PreparationScene implements Scene {
             System.out.println(2);
         }
         if (clickedBtn == null && currentTrap != null && Gdx.input.justTouched()) {
-            var newTrap = currentTrap.clone();
-            newTrap.setCell(Pair.vectorToCell(GameClient.lastClick));
-            GlobalSettings.gameObjects.add(newTrap);
+            var pos = Pair.vectorToCell(GameClient.lastClick);
+            if (pos.y > 0 && pos.y < 2 && pos.x > 0 && pos.x < GlobalSettings.WORLD_WIDTH / GlobalSettings.WIDTH_CELL){
+                var newTrap = currentTrap.clone();
+                newTrap.setCell(Pair.vectorToCell(GameClient.lastClick));
+                GlobalSettings.gameObjects.add(newTrap);
+            }
         }
 
         gui.render(batch);

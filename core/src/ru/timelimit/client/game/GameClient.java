@@ -35,6 +35,9 @@ public class GameClient extends ApplicationAdapter {
 		TextureManager.addTexture("PlatformL", "Sprites/PlatformLeft.png");
 		TextureManager.addTexture("PlatformM", "Sprites/PlatformMiddle.png");
 		TextureManager.addTexture("PlatformR", "Sprites/PlatformRight.png");
+		TextureManager.addTexture("BtnUp", "Sprites/Button_up.png");
+		TextureManager.addTexture("BtnDown", "Sprites/Button_down.png");
+		TextureManager.addTexture("BtnMenu", "Sprites/Button_menu.png");
 	}
 
 	@Override

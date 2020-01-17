@@ -14,8 +14,8 @@ public class PreparationUI extends UI {
     public void init() {
         btnMap = new HashMap<>();
 
-        var menuBtn = new Button(50, 10, 10, 10, () -> {});
-        menuBtn.setSprite(new Sprite(TextureManager.get("test")));
+        var menuBtn = new Button(50, 10, 40, 40, () -> {});
+        menuBtn.setSprite(new Sprite(TextureManager.get("BtnMenu")));
         btnMap.put("MenuBtn", menuBtn);
     }
 
@@ -23,10 +23,10 @@ public class PreparationUI extends UI {
         int startX = 130;
         for (int i = 0; i < trapList.size(); i++) {
             int finalI = i;
-            var trapBtn = new Button(startX, 10, 10, 10, () -> {
+            var trapBtn = new Button(startX, 10, 40, 40, () -> {
                 cb.accept(trapList.get(finalI));
             });
-            trapBtn.setSprite(new Sprite(TextureManager.get("test")));
+            trapBtn.setSprite(new Sprite(TextureManager.get("Laser")));
             btnMap.put("trapBtn" + i, trapBtn);
             startX += 40;
         }

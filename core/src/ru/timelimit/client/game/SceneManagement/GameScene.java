@@ -42,8 +42,8 @@ public class GameScene implements Scene {
         gui.init();
 
         background = new Sprite(TextureManager.get("BackgroundSky"));
-        background.setPosition(0, 0);
-        background.setSize(camera.viewportWidth, camera.viewportHeight);
+        background.setSize(camera.viewportWidth * 1.5f, camera.viewportHeight);
+        background.setPosition(camera.viewportWidth * (1.0f - 1.5f) / 2, 0);
 
         int x = 0;
         ground = new ArrayList<>();

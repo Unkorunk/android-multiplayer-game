@@ -12,6 +12,8 @@ public class Entity extends GameObject {
     private long chooseTimer = 0;
     private long delaySeconds = 1;
 
+    private int speed = 4;
+
     private enum TaskState {
         UNLOCK,
         UNLOCKED,
@@ -113,8 +115,8 @@ public class Entity extends GameObject {
         if (stateNow == TaskState.UNLOCKED) {
             Vector2 curSpeed = new Vector2(targetCell.x - nowCell.x, targetCell.y - nowCell.y);
 
-            position.x += curSpeed.x;
-            position.y += curSpeed.y;
+            position.x += curSpeed.x * speed;
+            position.y += curSpeed.y * speed;
         }
     }
 
