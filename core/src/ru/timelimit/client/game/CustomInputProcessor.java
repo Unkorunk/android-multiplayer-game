@@ -3,15 +3,18 @@ package ru.timelimit.client.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import ru.timelimit.client.game.SceneManagement.PreparationScene;
 
-public class CustomInputProcessor implements InputProcessor, GestureDetector.GestureListener {
+public final class CustomInputProcessor implements InputProcessor, GestureDetector.GestureListener {
     private OrthographicCamera cam;
+    private Sprite bg;
 
-    public void updateCamera(OrthographicCamera camera) {
+    public void updateCamera(OrthographicCamera camera, Sprite background) {
         cam = camera;
+        bg = background;
     }
 
     @Override
@@ -80,7 +83,7 @@ public class CustomInputProcessor implements InputProcessor, GestureDetector.Ges
             deltaX = -deltaX * (cam.viewportWidth / Gdx.graphics.getWidth());
             deltaY = deltaY * (cam.viewportHeight / Gdx.graphics.getHeight());
 
-            GlobalSettings.translateCamera(deltaX, deltaY, cam);
+            GlobalSettings.translateCamera(deltaX, deltaY, cam, bg);
         }
         return true;
     }

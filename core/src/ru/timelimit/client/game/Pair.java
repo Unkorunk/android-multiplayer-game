@@ -2,7 +2,7 @@ package ru.timelimit.client.game;
 
 import com.badlogic.gdx.math.Vector2;
 
-public class Pair {
+public final class Pair {
     public int x, y;
     public Pair() {
         x = y = 0;

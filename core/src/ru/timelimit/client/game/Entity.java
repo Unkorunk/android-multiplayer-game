@@ -5,12 +5,16 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Entity extends GameObject {
+public final class Entity extends GameObject {
     public Pair targetCell = null;
+
+    private int hp = GlobalSettings.defaultHP;
 
     private long lastTime = 0;
     private long chooseTimer = 0;
     private long delaySeconds = 1;
+
+    private int speed = 4;
 
     private enum TaskState {
         UNLOCK,
@@ -92,6 +96,10 @@ public class Entity extends GameObject {
 
                     default:
                         targetCell = new Pair(nowCell.x + 1, nowCell.y); // TODO: Lose or minus health
+                        hp -= trapObj.dmg;
+                        if (hp <= 0) {
+                            isEnabled = false;
+                        }
                         break;
                 }
             } else {
@@ -123,8 +131,8 @@ public class Entity extends GameObject {
             Vector2 curSpeed = new Vector2(targetCell.x - nowCell.x, targetCell.y - nowCell.y);
             curSpeed = curSpeed.nor();
 
-            position.x += curSpeed.x;
-            position.y += curSpeed.y;
+            position.x += curSpeed.x * speed;
+            position.y += curSpeed.y * speed;
         }
     }
 

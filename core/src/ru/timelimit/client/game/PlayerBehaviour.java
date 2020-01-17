@@ -1,6 +1,6 @@
 package ru.timelimit.client.game;
 
-public class PlayerBehaviour implements BehaviourModel {
+public final class PlayerBehaviour implements BehaviourModel {
     @Override
     public Command update() {
         if (GameClient.instance.sceneManager.currentScene.getUI().isClicked("JumpBtn")) {

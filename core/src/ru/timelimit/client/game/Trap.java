@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Trap extends GameObject {
+public final class Trap extends GameObject {
     public ArrayList<BehaviourModel.Command> commands;
 
     private Trap(ArrayList<BehaviourModel.Command> commands, Sprite sprite) {
@@ -15,7 +15,7 @@ public class Trap extends GameObject {
 
     public static final Trap laserTrap = new Trap(
             new ArrayList<>(Arrays.asList(BehaviourModel.Command.JUMP)),
-            new Sprite(TextureManager.get("Laser"))
+            new Sprite(TextureManager.getTexture("Laser"))
     );
 
     public int dmg = 25;

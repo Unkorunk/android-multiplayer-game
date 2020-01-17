@@ -1,6 +1,7 @@
 package ru.timelimit.client.game.SceneManagement;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import ru.timelimit.client.game.GlobalSettings;
 import ru.timelimit.client.game.UI.UI;
@@ -27,6 +28,11 @@ public class MenuScene implements Scene {
     @Override
     public OrthographicCamera getCamera() {
         // TODO: implement MenuScene
+        return null;
+    }
+
+    @Override
+    public Sprite getBackground() {
         return null;
     }
 
