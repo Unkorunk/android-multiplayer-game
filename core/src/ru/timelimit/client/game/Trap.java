@@ -41,7 +41,11 @@ public class Trap extends GameObject implements Cloneable {
                 GlobalSettings.checkObjectOnCell(new Pair(pos.x + 1, pos.y)) ||
                 GlobalSettings.checkObjectOnCell(new Pair(pos.x - 1, pos.y)) ||
                 GlobalSettings.checkObjectOnCell(new Pair(pos.x, pos.y + 1)) ||
-                GlobalSettings.checkObjectOnCell(new Pair(pos.x, pos.y - 1))) {
+                GlobalSettings.checkObjectOnCell(new Pair(pos.x + 1, pos.y + 1)) ||
+                GlobalSettings.checkObjectOnCell(new Pair(pos.x - 1, pos.y + 1)) ||
+                GlobalSettings.checkObjectOnCell(new Pair(pos.x, pos.y - 1)) ||
+                GlobalSettings.checkObjectOnCell(new Pair(pos.x - 1, pos.y - 1)) ||
+                GlobalSettings.checkObjectOnCell(new Pair(pos.x + 1, pos.y - 1))) {
             verdict = false;
         }
 

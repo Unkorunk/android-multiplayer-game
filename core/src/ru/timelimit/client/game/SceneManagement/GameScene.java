@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import ru.timelimit.client.game.*;
 import ru.timelimit.client.game.Behaviours.PlayerBehaviour;
+import ru.timelimit.client.game.Behaviours.RemoteBehaviour;
 import ru.timelimit.client.game.UI.GameUI;
 import ru.timelimit.client.game.UI.UI;
 
@@ -15,6 +17,7 @@ public class GameScene implements Scene {
     public int exitCode = 0;
 
     private Entity player;
+    private Entity remotePlayer;
 
     private OrthographicCamera camera;
     private static UI gui = new GameUI();
@@ -28,7 +31,13 @@ public class GameScene implements Scene {
         player.setSprite(new Sprite(ResourceManager.getTexture("Character")), true);
         player.setCell(new Pair(0, 1));
 
+        remotePlayer = new Entity();
+        remotePlayer.setBehaviour(new RemoteBehaviour());
+        remotePlayer.setSprite(new Sprite(ResourceManager.getTexture("Character")), true);
+        remotePlayer.setCell(new Pair(0, 1));
+
         GlobalSettings.gameObjects.add(player);
+        GlobalSettings.gameObjects.add(remotePlayer);
     }
 
     @Override
@@ -80,6 +89,16 @@ public class GameScene implements Scene {
     public Sprite getBackground() {
         return background;
     }
+
+    public void updateGame(ru.timelimit.network.GameUser[] users, ru.timelimit.network.Trap[] traps) {
+        for (int i = 0; i < users.length; i++) {
+            if (!users[i].isPlayer) {
+                ((RemoteBehaviour)remotePlayer.getBehaviour()).lazyPos = new Vector2(users[i].positionX, users[i].positionY);
+            }
+        }
+    }
+
+
 
     private void updateObjects() {
         for (var gameObj : GlobalSettings.gameObjects) {
