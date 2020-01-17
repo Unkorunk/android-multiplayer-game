@@ -12,5 +12,5 @@ public class Room {
 
     public ArrayList<Trap> traps = new ArrayList<>();
 
-    private Timer preparationTimer;
+    public Timer preparationTimer;
 }

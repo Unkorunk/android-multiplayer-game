@@ -5,36 +5,25 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Logger;
+
 import ru.timelimit.network.*;
 
 public class GameServer {
-    public static class User {
-        int slotRoom;
-        int targetX, targetY;
-        public User() {
-            slotRoom = -1;
-            targetX = 0;
-            targetY = 0;
-        }
-    }
+    private final static Logger LOG = Logger.getLogger(String.valueOf(GameServer.class));
 
-    static int countInRoom = 0;
-    static int[] usersInRoom = {-1, -1};
-    static boolean gameInProcess = false;
-    static ArrayList<Trap> traps = new ArrayList<>();
+    private static final int preparationTime = 10 * 1000;
 
-    private static int preparationTime = 10 * 1000;
-    private static Timer preparationTimer;
-
+    private static Room room = new Room();
     public static HashMap<Integer, User> users = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
         Server server = new Server();
         server.start();
+
+        LOG.info("server start");
 
         Network.register(server);
 
@@ -42,7 +31,7 @@ public class GameServer {
             @Override
             public void connected(Connection connection) {
                 super.connected(connection);
-                System.out.println("connected: " + connection.getID());
+                LOG.info("connected: " + connection.getID());
                 users.put(connection.getID(), new User());
             }
 
@@ -54,45 +43,54 @@ public class GameServer {
 
                     if (actionClient.actionType == ActionClientEnum.FINISH) {
                         if (users.get(connection.getID()).slotRoom != -1) {
-                            usersInRoom[users.get(connection.getID()).slotRoom] = -1;
+                            room.usersInRoom[users.get(connection.getID()).slotRoom] = -1;
                             users.get(connection.getID()).slotRoom = -1;
-                            countInRoom--;
+                            room.countInRoom--;
 
                             ActionServer actionServer = new ActionServer();
                             actionServer.actionType = ActionServerEnum.YOU_WIN;
                             server.sendToTCP(connection.getID(), actionServer);
 
-                            if (countInRoom == 0) {
+                            LOG.info(String.format("user %d leave from room", connection.getID()));
+
+                            if (room.countInRoom == 0) {
                                 server.sendToAllTCP(updateLobby());
-                                gameInProcess = false;
-                                traps.clear();
+                                room.gameInProcess = false;
+                                room.traps.clear();
+                                LOG.info("room ready for next game");
                             }
                         }
                     } else if (actionClient.actionType == ActionClientEnum.CONNECT) {
-                        if (countInRoom < 2 && !gameInProcess) {
-                            users.get(connection.getID()).slotRoom = countInRoom;
-                            usersInRoom[countInRoom] = connection.getID();
-                            countInRoom++;
+                        if (room.countInRoom < 2 && !room.gameInProcess) {
+                            users.get(connection.getID()).slotRoom = room.countInRoom;
+                            room.usersInRoom[room.countInRoom] = connection.getID();
+                            room.countInRoom++;
 
-                            if (countInRoom == 2) {
-                                gameInProcess = true;
+                            LOG.info(String.format("user %d join at slot %d", connection.getID(), room.countInRoom - 1));
+
+                            if (room.countInRoom == 2) {
+                                room.gameInProcess = true;
                             }
                         }
 
-                        if (gameInProcess) {
-                            for (int id : usersInRoom) {
+                        if (room.gameInProcess) {
+                            for (int id : room.usersInRoom) {
                                 ActionServer actionServer = new ActionServer();
                                 actionServer.actionType = ActionServerEnum.START_PREPARATION;
+
+                                LOG.info("start preparation");
 
                                 server.sendToTCP(id, actionServer);
                             }
 
-                            preparationTimer.schedule(new TimerTask() {
+                            room.preparationTimer.schedule(new TimerTask() {
                                 @Override
                                 public void run() {
-                                    for (int id : usersInRoom) {
+                                    for (int id : room.usersInRoom) {
                                         ActionServer actionServer = new ActionServer();
                                         actionServer.actionType = ActionServerEnum.START_GAME;
+
+                                        LOG.info("start game");
 
                                         server.sendToTCP(id, actionServer);
                                     }
@@ -104,13 +102,14 @@ public class GameServer {
                     } else if (actionClient.actionType == ActionClientEnum.SELECT_TARGET) {
                         User user = users.get(connection.getID());
                         if (user.slotRoom == -1) {
-                            System.out.println("kick: " + connection.getID());
+                            LOG.warning("kick: " + connection.getID());
                             users.remove(connection.getID());
                             connection.close();
                         } else {
                             SelectTargetRequest request = (SelectTargetRequest) actionClient.request;
                             user.targetX = request.targetX;
                             user.targetY = request.targetY;
+                            LOG.info(String.format("user %d select target (%d, %d)", connection.getID(), user.targetX, user.targetY));
 
                             updateGame(server);
                         }
@@ -119,7 +118,7 @@ public class GameServer {
                     } else if (actionClient.actionType == ActionClientEnum.UPDATE_GAME) {
                         User user = users.get(connection.getID());
                         if (user.slotRoom == -1) {
-                            System.out.println("kick: " + connection.getID());
+                            LOG.warning("kick: " + connection.getID());
                             users.remove(connection.getID());
                             connection.close();
                         } else {
@@ -128,7 +127,7 @@ public class GameServer {
                     } else if (actionClient.actionType == ActionClientEnum.SET_TRAP) {
                         User user = users.get(connection.getID());
                         if (user.slotRoom == -1) {
-                            System.out.println("kick: " + connection.getID());
+                            LOG.warning("kick: " + connection.getID());
                             users.remove(connection.getID());
                             connection.close();
                         } else {
@@ -138,7 +137,8 @@ public class GameServer {
                             trap.x = setTrapRequest.x;
                             trap.y = setTrapRequest.y;
                             // TODO: check exist on x, y other trap
-                            traps.add(trap);
+                            room.traps.add(trap);
+                            LOG.info(String.format("user %d set trap %d at (%d, %d)", connection.getID(), trap.trapId, trap.x, trap.y));
 
                             updateGame(server);
                         }
@@ -150,19 +150,19 @@ public class GameServer {
             @Override
             public void disconnected(Connection connection) {
                 super.disconnected(connection);
-                System.out.println("disconnected: " + connection.getID());
+                LOG.info("disconnected: " + connection.getID());
                 User user = users.get(connection.getID());
                 if (user.slotRoom != -1) {
-                    int otherUserId = usersInRoom[(user.slotRoom + 1) % 2];
+                    int otherUserId = room.usersInRoom[(user.slotRoom + 1) % 2];
 
-                    countInRoom = 0;
-                    usersInRoom[0] = -1;
-                    usersInRoom[1] = -1;
+                    room.countInRoom = 0;
+                    room.usersInRoom[0] = -1;
+                    room.usersInRoom[1] = -1;
 
                     ActionServer actionServer = new ActionServer();
                     actionServer.actionType = ActionServerEnum.YOU_WIN;
 
-                    gameInProcess = false;
+                    room.gameInProcess = false;
 
                     server.sendToTCP(otherUserId, actionServer);
                     server.sendToAllTCP(updateLobby());
@@ -177,9 +177,9 @@ public class GameServer {
         ActionServer actionServer = new ActionServer();
         actionServer.actionType = ActionServerEnum.UPDATE_LOBBY;
         actionServer.response = new UpdateLobbyResponse();
-        ((UpdateLobbyResponse)actionServer.response).countInRoom = countInRoom;
-        ((UpdateLobbyResponse)actionServer.response).usersInRoom = usersInRoom;
-        ((UpdateLobbyResponse)actionServer.response).gameInProcess = gameInProcess;
+        ((UpdateLobbyResponse)actionServer.response).countInRoom = room.countInRoom;
+        ((UpdateLobbyResponse)actionServer.response).usersInRoom = room.usersInRoom;
+        ((UpdateLobbyResponse)actionServer.response).gameInProcess = room.gameInProcess;
         return actionServer;
     }
 
@@ -188,14 +188,14 @@ public class GameServer {
         actionServer.actionType = ActionServerEnum.UPDATE_GAME;
         actionServer.response = new UpdateGameResponse();
         ((UpdateGameResponse)actionServer.response).targetX = new int[]{
-                users.get(usersInRoom[0]).targetX, users.get(usersInRoom[1]).targetX,
+                users.get(room.usersInRoom[0]).targetX, users.get(room.usersInRoom[1]).targetX,
         };
         ((UpdateGameResponse)actionServer.response).targetY = new int[]{
-                users.get(usersInRoom[0]).targetY, users.get(usersInRoom[1]).targetY,
+                users.get(room.usersInRoom[0]).targetY, users.get(room.usersInRoom[1]).targetY,
         };
-        ((UpdateGameResponse)actionServer.response).traps = (Trap[]) traps.toArray();
+        ((UpdateGameResponse)actionServer.response).traps = (Trap[]) room.traps.toArray();
 
-        for (int value : usersInRoom) {
+        for (int value : room.usersInRoom) {
             server.sendToTCP(value, actionServer);
         }
     }
