@@ -17,7 +17,7 @@ import ru.timelimit.network.*;
 public class GameServer {
     private final static Logger LOG = Logger.getLogger(String.valueOf(GameServer.class));
 
-    private static final int preparationTime = 10 * 1000;
+    private static final int preparationTime = 20 * 1000;
 
     private static int nextRoomId = 0;
 
@@ -96,6 +96,12 @@ public class GameServer {
                         Room newRoom = rooms.getOrDefault(joinRequest.lobbyId, null);
                         if (newRoom == null) {
                             LOG.warning("Invalid room");
+                            return;
+                        }
+
+                        if (newRoom.users.contains(user)) {
+                            LOG.warning(String.format("user %d alreay in room %d", user.connectionId, joinRequest.lobbyId));
+                            server.sendToTCP(user.connectionId, updateLobby());
                             return;
                         }
 
@@ -278,6 +284,8 @@ public class GameServer {
                             actionServer.actionType = ActionServerEnum.YOU_WIN;
 
                             user.room.gameInProcess = false;
+
+                            LOG.info("room ready for next game");
 
                             server.sendToTCP(otherUser.connectionId, actionServer);
                             server.sendToAllTCP(updateLobby());

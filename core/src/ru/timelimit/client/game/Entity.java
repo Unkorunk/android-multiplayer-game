@@ -17,6 +17,9 @@ public final class Entity extends GameObject {
     private long chooseTimer = 0;
     private long delaySeconds = 1;
 
+    private long timeListForDeltaTime = 0;
+    private float deltaTime = 0.0f;
+
     private int speed = 4;
 
     private boolean fallDown = false;
@@ -40,6 +43,10 @@ public final class Entity extends GameObject {
 
     @Override
     public void update() {
+        long deltaTimeNow = System.currentTimeMillis();
+        deltaTime = (deltaTimeNow - timeListForDeltaTime) / 1000.0f;
+        timeListForDeltaTime = deltaTimeNow;
+
         if (!initCalled) {
             init();
             initCalled = true;
@@ -159,8 +166,8 @@ public final class Entity extends GameObject {
 
             curSpeed = curSpeed.nor();
 
-            position.x += curSpeed.x * speed;
-            position.y += curSpeed.y * GlobalSettings.gravitySpeed;
+            position.x += curSpeed.x * speed * deltaTime;
+            position.y += curSpeed.y * GlobalSettings.gravitySpeed * deltaTime;
         }
 
         bm.sendPos(position.x, position.y, targetCell.x, targetCell.y);
