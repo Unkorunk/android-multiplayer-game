@@ -272,26 +272,29 @@ public class GameServer {
                 super.disconnected(connection);
                 LOG.info("disconnected: " + connection.getID());
                 if (usersAuth.containsKey(connection.getID())) {
-                    User user = users.get(usersAuth.get(connection.getID()));
-                    if (user.room != null) {
-                        user.room.users.remove(user);
-                        if (user.room.users.size() > 0) {
-                            User otherUser = user.room.users.get(0);
-                            user.room.users.clear();
-                            user.room.traps.clear();
+                    if (users.containsKey(usersAuth.get(connection.getID()))) {
+                        User user = users.get(usersAuth.get(connection.getID()));
+                        if (user.room != null) {
+                            user.room.users.remove(user);
+                            if (user.room.users.size() > 0) {
+                                User otherUser = user.room.users.get(0);
+                                user.room.users.clear();
+                                user.room.traps.clear();
 
-                            ActionServer actionServer = new ActionServer();
-                            actionServer.actionType = ActionServerEnum.YOU_WIN;
+                                ActionServer actionServer = new ActionServer();
+                                actionServer.actionType = ActionServerEnum.YOU_WIN;
 
-                            user.room.gameInProcess = false;
+                                user.room.gameInProcess = false;
 
-                            LOG.info("room ready for next game");
+                                LOG.info("room ready for next game");
 
-                            server.sendToTCP(otherUser.connectionId, actionServer);
-                            server.sendToAllTCP(updateLobby());
+                                server.sendToTCP(otherUser.connectionId, actionServer);
+                                server.sendToAllTCP(updateLobby());
+                            }
                         }
+                        users.remove(usersAuth.get(connection.getID()));
+                        usersAuth.remove(connection.getID());
                     }
-                    users.remove(usersAuth.get(connection.getID()));
                 }
             }
         });

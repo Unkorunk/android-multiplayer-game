@@ -44,6 +44,9 @@ public final class Entity extends GameObject {
     @Override
     public void update() {
         long deltaTimeNow = System.currentTimeMillis();
+        if (timeListForDeltaTime == 0) {
+            timeListForDeltaTime = System.currentTimeMillis();
+        }
         deltaTime = (deltaTimeNow - timeListForDeltaTime) / 1000.0f;
         timeListForDeltaTime = deltaTimeNow;
 
@@ -166,8 +169,9 @@ public final class Entity extends GameObject {
 
             curSpeed = curSpeed.nor();
 
-            position.x += curSpeed.x * speed * deltaTime;
-            position.y += curSpeed.y * GlobalSettings.gravitySpeed * deltaTime;
+            System.out.println("deltaTime: " + deltaTime);
+            position.x += curSpeed.x * speed * deltaTime * 6.0f;
+            position.y += curSpeed.y * GlobalSettings.gravitySpeed * deltaTime * 6.0f;
         }
 
         bm.sendPos(position.x, position.y, targetCell.x, targetCell.y);
