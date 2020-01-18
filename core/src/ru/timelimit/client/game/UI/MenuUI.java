@@ -117,6 +117,7 @@ public class MenuUI extends UI {
                 150, 40,  () -> {
             if (startTimer > 0) {
                 GameClient.sendDisconnect();
+                startTimer = -1;
             } else {
                 GameClient.sendCreateLobby();
             }
