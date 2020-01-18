@@ -22,6 +22,6 @@ public final class PlayerBehaviour implements BehaviourModel {
     }
 
     @Override
-    public boolean receivePos(Vector2 target) { return false; }
+    public Vector2 receivePos() { return null; }
 
 }

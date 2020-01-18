@@ -45,7 +45,11 @@ public final class Entity extends GameObject {
             initCalled = true;
         }
 
-        if (bm.receivePos(position)) {
+        var received = bm.receivePos();
+
+        if (received != null) {
+            System.out.println("Position received: " + position.x + " " + position.y);
+            position = new Vector2(received.x, received.y);
             return;
         }
 

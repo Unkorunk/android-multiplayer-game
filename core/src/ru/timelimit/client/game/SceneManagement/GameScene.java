@@ -93,7 +93,7 @@ public class GameScene implements Scene {
     public void updateGame(ru.timelimit.network.GameUser[] users, ru.timelimit.network.Trap[] traps) {
         for (int i = 0; i < users.length; i++) {
             if (!users[i].isPlayer) {
-                ((RemoteBehaviour)remotePlayer.getBehaviour()).lazyPos = new Vector2(users[i].positionX, users[i].positionY);
+                ((RemoteBehaviour)remotePlayer.getBehaviour()).setLazyPos(new Vector2(users[i].positionX, users[i].positionY));
             }
         }
     }

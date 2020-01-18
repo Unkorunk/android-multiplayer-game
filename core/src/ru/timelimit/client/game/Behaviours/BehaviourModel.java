@@ -14,5 +14,5 @@ public interface BehaviourModel {
 
     void sendPos(float x, float y, int xt, int yt);
 
-    boolean receivePos(Vector2 pos);
+    Vector2 receivePos();
 }
