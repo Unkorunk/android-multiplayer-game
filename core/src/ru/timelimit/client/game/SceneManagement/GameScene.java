@@ -36,8 +36,8 @@ public class GameScene implements Scene {
         remotePlayer.setSprite(new Sprite(ResourceManager.getTexture("Character")), true);
         remotePlayer.setCell(new Pair(0, 1));
 
-        GlobalSettings.gameObjects.add(player);
-        GlobalSettings.gameObjects.add(remotePlayer);
+        GlobalSettings.addObject(player);
+        GlobalSettings.addObject(remotePlayer);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class GameScene implements Scene {
 
     @Override
     public void dispose() {
-        GlobalSettings.gameObjects.clear();
+        GlobalSettings.clearObjects();
     }
 
     @Override
@@ -101,15 +101,19 @@ public class GameScene implements Scene {
 
 
     private void updateObjects() {
-        for (var gameObj : GlobalSettings.gameObjects) {
+        GlobalSettings.locker.lock();
+        for (var gameObj : GlobalSettings.getObjects()) {
             gameObj.update();
         }
+        GlobalSettings.locker.unlock();
     }
 
     private void renderObjects(SpriteBatch batch) {
-        for (var gameObj : GlobalSettings.gameObjects) {
+        GlobalSettings.locker.lock();
+        for (var gameObj : GlobalSettings.getObjects()) {
             gameObj.render(batch);
         }
+        GlobalSettings.locker.unlock();
     }
 
     private void renderBackground(SpriteBatch batch) {
@@ -137,7 +141,7 @@ public class GameScene implements Scene {
         GlobalSettings.translateCamera(player.position.x - camera.position.x,
                 player.position.y - camera.position.y, camera, background);
 
-        if (player.position.x >= GlobalSettings.gameObjects.get(0).position.x || !player.isEnabled){
+        if (player.position.x >= GlobalSettings.getObject(0).position.x || !player.isEnabled){
             exitCode = 1;
             GameClient.sendDisconnect();
         }

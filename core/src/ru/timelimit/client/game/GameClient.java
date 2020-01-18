@@ -188,6 +188,7 @@ public final class GameClient extends ApplicationAdapter {
 								if (GameClient.instance.sceneManager.currentScene instanceof PreparationScene) {
 									((PreparationScene)GameClient.instance.sceneManager.currentScene).updateGame(response.users, response.traps);
 								} else if (GameClient.instance.sceneManager.currentScene instanceof GameScene) {
+									System.out.println("DEBUG: UPDATE IN GAME");
 									((GameScene)GameClient.instance.sceneManager.currentScene).updateGame(response.users, response.traps);
 								}
 							}

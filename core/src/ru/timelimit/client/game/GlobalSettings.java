@@ -4,10 +4,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import java.util.ArrayList;
+import java.util.concurrent.locks.ReentrantLock;
 
 public final class GlobalSettings {
     public static final int WORLD_HEIGHT = 360;
     public static final int WORLD_WIDTH = 360 * 5;
+
+    public static ReentrantLock locker = new ReentrantLock();
 
     public static float gravitySpeed = 10;
 
@@ -18,7 +21,31 @@ public final class GlobalSettings {
 
     public static int preparationTime = 10 * 1000;
 
-    public static ArrayList<GameObject> gameObjects = new ArrayList<>();
+    private static ArrayList<GameObject> gameObjects = new ArrayList<>();
+
+    public static void addObject(GameObject obj) {
+        locker.lock();
+        gameObjects.add(obj);
+        locker.unlock();
+    }
+
+    public static GameObject getObject(int indx) {
+        locker.lock();
+        var tmp = gameObjects.get(indx);
+        locker.unlock();
+        return tmp;
+    }
+
+    public static void clearObjects() {
+        locker.lock();
+        gameObjects.clear();
+        locker.unlock();
+    }
+
+    public static ArrayList<GameObject> getObjects() {
+        return gameObjects;
+    }
+
     public static ArrayList<GameObject> getObjectsOnCell(Pair cell) {
         ArrayList<GameObject> result = new ArrayList<>();
         for (var gameObj : gameObjects) {

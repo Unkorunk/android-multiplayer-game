@@ -17,6 +17,7 @@ public class RemoteBehaviour implements BehaviourModel {
 
     @Override
     public boolean receivePos(Vector2 pos) {
+        System.out.println("Pos received: " + lazyPos.x + " " + lazyPos.y);
         pos = lazyPos;
         return true;
     }

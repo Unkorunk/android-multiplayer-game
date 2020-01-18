@@ -8,16 +8,13 @@ import com.badlogic.gdx.math.Vector2;
 import ru.timelimit.client.game.*;
 import ru.timelimit.client.game.UI.PreparationUI;
 import ru.timelimit.client.game.UI.UI;
-import ru.timelimit.network.Network;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class PreparationScene implements Scene {
     public int exitCode = 0;
 
-    private Timer preparationTimer;
     private OrthographicCamera camera;
     private static UI gui = new PreparationUI();
 
@@ -44,7 +41,7 @@ public class PreparationScene implements Scene {
 
             var newTrap = trapTypes.get(traps[i].trapId).clone();
             newTrap.setCell(new Pair(traps[i].x, traps[i].y));
-            GlobalSettings.gameObjects.add(newTrap);
+            GlobalSettings.addObject(newTrap);
         }
     }
 
@@ -93,13 +90,13 @@ public class PreparationScene implements Scene {
         finishObj.position = new Vector2(GlobalSettings.WORLD_WIDTH - 30, GlobalSettings.HEIGHT_CELL * 1.5f);
         finishObj.setSprite(new Sprite(ResourceManager.getTexture("Finish")), true);
 
-        GlobalSettings.gameObjects.add(finishObj);
+        GlobalSettings.addObject(finishObj);
     }
 
     @Override
     public void dispose() {
         if (exitCode != 3) {
-            GlobalSettings.gameObjects.clear();
+            GlobalSettings.clearObjects();
         }
     }
 
@@ -120,9 +117,11 @@ public class PreparationScene implements Scene {
 
 
     private void renderObjects(SpriteBatch batch) {
-        for (var gameObj : GlobalSettings.gameObjects) {
+        GlobalSettings.locker.lock();
+        for (var gameObj : GlobalSettings.getObjects()) {
             gameObj.render(batch);
         }
+        GlobalSettings.locker.lock();
     }
 
     private void renderBackground(SpriteBatch batch) {
