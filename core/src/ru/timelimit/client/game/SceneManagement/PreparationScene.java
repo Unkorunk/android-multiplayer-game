@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.timelimit.client.game.*;
 import ru.timelimit.client.game.UI.PreparationUI;
 import ru.timelimit.client.game.UI.UI;
+import ru.timelimit.network.Network;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -26,13 +27,25 @@ public class PreparationScene implements Scene {
 
     private ArrayList<Trap> trapTypes;
 
-    public Trap currentTrap = null;
+    public int currentTrap = -1;
 
     private void trapInit() {
         trapTypes = new ArrayList<>();
 
         trapTypes.add(Trap.laserTrap.clone());
         trapTypes.add(Trap.flyTrap.clone());
+    }
+
+    public void updateGame(ru.timelimit.network.GameUser[] users, ru.timelimit.network.Trap[] traps) {
+        for (int i = 0; i < traps.length; i ++) {
+            if (GlobalSettings.checkObjectOnCell(new Pair(traps[i].x, traps[i].y))) {
+                continue;
+            }
+
+            var newTrap = trapTypes.get(traps[i].trapId).clone();
+            newTrap.setCell(new Pair(traps[i].x, traps[i].y));
+            GlobalSettings.gameObjects.add(newTrap);
+        }
     }
 
     @Override
@@ -64,15 +77,15 @@ public class PreparationScene implements Scene {
             x += gSprite.getWidth();
         }
 
-        preparationTimer = new Timer();
-        preparationTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                exitCode = 3;
-            }
-        }, GlobalSettings.preparationTime);
+//        preparationTimer = new Timer();
+//        preparationTimer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                exitCode = 3;
+//            }
+//        }, GlobalSettings.preparationTime);
 
-        ((PreparationUI)gui).initChooser(trapTypes, (Trap trap) -> {
+        ((PreparationUI)gui).initChooser(trapTypes, (Integer trap) -> {
             currentTrap = trap;
         });
 
@@ -132,12 +145,14 @@ public class PreparationScene implements Scene {
         if (clickedBtn != null) {
             System.out.println(2);
         }
-        if (clickedBtn == null && currentTrap != null && Gdx.input.justTouched()) {
+        if (clickedBtn == null && currentTrap != -1 && Gdx.input.justTouched()) {
             var pos = Pair.vectorToPair(GameClient.lastClick);
-            if (currentTrap.validator(pos) && pos.x > 0 && pos.x < GlobalSettings.WORLD_WIDTH / GlobalSettings.WIDTH_CELL){
-                var newTrap = currentTrap.clone();
-                newTrap.setCell(Pair.vectorToPair(GameClient.lastClick));
-                GlobalSettings.gameObjects.add(newTrap);
+            if (trapTypes.get(currentTrap).validator(pos) && pos.x > 0 && pos.x < GlobalSettings.WORLD_WIDTH / GlobalSettings.WIDTH_CELL) {
+                var trapPos = Pair.vectorToPair(GameClient.lastClick);
+                GameClient.sendTrap(trapPos.x, trapPos.y, currentTrap);
+//                var newTrap = trapTypes.get(currentTrap).clone();
+//                newTrap.setCell(Pair.vectorToPair(GameClient.lastClick));
+//                GlobalSettings.gameObjects.add(newTrap);
             }
         }
 

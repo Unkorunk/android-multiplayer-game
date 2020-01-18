@@ -23,6 +23,7 @@ public final class GameUI extends UI {
         var jumpBtn = new Button(30, 10, 40, 40, () -> {});
         var slipBtn = new Button(width - 70, 10, 40, 40, () -> {});
         var menuBtn = new Button(width - 40, height - 50, 40, 40, () -> {
+            GameClient.sendDisconnect();
             GameClient.instance.sceneManager.currentScene.setState(1);
         });
 

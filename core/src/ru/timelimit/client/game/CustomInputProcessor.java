@@ -100,7 +100,7 @@ public final class CustomInputProcessor implements InputProcessor, GestureDetect
             deltaY = deltaY * (cam.viewportHeight / Gdx.graphics.getHeight());
 
             GlobalSettings.translateCamera(deltaX, deltaY, cam, bg);
-            ((PreparationScene) GameClient.instance.sceneManager.currentScene).currentTrap = null;
+            ((PreparationScene) GameClient.instance.sceneManager.currentScene).currentTrap = -1;
             return true;
         }
         return false;

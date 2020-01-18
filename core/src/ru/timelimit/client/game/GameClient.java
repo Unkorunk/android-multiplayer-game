@@ -1,6 +1,7 @@
 package ru.timelimit.client.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,8 +15,9 @@ import com.badlogic.gdx.math.Vector3;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import ru.timelimit.client.game.SceneManagement.GameScene;
+import ru.timelimit.client.game.SceneManagement.PreparationScene;
 import ru.timelimit.client.game.SceneManagement.SceneManager;
-import ru.timelimit.client.game.UI.Button;
 import ru.timelimit.client.game.UI.Label;
 import ru.timelimit.client.game.UI.MenuUI;
 import ru.timelimit.network.*;
@@ -68,6 +70,7 @@ public final class GameClient extends ApplicationAdapter {
 	public static Client client = null;
 
 	public static void sendConnect(String login, String password) {
+		System.out.println("Request: send connect");
 		var actionClient = new ActionClient();
 		actionClient.actionType = ActionClientEnum.CONNECT;
 
@@ -80,11 +83,64 @@ public final class GameClient extends ApplicationAdapter {
 		GameClient.client.sendTCP(actionClient);
 	}
 
-	public static void join() {
+	public static void sendJoin(int id) {
+		System.out.println("Request: send join");
 		var actionClient = new ActionClient();
 		actionClient.actionType = ActionClientEnum.JOIN;
 		actionClient.accessToken = GameClient.instance.token;
+		var req = new JoinRequest();
+		req.lobbyId = id;
+		actionClient.request = req;
 
+		GameClient.client.sendTCP(actionClient);
+
+		var ui = (MenuUI)GameClient.instance.sceneManager.currentScene.getUI();
+		ui.startTimer = 10;
+		((Label)ui.getElement("createLobbyBtn").getChildren(Label.class)).setText("Waiting for game (Click to leave)");
+		var bounds = ui.getElement("createLobbyBtn").getBounds();
+		ui.getElement("createLobbyBtn").setBounds(new Rectangle(bounds.x - 100, bounds.y, bounds.width + 200, bounds.height));
+	}
+
+	public static void sendCreateLobby() {
+		System.out.println("Request: send create lobby");
+		var actionClient = new ActionClient();
+		actionClient.actionType = ActionClientEnum.CREATE_LOBBY;
+		actionClient.accessToken = GameClient.instance.token;
+	}
+
+	public static void sendTrap(int x, int y, int trapId) {
+		System.out.println("Request: send trap");
+		var actionClient = new ActionClient();
+		actionClient.actionType = ActionClientEnum.SET_TRAP;
+		actionClient.accessToken = GameClient.instance.token;
+		var req = new SetTrapRequest();
+		req.x = x;
+		req.y = y;
+		req.trapId = trapId;
+		actionClient.request = req;
+
+		GameClient.client.sendTCP(actionClient);
+	}
+
+	public static void sendDisconnect() {
+		System.out.println("Request: Disconnect from lobby");
+		var actionClient = new ActionClient();
+		actionClient.actionType = ActionClientEnum.FINISH;
+		actionClient.accessToken = GameClient.instance.token;
+		GameClient.client.sendTCP(actionClient);
+	}
+
+	public static void sendTarget(float xPos, float yPos, int xTarget, int yTarget) {
+		System.out.println("Request: send target");
+		var actionClient = new ActionClient();
+		actionClient.actionType = ActionClientEnum.SELECT_TARGET;
+		actionClient.accessToken = GameClient.instance.token;
+		var req = new SelectTargetRequest();
+		req.targetX = xTarget;
+		req.targetY = yTarget;
+		req.positionX = xPos;
+		req.positionY = yPos;
+		actionClient.request = req;
 		GameClient.client.sendTCP(actionClient);
 	}
 
@@ -110,18 +166,26 @@ public final class GameClient extends ApplicationAdapter {
 								sceneManager.currentScene.getUI().errorLabel.setText(response.accessToken);
 							} else {
 								token = response.accessToken;
-								GameClient.join();
-								var ui = (MenuUI)sceneManager.currentScene.getUI();
-								ui.startTimer = 10;
-								((Label)ui.getElement("createLobbyBtn").getChildren(Label.class)).setText("Waiting for game (Click to leave)");
-								var bounds = ui.getElement("createLobbyBtn").getBounds();
-								ui.getElement("createLobbyBtn").setBounds(new Rectangle(bounds.x - 100, bounds.y, bounds.width + 200, bounds.height));
 							}
 						}
 					} else if (actionServer.actionType == ActionServerEnum.START_PREPARATION) {
-
-					} else if (actionServer.actionType == ActionServerEnum.START_GAME) {
 						sceneManager.currentScene.setState(2);
+					} else if (actionServer.actionType == ActionServerEnum.START_GAME) {
+						sceneManager.currentScene.setState(3);
+					} else if (actionServer.actionType == ActionServerEnum.UPDATE_GAME){
+						if (actionServer.response instanceof UpdateGameResponse) {
+							var response = (UpdateGameResponse)actionServer.response;
+							if (GameClient.instance.sceneManager.currentScene instanceof PreparationScene) {
+								((PreparationScene)GameClient.instance.sceneManager.currentScene).updateGame(response.users, response.traps);
+							} else if (GameClient.instance.sceneManager.currentScene instanceof GameScene) {
+								((GameScene)GameClient.instance.sceneManager.currentScene).updateGame(response.users, response.traps);
+							}
+						}
+					} else if (actionServer.actionType == ActionServerEnum.UPDATE_LOBBY) {
+						if (actionServer.response instanceof  UpdateLobbyResponse){
+							var response = (UpdateLobbyResponse)actionServer.response;
+							((MenuUI)GameClient.instance.sceneManager.currentScene.getUI()).updateLobbyList(response.lobbies);
+						}
 					}
 
 				}

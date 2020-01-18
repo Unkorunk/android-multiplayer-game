@@ -8,25 +8,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Align;
 import ru.timelimit.client.game.GameClient;
 import ru.timelimit.client.game.ResourceManager;
-import ru.timelimit.network.ActionClient;
-import ru.timelimit.network.ActionClientEnum;
-import ru.timelimit.network.ConnectRequest;
-import ru.timelimit.network.Request;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MenuUI extends UI {
-    public final class Lobby {
-        public Lobby(String name, String connection) {
-            this.name = name;
-            this.connection = connection;
-        }
-        public String name;
-        public String connection;
-    }
 
-    public ArrayList<Lobby> lobbyList = new ArrayList<>();
+    public ArrayList<Integer> lobbyList = new ArrayList<>();
     int curLobby = 0;
 
     private Label lobbyChooserLabel;
@@ -37,11 +25,19 @@ public class MenuUI extends UI {
     private TextFieldWrapper nicknameInput;
     private TextFieldWrapper passwordInput;
 
+    public void updateLobbyList(ru.timelimit.network.Lobby[] lobbies) {
+        lobbyList.clear();
+        for (int i = 0; i < lobbies.length; i++) {
+            lobbyList.add(lobbies[i].lobbyId);
+        }
+        updateLobbyChooser();
+    }
+
     private void updateLobbyChooser() {
         if (lobbyList.size() == 0) {
             lobbyChooserLabel.setText("No lobbies :(");
         } else {
-            lobbyChooserLabel.setText("Lobby: " + lobbyList.get(curLobby).name + ". Join!");
+            lobbyChooserLabel.setText("Lobby #" + lobbyList.get(curLobby) + ". Click to join!");
         }
     }
 
@@ -52,12 +48,14 @@ public class MenuUI extends UI {
         var lobbyChooserTitle = new Label(cameraWidth / 2, cameraHeight - 250, 0, 0, "Choose Game to Join");
 
         var lobbyChooserButton = new Button(cameraWidth / 2 - 150, cameraHeight - 320, 300, 40, () -> {
+            if (GameClient.instance.token == null){
+                return;
+            }
             if (lobbyList.size() != 0) {
-                System.out.println("MenuScene: Connecting to lobby " + lobbyList.get(curLobby).name);
-                GameClient.instance.sceneManager.currentScene.setState(2);
+                System.out.println("MenuScene: Connecting to lobby " + lobbyList.get(curLobby));
+                GameClient.sendJoin(curLobby);
             } else {
                 System.out.println("MenuScene: No lobbies to connect :(");
-                GameClient.instance.sceneManager.currentScene.setState(2);
             }
         });
         lobbyChooserLabel = new Label(cameraWidth / 2, cameraHeight - 320 + 20, 0, 0, "No lobbies :(");
@@ -105,14 +103,9 @@ public class MenuUI extends UI {
         var createLobbyBtn = new Button(cameraWidth / 2 - 75, cameraHeight - 220,
                 150, 40,  () -> {
             if (startTimer > 0) {
-                System.out.println("MenuScene: disconnect from lobby");
-                var actionClient = new ActionClient();
-                actionClient.actionType = ActionClientEnum.FINISH;
-                actionClient.accessToken = GameClient.instance.token;
-                GameClient.client.sendTCP(actionClient);
+                GameClient.sendDisconnect();
             } else {
-                System.out.println("MenuScene: Creating lobby");
-                GameClient.sendConnect(nicknameInput.origin.getText(), passwordInput.origin.getText());
+                GameClient.sendCreateLobby();
             }
 
         });
@@ -141,9 +134,15 @@ public class MenuUI extends UI {
         passwordInput.origin.setWidth(250);
         passwordInput.origin.setAlignment(Align.center);
 
+        var loginBtn = new Button(cameraWidth / 2f + 140, cameraHeight - 170, 40, 40, () -> {
+            GameClient.sendConnect(nicknameInput.origin.getText(), passwordInput.origin.getText());
+        });
+        loginBtn.setSprite(new Sprite(ResourceManager.getTexture("BtnUp")));
+
         btnMap.put("createLobbyBtn", createLobbyBtn);
         btnMap.put("ExitBtn", btnExit);
         btnMap.put("MainTitle", title);
+        btnMap.put("LoginBtn", loginBtn);
         btnMap.put("nicknameInput", nicknameInput);
         btnMap.put("passwordInput", passwordInput);
 

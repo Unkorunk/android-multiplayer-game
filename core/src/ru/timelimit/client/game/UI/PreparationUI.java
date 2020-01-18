@@ -22,6 +22,7 @@ public final class PreparationUI extends UI {
         btnMap.put("errorLabel", errorLabel);
 
         var menuBtn = new Button(width - 40, height - 50, 40, 40, () -> {
+            GameClient.sendDisconnect();
             GameClient.instance.sceneManager.currentScene.setState(1);
         });
         menuBtn.setSprite(new Sprite(ResourceManager.getTexture("BtnExit")));
@@ -34,13 +35,11 @@ public final class PreparationUI extends UI {
         btnMap.put("Title", title);
     }
 
-    public void initChooser(ArrayList<Trap> trapList, Consumer<Trap> cb) {
+    public void initChooser(ArrayList<Trap> trapList, Consumer<Integer> cb) {
         int startX = 130;
         for (int i = 0; i < trapList.size(); i++) {
             int finalI = i;
-            var trapBtn = new Button(startX, 10, 40, 40, () -> {
-                cb.accept(trapList.get(finalI));
-            });
+            var trapBtn = new Button(startX, 10, 40, 40, () -> cb.accept(finalI));
             trapBtn.setSprite(new Sprite(trapList.get(finalI).getSprite().getTexture()));
             btnMap.put("trapBtn" + i, trapBtn);
             startX += 50;

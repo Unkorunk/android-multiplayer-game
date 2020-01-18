@@ -45,6 +45,10 @@ public final class Entity extends GameObject {
             initCalled = true;
         }
 
+        if (bm.receivePos(position)) {
+            return;
+        }
+
         if (targetCell == null) {
             targetCell = getCell();
         }
@@ -74,11 +78,7 @@ public final class Entity extends GameObject {
             }
 
             if (stateNow == TaskState.LOCK) {
-//            for (var cmd : trapObj.commands) {
-//                if (commandToString.containsKey(cmd)) {
-//                    GameClient.instance.sceneManager.currentScene.getUI().showElement(commandToString.get(cmd));
-//                }
-//            }
+
                 for (var cmd : commandToString.values()) {
                     GameClient.instance.sceneManager.currentScene.getUI().showElement(cmd);
                 }
@@ -158,11 +158,15 @@ public final class Entity extends GameObject {
             position.x += curSpeed.x * speed;
             position.y += curSpeed.y * GlobalSettings.gravitySpeed;
         }
+
+        bm.sendPos(position.x, position.y, targetCell.x, targetCell.y);
     }
 
     public void setBehaviour(BehaviourModel model){
         bm = model;
     }
+
+    public BehaviourModel getBehaviour() { return bm; }
 
     private BehaviourModel bm;
 }
