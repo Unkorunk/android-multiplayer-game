@@ -48,7 +48,7 @@ public class MenuScene implements Scene {
 
     @Override
     public void dispose() {
-        GlobalSettings.gameObjects.clear();
+        GlobalSettings.clearObjects();
         ResourceManager.disposeTempFonts();
     }
 
