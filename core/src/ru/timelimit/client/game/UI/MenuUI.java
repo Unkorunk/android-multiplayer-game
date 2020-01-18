@@ -29,6 +29,8 @@ public class MenuUI extends UI {
         for (int i = 0; i < lobbies.length; i++) {
             lobbyList.add(lobbies[i].lobbyId);
         }
+        if (curLobby >= lobbyList.size())
+            curLobby = lobbyList.size() - 1;
         updateLobbyChooser();
     }
 

@@ -39,14 +39,14 @@ public abstract class GameObject {
 
         objSprite.setPosition(position.x - objSprite.getWidth() / 2.0f + offsetX, position.y - objSprite.getHeight() / 2.0f + offsetY);
         objSprite.draw(spriteBatch);
-
-        // TODO: comment that
-        var nowCell = getCell();
-        Pixmap pixmap = new Pixmap((int)GlobalSettings.WIDTH_CELL, (int)GlobalSettings.HEIGHT_CELL, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.BLUE);
-        pixmap.drawRectangle(0, 0, (int)GlobalSettings.WIDTH_CELL, (int)GlobalSettings.HEIGHT_CELL);
-        var texture = new Texture(pixmap);
-        spriteBatch.draw(texture, GlobalSettings.WIDTH_CELL * nowCell.x, GlobalSettings.HEIGHT_CELL * nowCell.y);
+//
+//        // TODO: comment that
+//        var nowCell = getCell();
+//        Pixmap pixmap = new Pixmap((int)GlobalSettings.WIDTH_CELL, (int)GlobalSettings.HEIGHT_CELL, Pixmap.Format.RGBA8888);
+//        pixmap.setColor(Color.BLUE);
+//        pixmap.drawRectangle(0, 0, (int)GlobalSettings.WIDTH_CELL, (int)GlobalSettings.HEIGHT_CELL);
+//        var texture = new Texture(pixmap);
+//        spriteBatch.draw(texture, GlobalSettings.WIDTH_CELL * nowCell.x, GlobalSettings.HEIGHT_CELL * nowCell.y);
     }
 
     public void setCell(Pair pair) {
