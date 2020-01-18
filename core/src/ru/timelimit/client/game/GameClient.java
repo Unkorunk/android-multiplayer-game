@@ -75,8 +75,8 @@ public final class GameClient extends ApplicationAdapter {
 		actionClient.actionType = ActionClientEnum.CONNECT;
 
 		var req = new ConnectRequest();
-		req.password = login;
-		req.username = password;
+		req.password = password;
+		req.username = login;
 
 		actionClient.request = req;
 
@@ -101,11 +101,19 @@ public final class GameClient extends ApplicationAdapter {
 		ui.getElement("createLobbyBtn").setBounds(new Rectangle(bounds.x - 100, bounds.y, bounds.width + 200, bounds.height));
 	}
 
+	public static void sendUpdate() {
+		var actionClient = new ActionClient();
+		actionClient.actionType = ActionClientEnum.UPDATE_LOBBY;
+		actionClient.accessToken = GameClient.instance.token;
+		GameClient.client.sendTCP(actionClient);
+	}
+
 	public static void sendCreateLobby() {
 		System.out.println("Request: send create lobby");
 		var actionClient = new ActionClient();
 		actionClient.actionType = ActionClientEnum.CREATE_LOBBY;
 		actionClient.accessToken = GameClient.instance.token;
+		GameClient.client.sendTCP(actionClient);
 	}
 
 	public static void sendTrap(int x, int y, int trapId) {
@@ -166,6 +174,7 @@ public final class GameClient extends ApplicationAdapter {
 								sceneManager.currentScene.getUI().errorLabel.setText(response.accessToken);
 							} else {
 								token = response.accessToken;
+								sendUpdate();
 							}
 						}
 					} else if (actionServer.actionType == ActionServerEnum.START_PREPARATION) {
