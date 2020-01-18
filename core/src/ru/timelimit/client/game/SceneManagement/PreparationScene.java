@@ -121,7 +121,7 @@ public class PreparationScene implements Scene {
         for (var gameObj : GlobalSettings.getObjects()) {
             gameObj.render(batch);
         }
-        GlobalSettings.locker.lock();
+        GlobalSettings.locker.unlock();;
     }
 
     private void renderBackground(SpriteBatch batch) {
