@@ -112,13 +112,12 @@ public class GameScene implements Scene {
 
         renderBackground(batch);
 
-        gui.render(batch);
-
         renderObjects(batch);
 
         GlobalSettings.translateCamera(player.position.x - camera.position.x,
                 player.position.y - camera.position.y, camera, background);
 
+        gui.render(batch);
         if (player.position.x >= GlobalSettings.gameObjects.get(0).position.x || !player.isEnabled){
             exitCode = 2;
         }

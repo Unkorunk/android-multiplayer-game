@@ -16,6 +16,8 @@ import java.util.TimerTask;
 public class PreparationScene implements Scene {
     public int exitCode = 0;
 
+    private int money = 100;
+
     private Timer preparationTimer;
     private OrthographicCamera camera;
     private static UI gui = new PreparationUI();
@@ -124,6 +126,7 @@ public class PreparationScene implements Scene {
         for (var sprite : ground) {
             sprite.draw(batch);
         }
+        ((PreparationUI)gui).updateMoney(money);
     }
 
     @Override
@@ -136,7 +139,9 @@ public class PreparationScene implements Scene {
         }
         if (clickedBtn == null && currentTrap != null && Gdx.input.justTouched()) {
             var pos = Pair.vectorToPair(GameClient.lastClick);
-            if (currentTrap.validator(pos) && pos.x > 0 && pos.x < GlobalSettings.WORLD_WIDTH / GlobalSettings.WIDTH_CELL){
+            if (currentTrap.validator(pos) && pos.x > 0 && pos.x < GlobalSettings.WORLD_WIDTH / GlobalSettings.WIDTH_CELL
+                && money >= currentTrap.cost) {
+                money -= currentTrap.cost;
                 var newTrap = currentTrap.clone();
                 newTrap.setCell(Pair.vectorToPair(GameClient.lastClick));
                 GlobalSettings.gameObjects.add(newTrap);
