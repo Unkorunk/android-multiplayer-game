@@ -8,10 +8,12 @@ import java.util.Arrays;
 
 public class Trap extends GameObject implements Cloneable {
     public ArrayList<ru.timelimit.client.game.Behaviours.BehaviourModel.Command> commands;
+    public int cost;
 
     protected Trap(ArrayList<ru.timelimit.client.game.Behaviours.BehaviourModel.Command> commands, Sprite sprite) {
         this.commands = commands;
         this.objSprite = sprite;
+        this.cost = 10;
     }
 
     public static final Trap laserTrap = new Trap(
