@@ -223,6 +223,7 @@ public class GameServer {
 
                                     User userTemp = new User();
                                     userTemp.connectionId = connection.getID();
+                                    userTemp.username = connectRequest.username;
                                     users.put(accessToken.toString(), userTemp);
                                     usersAuth.put(connection.getID(), accessToken.toString());
                                 } else {
@@ -244,6 +245,7 @@ public class GameServer {
 
                                     User userTemp = new User();
                                     userTemp.connectionId = connection.getID();
+                                    userTemp.username = connectRequest.username;
                                     users.put(accessToken.toString(), userTemp);
                                     usersAuth.put(connection.getID(), accessToken.toString());
                                 } else {
@@ -262,6 +264,34 @@ public class GameServer {
                         LOG.info(String.format("create new room: %d", nextRoomId));
                         rooms.put(nextRoomId++, new Room());
                         server.sendToAllTCP(updateLobby());
+                    } else if (actionClient.actionType == ActionClientEnum.GET_MMR) {
+                        if (user != null) {
+                            try {
+                                ActionServer actionServer = new ActionServer();
+                                actionServer.actionType = ActionServerEnum.GET_MMR;
+                                actionServer.response = new GetMMRResponse();
+                                ((GetMMRResponse) actionServer.response).MMR = 100;
+
+                                PreparedStatement preparedStatementLogin = finalDatabaseConnection.prepareStatement(
+                                        "SELECT * FROM users WHERE username=?"
+                                );
+
+                                LOG.info(String.format("user %s try log", user.username));
+
+                                preparedStatementLogin.setString(1, user.username);
+                                ResultSet resultSet = preparedStatementLogin.executeQuery();
+                                if (resultSet != null && resultSet.next()) {
+                                    ((GetMMRResponse) actionServer.response).MMR = resultSet.getInt("score");
+                                    LOG.info(String.format("user %s get MMR = %d", user.username, ((GetMMRResponse) actionServer.response).MMR));
+                                } else {
+                                    LOG.warning(String.format("user %s failed get MMR", user.username));
+                                }
+
+                                server.sendToTCP(user.connectionId, actionServer);
+                            } catch(Exception ex) {
+                                ex.printStackTrace();
+                            }
+                        }
                     }
 
                 }

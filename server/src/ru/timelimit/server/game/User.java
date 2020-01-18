@@ -1,6 +1,7 @@
 package ru.timelimit.server.game;
 
 public class User {
+    public String username;
     public int connectionId;
     public Room room;
     public int targetX, targetY;

@@ -69,6 +69,13 @@ public final class GameClient extends ApplicationAdapter {
 
 	public static Client client = null;
 
+	public static void sendMMR() {
+		var actionClient = new ActionClient();
+		actionClient.actionType = ActionClientEnum.GET_MMR;
+		actionClient.accessToken = GameClient.instance.token;
+		GameClient.client.sendTCP(actionClient);
+	}
+
 	public static void sendConnect(String login, String password) {
 		System.out.println("Request: send connect");
 		var actionClient = new ActionClient();
@@ -174,6 +181,7 @@ public final class GameClient extends ApplicationAdapter {
 								sceneManager.currentScene.getUI().errorLabel.setText(response.accessToken);
 							} else {
 								token = response.accessToken;
+								GameClient.sendMMR();
 								sendUpdate();
 							}
 						}
@@ -200,6 +208,14 @@ public final class GameClient extends ApplicationAdapter {
 								var response = (UpdateLobbyResponse)actionServer.response;
 								((MenuUI)GameClient.instance.sceneManager.currentScene.getUI()).updateLobbyList(response.lobbies);
 							}
+						}
+					} else if (actionServer.actionType == ActionServerEnum.GET_MMR) {
+						if (actionServer.response instanceof GetMMRResponse) {
+							var response = (GetMMRResponse)actionServer.response;
+							if (GameClient.instance.sceneManager.currentScene.getUI() instanceof  MenuUI){
+								((MenuUI)GameClient.instance.sceneManager.currentScene.getUI()).updateMMR(response.MMR);
+							}
+
 						}
 					}
 
