@@ -74,6 +74,8 @@ public class GameServer {
                             actionServer.actionType = ActionServerEnum.YOU_WIN;
                             server.sendToTCP(connection.getID(), actionServer);
 
+                            updateMMR(finalDatabaseConnection, user, 25);
+
                             LOG.info(String.format("user %d leave from room", connection.getID()));
 
                             if (user.room.users.size() == 0) {
@@ -311,6 +313,9 @@ public class GameServer {
                                 user.room.users.clear();
                                 user.room.traps.clear();
 
+                                updateMMR(finalDatabaseConnection, otherUser, 23);
+                                updateMMR(finalDatabaseConnection, user, -50);
+
                                 ActionServer actionServer = new ActionServer();
                                 actionServer.actionType = ActionServerEnum.YOU_WIN;
 
@@ -351,6 +356,35 @@ public class GameServer {
 
         actionServer.response = updateLobbyResponse;
         return actionServer;
+    }
+
+    private static void updateMMR(java.sql.Connection connection, User user, Integer deltaMMR) {
+        try {
+            PreparedStatement preparedStatementLogin = connection.prepareStatement(
+                    "SELECT * FROM users WHERE username=?"
+            );
+
+            preparedStatementLogin.setString(1, user.username);
+            ResultSet resultSet = preparedStatementLogin.executeQuery();
+            if (resultSet != null && resultSet.next()) {
+                int mmr = resultSet.getInt("score") + deltaMMR;
+                PreparedStatement preparedStatementUpdate= connection.prepareStatement(
+                        "UPDATE users SET score = ? WHERE username = ?"
+                );
+                preparedStatementUpdate.setInt(1, mmr);
+                preparedStatementUpdate.setString(2, user.username);
+
+                if (preparedStatementUpdate.executeUpdate() > 0) {
+                    LOG.info(String.format("user %s successfully set mmr = %d", user.username, mmr));
+                } else {
+                    LOG.warning(String.format("user %s failed set mmr", user.username));
+                }
+            } else {
+                LOG.warning(String.format("user %s failed get MMR", user.username));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private static void updateGame(Server server, Room room) {
