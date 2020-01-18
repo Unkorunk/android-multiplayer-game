@@ -10,6 +10,12 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 
 public final class PreparationUI extends UI {
+    private Label moneyDisplay;
+
+    public void updateMoney(int money) {
+        moneyDisplay.setText("$" + money);
+    }
+
     @Override
     public void init() {
         var width = GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth;
@@ -31,8 +37,11 @@ public final class PreparationUI extends UI {
                 GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight - 50,
                 100,10, "PREPARATION STAGE");
 
+        moneyDisplay = new Label(width - 70 - 20, height - 50 - 20, 0, 0, "$0");
+
         btnMap.put("MenuBtn", menuBtn);
         btnMap.put("Title", title);
+        btnMap.put("MoneyDisplay", moneyDisplay);
     }
 
     public void initChooser(ArrayList<Trap> trapList, Consumer<Integer> cb) {

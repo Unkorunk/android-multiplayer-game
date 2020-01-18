@@ -130,18 +130,20 @@ public class GameScene implements Scene {
 
     @Override
     public void render(SpriteBatch batch) {
+        ((GameUI)gui).updateHp(player.hp);
         updateObjects();
 
         renderBackground(batch);
-
-        gui.render(batch);
 
         renderObjects(batch);
 
         GlobalSettings.translateCamera(player.position.x - camera.position.x,
                 player.position.y - camera.position.y, camera, background);
 
+        gui.render(batch);
+
         if (player.position.x >= GlobalSettings.getObject(0).position.x || !player.isEnabled){
+            System.out.println("Disconnect: " + player.position.x + " " + player.position.y + " " + player.isEnabled);
             exitCode = 1;
             GameClient.sendDisconnect();
         }

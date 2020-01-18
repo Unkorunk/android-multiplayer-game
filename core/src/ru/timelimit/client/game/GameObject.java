@@ -10,6 +10,13 @@ import com.badlogic.gdx.math.Vector2;
 public abstract class GameObject {
     public Vector2 position = new Vector2();
     protected Sprite objSprite;
+    private int offsetX = 0;
+    private int offsetY = 0;
+
+    public void setOffset(int x, int y) {
+        offsetX = x;
+        offsetY = y;
+    }
 
     public void setSprite(Sprite sprite, boolean fixSize) {
         if (fixSize) {
@@ -30,7 +37,7 @@ public abstract class GameObject {
         if (!isEnabled)
             return;
 
-        objSprite.setPosition(position.x - objSprite.getWidth() / 2.0f, position.y - objSprite.getHeight() / 2.0f);
+        objSprite.setPosition(position.x - objSprite.getWidth() / 2.0f + offsetX, position.y - objSprite.getHeight() / 2.0f + offsetY);
         objSprite.draw(spriteBatch);
 
         // TODO: comment that
