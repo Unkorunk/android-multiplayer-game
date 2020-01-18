@@ -38,7 +38,8 @@ public final class CustomInputProcessor implements InputProcessor, GestureDetect
                 if (tf.getText().length() > 0) {
                     tf.setText(tf.getText().substring(0, tf.getText().length() - 1));
                 }
-            } else if (tf.getText().length() < 20 && ((character > 64 && character < 91) || (character > 96 && character < 123))) {
+            } else if (tf.getText().length() < 20 && ((character > 64 && character < 91) || (character > 96 && character < 123)
+                    || (character > 47 && character < 58))) {
                 tf.setText(tf.getText() + character);
             }
 
