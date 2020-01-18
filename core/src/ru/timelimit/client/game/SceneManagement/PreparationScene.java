@@ -159,9 +159,8 @@ public class PreparationScene implements Scene {
             }
         }
 
-        gui.render(batch);
-
         renderObjects(batch);
+        gui.render(batch);
     }
 
     @Override
