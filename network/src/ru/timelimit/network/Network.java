@@ -25,5 +25,6 @@ public class Network {
         kryo.register(Lobby.class);
         kryo.register(JoinRequest.class);
         kryo.register(GameUser.class);
+        kryo.register(GameUser[].class);
     }
 }

@@ -115,7 +115,7 @@ public class GameServer {
                                 ActionServer actionServer = new ActionServer();
                                 actionServer.actionType = ActionServerEnum.START_PREPARATION;
 
-                                LOG.info("start preparation");
+                                LOG.info(String.format("start preparation: %d", userTemp.connectionId));
 
                                 server.sendToTCP(userTemp.connectionId, actionServer);
                             }
@@ -215,7 +215,9 @@ public class GameServer {
 
                                     LOG.info(String.format("user %s success login", connectRequest.username));
 
-                                    users.put(accessToken.toString(), new User());
+                                    User userTemp = new User();
+                                    userTemp.connectionId = connection.getID();
+                                    users.put(accessToken.toString(), userTemp);
                                     usersAuth.put(connection.getID(), accessToken.toString());
                                 } else {
                                     ((ConnectResponse) actionServer.response).accessToken = "INCORRECT PASSWORD";
@@ -315,12 +317,16 @@ public class GameServer {
             ActionServer actionServer = new ActionServer();
             actionServer.actionType = ActionServerEnum.UPDATE_GAME;
             actionServer.response = new UpdateGameResponse();
+            ((UpdateGameResponse) actionServer.response).users = new GameUser[room.users.size()];
             for (int i = 0; i < room.users.size(); i++) {
                 ((UpdateGameResponse) actionServer.response).users[i]
                         = new GameUser(room.users.get(i).connectionId == user.connectionId, room.users.get(i).targetX,
                         room.users.get(i).targetY, room.users.get(i).positionX, room.users.get(i).positionY);
             }
-            ((UpdateGameResponse) actionServer.response).traps = (Trap[]) room.traps.toArray();
+            ((UpdateGameResponse) actionServer.response).traps = new Trap[room.traps.size()];
+            for (int i = 0; i < room.traps.size(); i++) {
+                ((UpdateGameResponse) actionServer.response).traps[i] = room.traps.get(i);
+            }
 
             server.sendToTCP(user.connectionId, actionServer);
         }
