@@ -17,7 +17,6 @@ public class PreparationScene implements Scene {
 
     private int money = 100;
 
-    private Timer preparationTimer;
     private OrthographicCamera camera;
     private static UI gui = new PreparationUI();
 
@@ -153,8 +152,8 @@ public class PreparationScene implements Scene {
         if (clickedBtn == null && currentTrap != -1 && Gdx.input.justTouched()) {
             var pos = Pair.vectorToPair(GameClient.lastClick);
             if (trapTypes.get(currentTrap).validator(pos) && pos.x > 0 && pos.x < GlobalSettings.WORLD_WIDTH / GlobalSettings.WIDTH_CELL
-                && money >= currentTrap.cost) {
-                money -= currentTrap.cost;
+                && money >= trapTypes.get(currentTrap).cost) {
+                money -= trapTypes.get(currentTrap).cost;
                 var trapPos = Pair.vectorToPair(GameClient.lastClick);
                 GameClient.sendTrap(trapPos.x, trapPos.y, currentTrap);
             }
