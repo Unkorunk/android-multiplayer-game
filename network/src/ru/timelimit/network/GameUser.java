@@ -7,6 +7,12 @@ public class GameUser {
     public float positionX;
     public float positionY;
 
+    public GameUser() {
+        isPlayer = false;
+        targetX = targetY = 0;
+        positionX = positionY = 0;
+    }
+
     public GameUser(boolean isPlayer, int targetX, int targetY, float positionX, float positionY) {
         this.isPlayer = isPlayer;
         this.targetX = targetX;
