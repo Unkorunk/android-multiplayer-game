@@ -170,8 +170,8 @@ public final class Entity extends GameObject {
             curSpeed = curSpeed.nor();
 
             System.out.println("deltaTime: " + deltaTime);
-            position.x += curSpeed.x * speed * deltaTime * 6.0f;
-            position.y += curSpeed.y * GlobalSettings.gravitySpeed * deltaTime * 6.0f;
+            position.x += curSpeed.x * speed * deltaTime * 30.0f;
+            position.y += curSpeed.y * GlobalSettings.gravitySpeed * deltaTime * 30.0f;
         }
 
         bm.sendPos(position.x, position.y, targetCell.x, targetCell.y);

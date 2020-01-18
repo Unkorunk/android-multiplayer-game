@@ -142,6 +142,7 @@ public class GameScene implements Scene {
                 player.position.y - camera.position.y, camera, background);
 
         if (player.position.x >= GlobalSettings.getObject(0).position.x || !player.isEnabled){
+            System.out.println("Disconnect: " + player.position.x + " " + player.position.y + " " + player.isEnabled);
             exitCode = 1;
             GameClient.sendDisconnect();
         }
