@@ -158,10 +158,12 @@ public class MenuUI extends UI {
         btnMap.put("LoginBtn", loginBtn);
         btnMap.put("nicknameInput", nicknameInput);
         btnMap.put("passwordInput", passwordInput);
+        btnMap.put("mmrlabel", MMRLabel);
 
         lobbyChooserInit();
 
         if (GameClient.instance.token != null) {
+            System.out.println("SEND MMR");
             GameClient.sendMMR();
         }
     }
