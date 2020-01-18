@@ -88,8 +88,9 @@ public class GameServer {
                         JoinRequest joinRequest = ((JoinRequest) actionClient.request);
 
                         if (joinRequest == null) {
-                            LOG.warning("joinRequest is null or ");
+                            LOG.warning("joinRequest is null");
                             connection.close();
+                            return;
                         }
 
                         Room newRoom = rooms.getOrDefault(joinRequest.lobbyId, null);
@@ -301,6 +302,7 @@ public class GameServer {
 
         updateLobbyResponse.lobbies = new Lobby[availableRooms.size()];
         for (int i = 0; i < availableRooms.size(); i++) {
+            updateLobbyResponse.lobbies[i] = new Lobby();
             updateLobbyResponse.lobbies[i].lobbyId = availableRooms.get(i);
         }
 
