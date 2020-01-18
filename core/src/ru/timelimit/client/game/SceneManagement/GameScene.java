@@ -138,7 +138,8 @@ public class GameScene implements Scene {
                 player.position.y - camera.position.y, camera, background);
 
         if (player.position.x >= GlobalSettings.gameObjects.get(0).position.x || !player.isEnabled){
-            exitCode = 2;
+            exitCode = 1;
+            GameClient.sendDisconnect();
         }
         String clickedBtn = gui.findClicked();
     }

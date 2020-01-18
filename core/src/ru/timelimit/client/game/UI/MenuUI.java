@@ -1,6 +1,5 @@
 package ru.timelimit.client.game.UI;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -37,6 +36,8 @@ public class MenuUI extends UI {
         if (lobbyList.size() == 0) {
             lobbyChooserLabel.setText("No lobbies :(");
         } else {
+            System.out.println("Lobby count: " + lobbyList.size());
+            System.out.println("Cur lobby in chooser: " + lobbyList.get(curLobby));
             lobbyChooserLabel.setText("Lobby #" + lobbyList.get(curLobby) + ". Click to join!");
         }
     }
@@ -53,7 +54,7 @@ public class MenuUI extends UI {
             }
             if (lobbyList.size() != 0) {
                 System.out.println("MenuScene: Connecting to lobby " + lobbyList.get(curLobby));
-                GameClient.sendJoin(curLobby);
+                GameClient.sendJoin(lobbyList.get(curLobby));
             } else {
                 System.out.println("MenuScene: No lobbies to connect :(");
             }

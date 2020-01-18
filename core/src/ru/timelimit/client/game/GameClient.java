@@ -61,7 +61,7 @@ public final class GameClient extends ApplicationAdapter {
 
 		var fontGen = new FreeTypeFontGenerator(Gdx.files.internal("Fonts/font.ttf"));
 		var fontParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
-		fontParam.size = 20;
+		fontParam.size = 18;
 		ResourceManager.addFont("defaultFont", fontGen.generateFont(fontParam));
 
 		fontGen.dispose();
@@ -183,17 +183,22 @@ public final class GameClient extends ApplicationAdapter {
 						sceneManager.currentScene.setState(3);
 					} else if (actionServer.actionType == ActionServerEnum.UPDATE_GAME){
 						if (actionServer.response instanceof UpdateGameResponse) {
-							var response = (UpdateGameResponse)actionServer.response;
-							if (GameClient.instance.sceneManager.currentScene instanceof PreparationScene) {
-								((PreparationScene)GameClient.instance.sceneManager.currentScene).updateGame(response.users, response.traps);
-							} else if (GameClient.instance.sceneManager.currentScene instanceof GameScene) {
-								((GameScene)GameClient.instance.sceneManager.currentScene).updateGame(response.users, response.traps);
+							if (!(GameClient.instance.sceneManager.currentScene.getUI() instanceof  MenuUI)){
+								var response = (UpdateGameResponse)actionServer.response;
+								if (GameClient.instance.sceneManager.currentScene instanceof PreparationScene) {
+									((PreparationScene)GameClient.instance.sceneManager.currentScene).updateGame(response.users, response.traps);
+								} else if (GameClient.instance.sceneManager.currentScene instanceof GameScene) {
+									((GameScene)GameClient.instance.sceneManager.currentScene).updateGame(response.users, response.traps);
+								}
 							}
+
 						}
 					} else if (actionServer.actionType == ActionServerEnum.UPDATE_LOBBY) {
 						if (actionServer.response instanceof  UpdateLobbyResponse){
-							var response = (UpdateLobbyResponse)actionServer.response;
-							((MenuUI)GameClient.instance.sceneManager.currentScene.getUI()).updateLobbyList(response.lobbies);
+							if (GameClient.instance.sceneManager.currentScene.getUI() instanceof  MenuUI){
+								var response = (UpdateLobbyResponse)actionServer.response;
+								((MenuUI)GameClient.instance.sceneManager.currentScene.getUI()).updateLobbyList(response.lobbies);
+							}
 						}
 					}
 
