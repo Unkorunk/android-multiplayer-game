@@ -21,6 +21,14 @@ public class MenuUI extends UI {
     public int startTimer = -1;
 
     public TextFieldWrapper activeField = null;
+    public int MMR = -1;
+
+    public void updateMMR(int mmr) {
+        MMR = mmr;
+        MMRLabel.setText("Score: " + mmr);
+    }
+
+    public Label MMRLabel;
     private TextFieldWrapper nicknameInput;
     private TextFieldWrapper passwordInput;
 
@@ -29,6 +37,8 @@ public class MenuUI extends UI {
         for (int i = 0; i < lobbies.length; i++) {
             lobbyList.add(lobbies[i].lobbyId);
         }
+        if (curLobby >= lobbyList.size())
+            curLobby = lobbyList.size() - 1;
         updateLobbyChooser();
     }
 
@@ -98,6 +108,8 @@ public class MenuUI extends UI {
         errorLabel.background = null;
         btnMap.put("errorLabel", errorLabel);
 
+        MMRLabel = new Label(50, cameraHeight - 100, 0, 0, "Score: ");
+
         var title = new Label(cameraWidth  / 2, cameraHeight - 40,
                 100,10, "KILL YOUR FRIENDS");
         title.setBackground(new Sprite(ResourceManager.getTexture("BtnEmpty")));
@@ -148,5 +160,9 @@ public class MenuUI extends UI {
         btnMap.put("passwordInput", passwordInput);
 
         lobbyChooserInit();
+
+        if (GameClient.instance.token != null) {
+            GameClient.sendMMR();
+        }
     }
 }

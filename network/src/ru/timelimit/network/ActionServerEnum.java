@@ -7,5 +7,6 @@ public enum ActionServerEnum {
     START_GAME,
     YOU_WIN,
     YOU_LOSE,
-    CONNECT
+    CONNECT,
+    GET_MMR
 }

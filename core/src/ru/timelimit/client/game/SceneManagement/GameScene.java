@@ -33,7 +33,9 @@ public class GameScene implements Scene {
 
         remotePlayer = new Entity();
         remotePlayer.setBehaviour(new RemoteBehaviour());
-        remotePlayer.setSprite(new Sprite(ResourceManager.getTexture("Character")), true);
+        var sprite =  new Sprite(ResourceManager.getTexture("Character"));
+        sprite.setColor(1, 0.5f, 0.5f, 0.5f);
+        remotePlayer.setSprite(sprite, true);
         remotePlayer.setCell(new Pair(0, 1));
 
         GlobalSettings.addObject(player);

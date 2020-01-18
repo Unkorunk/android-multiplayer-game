@@ -8,5 +8,6 @@ public enum ActionClientEnum {
     JOIN,
     FINISH,
     CONNECT,
-    CREATE_LOBBY
+    CREATE_LOBBY,
+    GET_MMR
 }
