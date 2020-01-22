@@ -1,5 +1,6 @@
 package ru.timelimit.client.game.UI;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import ru.timelimit.client.game.GameClient;
 import ru.timelimit.client.game.GlobalSettings;
@@ -7,20 +8,26 @@ import ru.timelimit.client.game.GlobalSettings;
 import java.util.HashMap;
 
 public abstract class UI {
+    protected OrthographicCamera cameraInst;
+    protected static UI currentUI;
     public abstract void init();
 
     public Label errorLabel;
 
-    public boolean isClicked(String elementName) {
-        if (!btnMap.containsKey(elementName)) {
+    public void setCamera(OrthographicCamera camera) {
+        cameraInst = camera;
+    }
+
+    public static boolean isClicked(String elementName) {
+        if (!currentUI.btnMap.containsKey(elementName)) {
             return false;
         }
 
-        if (GlobalSettings.checkForType(btnMap.get(elementName), Button.class)) {
-            return ((Button)btnMap.get(elementName)).checkClick(GameClient.lastClick);
+        if (GlobalSettings.checkForType(currentUI.btnMap.get(elementName), Button.class)) {
+            return ((Button)currentUI.btnMap.get(elementName)).checkClick(GameClient.lastClick);
         }
-        if (GlobalSettings.checkForType(btnMap.get(elementName), TextFieldWrapper.class)) {
-            return ((TextFieldWrapper)btnMap.get(elementName)).checkClick(GameClient.lastClick);
+        if (GlobalSettings.checkForType(currentUI.btnMap.get(elementName), TextFieldWrapper.class)) {
+            return ((TextFieldWrapper)currentUI.btnMap.get(elementName)).checkClick(GameClient.lastClick);
         }
         return false;
     }
@@ -44,15 +51,22 @@ public abstract class UI {
     public void render(Batch batch) {
         for (HashMap.Entry<String, UIElement> it : btnMap.entrySet()) {
             if (btnSettings == null || btnSettings.getOrDefault(it.getKey(), true)) {
-                it.getValue().render(batch);
+                it.getValue().render(batch, cameraInst);
             }
         }
     }
 
-    public void hideElement(String nameElement) {
+    public static void hideElement(String nameElement) {
+        currentUI.hideEl(nameElement);
+    }
+    public static void showElement(String nameElement) {
+        currentUI.showEl(nameElement);
+    }
+
+    protected void hideEl(String nameElement) {
         btnSettings.put(nameElement, false);
     }
-    public void showElement(String nameElement) {
+    protected void showEl(String nameElement) {
         btnSettings.put(nameElement, true);
     }
 

@@ -1,6 +1,7 @@
 package ru.timelimit.client.game.UI;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -15,7 +16,7 @@ public final class TextFieldWrapper extends UIElement {
     public TextField origin;
 
     @Override
-    public void render(Batch batch) {
+    public void render(Batch batch, OrthographicCamera camera) {
         origin.draw(batch, 1);
     }
 
@@ -30,7 +31,7 @@ public final class TextFieldWrapper extends UIElement {
                 System.out.println("Clicked!");
                 Gdx.input.setOnscreenKeyboardVisible(true);
 
-                ((MenuUI) GameClient.instance.sceneManager.currentScene.getUI()).activeField = this;
+                ((MenuUI) UI.currentUI).activeField = this;
 
                 return true;
             }

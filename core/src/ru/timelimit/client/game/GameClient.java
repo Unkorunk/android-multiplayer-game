@@ -26,7 +26,7 @@ import java.io.IOException;
 
 public final class GameClient extends ApplicationAdapter {
 
-	public static GameClient instance;
+	private static GameClient instance;
 
 	public String token = null;
 
@@ -143,6 +143,7 @@ public final class GameClient extends ApplicationAdapter {
 		actionClient.actionType = ActionClientEnum.FINISH;
 		actionClient.accessToken = GameClient.instance.token;
 		GameClient.client.sendTCP(actionClient);
+		instance.sceneManager.currentScene.setState(1);
 	}
 
 	public static void sendTarget(float xPos, float yPos, int xTarget, int yTarget) {
@@ -170,55 +171,79 @@ public final class GameClient extends ApplicationAdapter {
 		Network.register(client);
 
 		client.addListener(new Listener() {
+			@Override
+			public void connected(Connection connection) {
+				super.connected(connection);
+			}
+
+			@Override
+			public void disconnected(Connection connection) {
+				super.disconnected(connection);
+			}
+
+			@Override
 			public void received(Connection connection, Object object) {
+				super.received(connection, object);
 				if (object instanceof ActionServer) {
 					ActionServer actionServer = (ActionServer) object;
 					System.out.println(actionServer.actionType.name());
-					if (actionServer.actionType == ActionServerEnum.CONNECT) {
-						if (actionServer.response instanceof ConnectResponse) {
-							var response = (ConnectResponse)actionServer.response;
-							if (response.accessToken.equals("FAILED") || response.accessToken.equals("INCORRECT PASSWORD")) {
-								sceneManager.currentScene.getUI().errorLabel.setText(response.accessToken);
-							} else {
-								token = response.accessToken;
-								GameClient.sendMMR();
-								sendUpdate();
-							}
-						}
-					} else if (actionServer.actionType == ActionServerEnum.START_PREPARATION) {
-						sceneManager.currentScene.setState(2);
-					} else if (actionServer.actionType == ActionServerEnum.START_GAME) {
-						sceneManager.currentScene.setState(3);
-					} else if (actionServer.actionType == ActionServerEnum.UPDATE_GAME){
-						if (actionServer.response instanceof UpdateGameResponse) {
-							if (!(GameClient.instance.sceneManager.currentScene.getUI() instanceof  MenuUI)){
-								var response = (UpdateGameResponse)actionServer.response;
-								if (GameClient.instance.sceneManager.currentScene instanceof PreparationScene) {
-									((PreparationScene)GameClient.instance.sceneManager.currentScene).updateGame(response.users, response.traps);
-								} else if (GameClient.instance.sceneManager.currentScene instanceof GameScene) {
-									System.out.println("DEBUG: UPDATE IN GAME");
-									((GameScene)GameClient.instance.sceneManager.currentScene).updateGame(response.users, response.traps);
+					switch (actionServer.actionType) {
+						case CONNECT:
+							if (actionServer.response instanceof ConnectResponse) {
+								var response = (ConnectResponse)actionServer.response;
+								if (response.accessToken.equals("FAILED") || response.accessToken.equals("INCORRECT PASSWORD")) {
+									sceneManager.currentScene.getUI().errorLabel.setText(response.accessToken);
+								} else {
+									token = response.accessToken;
+									GameClient.sendMMR();
+									sendUpdate();
 								}
 							}
+							break;
 
-						}
-					} else if (actionServer.actionType == ActionServerEnum.UPDATE_LOBBY) {
-						if (actionServer.response instanceof  UpdateLobbyResponse){
-							if (GameClient.instance.sceneManager.currentScene.getUI() instanceof  MenuUI){
-								var response = (UpdateLobbyResponse)actionServer.response;
-								((MenuUI)GameClient.instance.sceneManager.currentScene.getUI()).updateLobbyList(response.lobbies);
-							}
-						}
-					} else if (actionServer.actionType == ActionServerEnum.GET_MMR) {
-						if (actionServer.response instanceof GetMMRResponse) {
-							var response = (GetMMRResponse)actionServer.response;
-							if (GameClient.instance.sceneManager.currentScene.getUI() instanceof  MenuUI){
-								((MenuUI)GameClient.instance.sceneManager.currentScene.getUI()).updateMMR(response.MMR);
-							}
+						case START_PREPARATION:
+							sceneManager.currentScene.setState(2);
+							break;
 
-						}
+						case START_GAME:
+							sceneManager.currentScene.setState(3);
+							break;
+
+						case UPDATE_GAME:
+							if (actionServer.response instanceof UpdateGameResponse) {
+								if (!(sceneManager.currentScene.getUI() instanceof  MenuUI)){
+									var response = (UpdateGameResponse)actionServer.response;
+									if (sceneManager.currentScene instanceof PreparationScene) {
+										((PreparationScene)sceneManager.currentScene).updateGame(response.users, response.traps);
+									} else if (sceneManager.currentScene instanceof GameScene) {
+										System.out.println("DEBUG: UPDATE IN GAME");
+										((GameScene)sceneManager.currentScene).updateGame(response.users, response.traps);
+									}
+								}
+
+							}
+							break;
+
+						case UPDATE_LOBBY:
+							if (actionServer.response instanceof  UpdateLobbyResponse){
+								if (sceneManager.currentScene.getUI() instanceof  MenuUI){
+									var response = (UpdateLobbyResponse)actionServer.response;
+									((MenuUI)sceneManager.currentScene.getUI()).updateLobbyList(response.lobbies);
+								}
+							}
+							break;
+
+						case GET_MMR:
+							if (actionServer.response instanceof GetMMRResponse) {
+								var response = (GetMMRResponse)actionServer.response;
+								if (sceneManager.currentScene.getUI() instanceof  MenuUI){
+									((MenuUI)sceneManager.currentScene.getUI()).updateMMR(response.MMR);
+								}
+
+							}
+						default:
+							break;
 					}
-
 				}
 			}
 		});
@@ -229,7 +254,7 @@ public final class GameClient extends ApplicationAdapter {
 
 		im = new InputMultiplexer();
 
-		inputProcessor = new CustomInputProcessor();
+		inputProcessor = new CustomInputProcessor(this);
 		GestureDetector gd = new GestureDetector(inputProcessor);
 
 		sceneManager = new SceneManager();

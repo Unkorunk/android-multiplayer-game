@@ -1,5 +1,6 @@
 package ru.timelimit.client.game.UI;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import ru.timelimit.client.game.GameClient;
 import ru.timelimit.client.game.ResourceManager;
@@ -15,8 +16,10 @@ public final class GameUI extends UI {
 
     @Override
     public void init() {
-        var width = GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth;
-        var height = GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight;
+        UI.currentUI = this;
+
+        var width = cameraInst.viewportWidth;
+        var height = cameraInst.viewportHeight;
 
         btnMap = new HashMap<>();
         btnSettings = new HashMap<>();
@@ -29,7 +32,6 @@ public final class GameUI extends UI {
         var slipBtn = new Button(width - 70, 10, 40, 40, () -> {});
         var menuBtn = new Button(10, height - 50, 40, 40, () -> {
             GameClient.sendDisconnect();
-            GameClient.instance.sceneManager.currentScene.setState(1);
         });
 
 

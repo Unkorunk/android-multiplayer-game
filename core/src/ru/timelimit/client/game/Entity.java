@@ -1,6 +1,7 @@
 package ru.timelimit.client.game;
 
 import com.badlogic.gdx.math.Vector2;
+import ru.timelimit.client.game.UI.UI;
 import ru.timelimit.network.ActionClient;
 import ru.timelimit.network.ActionClientEnum;
 import ru.timelimit.network.ConnectRequest;
@@ -104,7 +105,7 @@ public final class Entity extends GameObject {
         if (stateNow == TaskState.LOCK) {
 
             for (var cmd : commandToString.values()) {
-                GameClient.instance.sceneManager.currentScene.getUI().showElement(cmd);
+                UI.showElement(cmd);
             }
             chooseTimer = delaySeconds * 1000;
             lastTime = System.currentTimeMillis();
@@ -157,7 +158,7 @@ public final class Entity extends GameObject {
 
         if (stateNow == TaskState.UNLOCK) {
             for (var cmd : commandToString.values()) {
-                GameClient.instance.sceneManager.currentScene.getUI().hideElement(cmd);
+                UI.hideElement(cmd);
             }
             stateNow = TaskState.UNLOCKED;
         } else if (nowCell.equals(targetCell)) {

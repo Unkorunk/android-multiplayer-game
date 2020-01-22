@@ -10,9 +10,7 @@ import ru.timelimit.client.game.ResourceManager;
 public final class Button extends UIElement {
     public Button(float x, float y, float width, float height, Runnable callback) {
         btnRect = new Rectangle(x, y, width, height);
-        renderRect = new Rectangle(GameClient.instance.sceneManager.currentScene.getCamera().position.x + x,
-                GameClient.instance.sceneManager.currentScene.getCamera().position.y + y,
-                width, height);
+        renderRect = new Rectangle(x, y, width, height);
 
         cb = callback;
         background = new Sprite(ResourceManager.getTexture("BtnEmpty"));

@@ -1,6 +1,7 @@
 package ru.timelimit.client.game.UI;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
@@ -12,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MenuUI extends UI {
-
     public ArrayList<Integer> lobbyList = new ArrayList<>();
     int curLobby = 0;
 
@@ -53,15 +53,12 @@ public class MenuUI extends UI {
     }
 
     private void lobbyChooserInit() {
-        var cameraWidth = GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth;
-        var cameraHeight = GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight;
+        var cameraWidth = cameraInst.viewportWidth;
+        var cameraHeight = cameraInst.viewportHeight;
 
         var lobbyChooserTitle = new Label(cameraWidth / 2, cameraHeight - 250, 0, 0, "Choose Game to Join");
 
         var lobbyChooserButton = new Button(cameraWidth / 2 - 150, cameraHeight - 320, 300, 40, () -> {
-            if (GameClient.instance.token == null){
-                return;
-            }
             if (lobbyList.size() != 0) {
                 System.out.println("MenuScene: Connecting to lobby " + lobbyList.get(curLobby));
                 GameClient.sendJoin(lobbyList.get(curLobby));
@@ -99,12 +96,13 @@ public class MenuUI extends UI {
 
     @Override
     public void init() {
+        UI.currentUI = this;
         btnMap = new HashMap<>();
 
-        var cameraWidth = GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth;
-        var cameraHeight = GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight;
+        var cameraWidth = cameraInst.viewportWidth;
+        var cameraHeight = cameraInst.viewportHeight;
 
-        errorLabel = new Label( 100, GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight - 20, 0, 0, "");
+        errorLabel = new Label( 100, cameraHeight - 20, 0, 0, "");
         errorLabel.background = null;
         btnMap.put("errorLabel", errorLabel);
 
@@ -163,9 +161,9 @@ public class MenuUI extends UI {
 
         lobbyChooserInit();
 
-        if (GameClient.instance.token != null) {
-            System.out.println("SEND MMR");
-            GameClient.sendMMR();
-        }
+//        if (GameClient.instance.token != null) {
+//            System.out.println("SEND MMR");
+//            GameClient.sendMMR();
+//        }
     }
 }

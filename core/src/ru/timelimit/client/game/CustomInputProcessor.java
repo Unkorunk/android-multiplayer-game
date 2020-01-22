@@ -11,6 +11,10 @@ import ru.timelimit.client.game.SceneManagement.PreparationScene;
 import ru.timelimit.client.game.UI.MenuUI;
 
 public final class CustomInputProcessor implements InputProcessor, GestureDetector.GestureListener {
+    CustomInputProcessor(GameClient gameClient) {
+        gc = gameClient;
+    }
+    private GameClient gc;
     private OrthographicCamera cam;
     private Sprite bg;
 
@@ -31,8 +35,8 @@ public final class CustomInputProcessor implements InputProcessor, GestureDetect
 
     @Override
     public boolean keyTyped(char character) {
-        if (GlobalSettings.checkForType(GameClient.instance.sceneManager.currentScene, MenuScene.class)) {
-            var tf = ((MenuUI)GameClient.instance.sceneManager.currentScene.getUI()).activeField.origin;
+        if (GlobalSettings.checkForType(gc.sceneManager.currentScene, MenuScene.class)) {
+            var tf = ((MenuUI)gc.sceneManager.currentScene.getUI()).activeField.origin;
 
             if (character == 8){
                 if (tf.getText().length() > 0) {
@@ -96,12 +100,12 @@ public final class CustomInputProcessor implements InputProcessor, GestureDetect
 
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
-        if (GlobalSettings.checkForType(GameClient.instance.sceneManager.currentScene, PreparationScene.class)) {
+        if (GlobalSettings.checkForType(gc.sceneManager.currentScene, PreparationScene.class)) {
             deltaX = -deltaX * (cam.viewportWidth / Gdx.graphics.getWidth());
             deltaY = deltaY * (cam.viewportHeight / Gdx.graphics.getHeight());
 
             GlobalSettings.translateCamera(deltaX, deltaY, cam, bg);
-            ((PreparationScene) GameClient.instance.sceneManager.currentScene).currentTrap = -1;
+            ((PreparationScene) gc.sceneManager.currentScene).currentTrap = -1;
             return true;
         }
         return false;

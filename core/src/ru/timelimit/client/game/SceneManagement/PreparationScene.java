@@ -18,7 +18,7 @@ public class PreparationScene implements Scene {
     private int money = 100;
 
     private OrthographicCamera camera;
-    private static UI gui = new PreparationUI();
+    private UI gui = new PreparationUI();
 
     private Sprite background;
     private ArrayList<Sprite> ground;
@@ -59,6 +59,8 @@ public class PreparationScene implements Scene {
         camera = new OrthographicCamera(600, 600 * (height / width));
         camera.position.set(0 + camera.viewportWidth / 2, 0 + camera.viewportHeight / 2, 0);
         camera.update();
+
+        gui.setCamera(camera);
         gui.init();
 
         background = new Sprite(ResourceManager.getTexture("BackgroundSky"));

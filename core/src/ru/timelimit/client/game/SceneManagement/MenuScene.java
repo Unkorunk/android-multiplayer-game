@@ -14,7 +14,7 @@ import java.util.Objects;
 public class MenuScene implements Scene {
     public int exitCode = 0;
     private OrthographicCamera camera;
-    private static UI gui = new MenuUI();
+    private UI gui = new MenuUI();
 
     private Sprite background;
     private Sprite backgroundCity1;
@@ -30,6 +30,7 @@ public class MenuScene implements Scene {
         camera = new OrthographicCamera(600, 600 * (height / width));
         camera.position.set(0 + camera.viewportWidth / 2, 0 + camera.viewportHeight / 2, 0);
         camera.update();
+        gui.setCamera(camera);
         gui.init();
 
         background = new Sprite(Objects.requireNonNull(ResourceManager.getTexture("BackgroundSky")));

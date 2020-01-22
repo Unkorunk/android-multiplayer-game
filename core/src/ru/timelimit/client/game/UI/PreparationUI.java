@@ -1,5 +1,6 @@
 package ru.timelimit.client.game.UI;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import ru.timelimit.client.game.GameClient;
 import ru.timelimit.client.game.ResourceManager;
@@ -18,8 +19,10 @@ public final class PreparationUI extends UI {
 
     @Override
     public void init() {
-        var width = GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth;
-        var height = GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight;
+        UI.currentUI = this;
+
+        var width = cameraInst.viewportWidth;
+        var height = cameraInst.viewportHeight;
 
         btnMap = new HashMap<>();
 
@@ -29,12 +32,11 @@ public final class PreparationUI extends UI {
 
         var menuBtn = new Button(width - 40, height - 50, 40, 40, () -> {
             GameClient.sendDisconnect();
-            GameClient.instance.sceneManager.currentScene.setState(1);
         });
         menuBtn.setSprite(new Sprite(ResourceManager.getTexture("BtnExit")));
 
-        var title = new Label(GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth / 2,
-                GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight - 50,
+        var title = new Label(cameraInst.viewportWidth / 2,
+                cameraInst.viewportHeight - 50,
                 100,10, "PREPARATION STAGE");
 
         moneyDisplay = new Label(width - 70 - 20, height - 50 - 20, 0, 0, "$0");

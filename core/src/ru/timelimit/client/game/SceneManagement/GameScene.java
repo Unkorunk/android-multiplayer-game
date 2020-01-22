@@ -20,7 +20,7 @@ public class GameScene implements Scene {
     private Entity remotePlayer;
 
     private OrthographicCamera camera;
-    private static UI gui = new GameUI();
+    private UI gui = new GameUI();
     private Sprite background;
     private ArrayList<Sprite> ground;
     private ArrayList<Sprite> parallaxCity;
@@ -50,6 +50,7 @@ public class GameScene implements Scene {
         camera = new OrthographicCamera(600, 600 * (height / width));
         camera.position.set(0 + camera.viewportWidth / 2, 0 + camera.viewportHeight / 2, 0);
         camera.update();
+        gui.setCamera(camera);
         gui.init();
 
         background = new Sprite(ResourceManager.getTexture("BackgroundSky"));

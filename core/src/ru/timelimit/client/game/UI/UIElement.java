@@ -1,5 +1,6 @@
 package ru.timelimit.client.game.UI;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
@@ -10,11 +11,11 @@ import ru.timelimit.client.game.GlobalSettings;
 import java.util.ArrayList;
 
 public abstract class UIElement {
-    public void render(Batch batch) {
-        renderRect.x = GameClient.instance.sceneManager.currentScene.getCamera().position.x
-                - GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth / 2 + btnRect.x;
-        renderRect.y = GameClient.instance.sceneManager.currentScene.getCamera().position.y
-                - GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight / 2 + btnRect.y;
+    public void render(Batch batch, OrthographicCamera camera) {
+        renderRect.x = camera.position.x
+                - camera.viewportWidth / 2 + btnRect.x;
+        renderRect.y = camera.position.y
+                - camera.viewportHeight / 2 + btnRect.y;
 
         if (background != null) {
             background.setBounds(renderRect.x, renderRect.y, renderRect.width, renderRect.height);
@@ -26,7 +27,7 @@ public abstract class UIElement {
         }
 
         for (var child : children) {
-            child.render(batch);
+            child.render(batch, camera);
         }
     }
 

@@ -1,5 +1,6 @@
 package ru.timelimit.client.game.UI;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -11,9 +12,7 @@ import ru.timelimit.client.game.ResourceManager;
 public final class Label extends UIElement {
     public Label(float x, float y, float width, float height, String text) {
         btnRect = new Rectangle(x, y, width, height);
-        renderRect = new Rectangle(GameClient.instance.sceneManager.currentScene.getCamera().position.x + x,
-                GameClient.instance.sceneManager.currentScene.getCamera().position.y + y,
-                width, height);
+        renderRect = new Rectangle(x, y, width, height);
 
         background = new Sprite(ResourceManager.getTexture("BtnEmpty"));
 
@@ -37,11 +36,11 @@ public final class Label extends UIElement {
     }
 
     @Override
-    public void render(Batch batch) {
-        renderRect.x = GameClient.instance.sceneManager.currentScene.getCamera().position.x
-                - GameClient.instance.sceneManager.currentScene.getCamera().viewportWidth / 2 + btnRect.x;
-        renderRect.y = GameClient.instance.sceneManager.currentScene.getCamera().position.y
-                - GameClient.instance.sceneManager.currentScene.getCamera().viewportHeight / 2 + btnRect.y;
+    public void render(Batch batch, OrthographicCamera camera) {
+        renderRect.x = camera.position.x
+                - camera.viewportWidth / 2 + btnRect.x;
+        renderRect.y = camera.position.y
+                - camera.viewportHeight / 2 + btnRect.y;
 
         renderRect.x -= labelLayout.width / 2 + margin;
         renderRect.y -= labelLayout.height / 2 + margin;
