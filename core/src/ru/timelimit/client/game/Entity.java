@@ -12,7 +12,11 @@ import java.util.HashMap;
 public final class Entity extends GameObject {
     public Pair targetCell = null;
 
-    public int hp = GlobalSettings.defaultHP;
+    private int hp = GlobalSettings.defaultHP;
+
+    public int getHp() {
+        return hp;
+    }
 
     private long lastTime = 0;
     private long chooseTimer = 0;
@@ -121,7 +125,7 @@ public final class Entity extends GameObject {
 
                 if (!trapObj.commands.contains(cmd)) {
                     // cmd = trapObj.commands.get(0);
-                    hp -= trapObj.dmg;
+                    hp -= trapObj.getDmg();
                     getSprite().setColor(1, 0, 0, 1);
                     if (hp <= 0) {
                         isEnabled = false;

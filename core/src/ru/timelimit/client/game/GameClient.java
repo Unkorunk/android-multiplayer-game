@@ -28,7 +28,7 @@ public final class GameClient extends ApplicationAdapter {
 
 	private static GameClient instance;
 
-	public String token = null;
+	public static String token = null;
 
 	private CustomInputProcessor inputProcessor;
 	private InputMultiplexer im;
@@ -72,7 +72,7 @@ public final class GameClient extends ApplicationAdapter {
 	public static void sendMMR() {
 		var actionClient = new ActionClient();
 		actionClient.actionType = ActionClientEnum.GET_MMR;
-		actionClient.accessToken = GameClient.instance.token;
+		actionClient.accessToken = token;
 		GameClient.client.sendTCP(actionClient);
 	}
 
@@ -94,7 +94,7 @@ public final class GameClient extends ApplicationAdapter {
 		System.out.println("Request: send join");
 		var actionClient = new ActionClient();
 		actionClient.actionType = ActionClientEnum.JOIN;
-		actionClient.accessToken = GameClient.instance.token;
+		actionClient.accessToken = token;
 		var req = new JoinRequest();
 		req.lobbyId = id;
 		actionClient.request = req;
@@ -102,7 +102,7 @@ public final class GameClient extends ApplicationAdapter {
 		GameClient.client.sendTCP(actionClient);
 
 		var ui = (MenuUI)GameClient.instance.sceneManager.currentScene.getUI();
-		ui.startTimer = 10;
+		ui.setState(MenuUI.State.JOINING);
 		((Label)ui.getElement("createLobbyBtn").getChildren(Label.class)).setText("Waiting for game (Click to leave)");
 		var bounds = ui.getElement("createLobbyBtn").getBounds();
 		ui.getElement("createLobbyBtn").setBounds(new Rectangle(bounds.x - 100, bounds.y, bounds.width + 200, bounds.height));
@@ -111,7 +111,7 @@ public final class GameClient extends ApplicationAdapter {
 	public static void sendUpdate() {
 		var actionClient = new ActionClient();
 		actionClient.actionType = ActionClientEnum.UPDATE_LOBBY;
-		actionClient.accessToken = GameClient.instance.token;
+		actionClient.accessToken = token;
 		GameClient.client.sendTCP(actionClient);
 	}
 
@@ -119,7 +119,7 @@ public final class GameClient extends ApplicationAdapter {
 		System.out.println("Request: send create lobby");
 		var actionClient = new ActionClient();
 		actionClient.actionType = ActionClientEnum.CREATE_LOBBY;
-		actionClient.accessToken = GameClient.instance.token;
+		actionClient.accessToken = token;
 		GameClient.client.sendTCP(actionClient);
 	}
 
@@ -127,7 +127,7 @@ public final class GameClient extends ApplicationAdapter {
 		System.out.println("Request: send trap");
 		var actionClient = new ActionClient();
 		actionClient.actionType = ActionClientEnum.SET_TRAP;
-		actionClient.accessToken = GameClient.instance.token;
+		actionClient.accessToken = token;
 		var req = new SetTrapRequest();
 		req.x = x;
 		req.y = y;
@@ -141,7 +141,7 @@ public final class GameClient extends ApplicationAdapter {
 		System.out.println("Request: Disconnect from lobby");
 		var actionClient = new ActionClient();
 		actionClient.actionType = ActionClientEnum.FINISH;
-		actionClient.accessToken = GameClient.instance.token;
+		actionClient.accessToken = token;
 		GameClient.client.sendTCP(actionClient);
 		instance.sceneManager.currentScene.setState(1);
 	}
@@ -150,7 +150,7 @@ public final class GameClient extends ApplicationAdapter {
 		System.out.println("Request: send target");
 		var actionClient = new ActionClient();
 		actionClient.actionType = ActionClientEnum.SELECT_TARGET;
-		actionClient.accessToken = GameClient.instance.token;
+		actionClient.accessToken = token;
 		var req = new SelectTargetRequest();
 		req.targetX = xTarget;
 		req.targetY = yTarget;
@@ -195,6 +195,7 @@ public final class GameClient extends ApplicationAdapter {
 									sceneManager.currentScene.getUI().errorLabel.setText(response.accessToken);
 								} else {
 									token = response.accessToken;
+									((MenuUI)sceneManager.currentScene.getUI()).setState(MenuUI.State.LOGIN);
 									GameClient.sendMMR();
 									sendUpdate();
 								}

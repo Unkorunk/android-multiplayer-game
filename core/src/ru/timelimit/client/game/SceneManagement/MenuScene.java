@@ -12,7 +12,7 @@ import ru.timelimit.client.game.UI.UI;
 import java.util.Objects;
 
 public class MenuScene implements Scene {
-    public int exitCode = 0;
+    private int exitCode = 0;
     private OrthographicCamera camera;
     private UI gui = new MenuUI();
 

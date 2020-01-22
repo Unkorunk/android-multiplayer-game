@@ -14,7 +14,7 @@ import ru.timelimit.client.game.UI.UI;
 import java.util.ArrayList;
 
 public class GameScene implements Scene {
-    public int exitCode = 0;
+    private int exitCode = 0;
 
     private Entity player;
     private Entity remotePlayer;
@@ -133,7 +133,7 @@ public class GameScene implements Scene {
 
     @Override
     public void render(SpriteBatch batch) {
-        ((GameUI)gui).updateHp(player.hp);
+        ((GameUI)gui).updateHp(player.getHp());
         updateObjects();
 
         renderBackground(batch);

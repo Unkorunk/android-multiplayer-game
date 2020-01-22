@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class PreparationScene implements Scene {
-    public int exitCode = 0;
+    private int exitCode = 0;
 
     private int money = 100;
 
@@ -154,8 +154,8 @@ public class PreparationScene implements Scene {
         if (clickedBtn == null && currentTrap != -1 && Gdx.input.justTouched()) {
             var pos = Pair.vectorToPair(GameClient.lastClick);
             if (trapTypes.get(currentTrap).validator(pos) && pos.x > 0 && pos.x < GlobalSettings.WORLD_WIDTH / GlobalSettings.WIDTH_CELL
-                && money >= trapTypes.get(currentTrap).cost) {
-                money -= trapTypes.get(currentTrap).cost;
+                && money >= trapTypes.get(currentTrap).getCost()) {
+                money -= trapTypes.get(currentTrap).getCost();
                 var trapPos = Pair.vectorToPair(GameClient.lastClick);
                 GameClient.sendTrap(trapPos.x, trapPos.y, currentTrap);
             }

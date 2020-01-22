@@ -18,17 +18,49 @@ public class MenuUI extends UI {
 
     private Label lobbyChooserLabel;
 
-    public int startTimer = -1;
+    public enum State {
+        JOINING, LOGIN, LOGOUT
+    }
+
+    private State status = State.LOGOUT;
+
+    public void setState(State state) {
+        switch (state) {
+            case LOGOUT:
+                hideElement("LobbyChooseTitle");
+                hideElement("LobbyChooser");
+                hideElement("prevLobby");
+                hideElement("nextLobby");
+                hideElement("createLobbyBtn");
+                hideElement("mmrlabel");
+                break;
+            case LOGIN:
+                showElement("LobbyChooseTitle");
+                showElement("LobbyChooser");
+                showElement("prevLobby");
+                showElement("nextLobby");
+                showElement("createLobbyBtn");
+                showElement("mmrlabel");
+                break;
+            case JOINING:
+                break;
+            default:
+                break;
+        }
+        status = state;
+    }
+
+    //private int startTimer = -1;
 
     public TextFieldWrapper activeField = null;
-    public int MMR = -1;
+    private int MMR = -1;
 
     public void updateMMR(int mmr) {
         MMR = mmr;
         MMRLabel.setText("Score: " + mmr);
     }
 
-    public Label MMRLabel;
+    private Label MMRLabel;
     private TextFieldWrapper nicknameInput;
     private TextFieldWrapper passwordInput;
 
@@ -98,6 +130,7 @@ public class MenuUI extends UI {
     public void init() {
         UI.currentUI = this;
         btnMap = new HashMap<>();
+        btnSettings = new HashMap<>();
 
         var cameraWidth = cameraInst.viewportWidth;
         var cameraHeight = cameraInst.viewportHeight;
@@ -113,10 +146,10 @@ public class MenuUI extends UI {
         title.setBackground(new Sprite(ResourceManager.getTexture("BtnEmpty")));
         var createLobbyBtn = new Button(cameraWidth / 2 - 75, cameraHeight - 220,
                 150, 40,  () -> {
-            if (startTimer > 0) {
+            if (status == State.JOINING) {
                 GameClient.sendDisconnect();
-                startTimer = -1;
-            } else {
+                setState(State.LOGIN);
+            } else if (status == State.LOGIN) {
                 GameClient.sendCreateLobby();
             }
 
@@ -151,19 +184,21 @@ public class MenuUI extends UI {
         });
         loginBtn.setSprite(new Sprite(ResourceManager.getTexture("BtnUp")));
 
-        btnMap.put("createLobbyBtn", createLobbyBtn);
-        btnMap.put("ExitBtn", btnExit);
-        btnMap.put("MainTitle", title);
-        btnMap.put("LoginBtn", loginBtn);
-        btnMap.put("nicknameInput", nicknameInput);
-        btnMap.put("passwordInput", passwordInput);
-        btnMap.put("mmrlabel", MMRLabel);
+        addElement("createLobbyBtn", createLobbyBtn, true);
+        addElement("ExitBtn", btnExit, true);
+        addElement("MainTitle", title, true);
+        addElement("LoginBtn", loginBtn, true);
+        addElement("nicknameInput", nicknameInput, true);
+        addElement("passwordInput", passwordInput, true);
+        addElement("mmrlabel", MMRLabel, true);
 
         lobbyChooserInit();
 
-//        if (GameClient.instance.token != null) {
-//            System.out.println("SEND MMR");
-//            GameClient.sendMMR();
-//        }
+        if (GameClient.token != null) {
+            System.out.println("SEND MMR");
+            GameClient.sendMMR();
+        } else {
+            setState(State.LOGOUT);
+        }
     }
 }

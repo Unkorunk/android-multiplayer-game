@@ -70,6 +70,11 @@ public abstract class UI {
         btnSettings.put(nameElement, true);
     }
 
+    protected void addElement(String name, UIElement element, boolean visibility) {
+        btnMap.put(name, element);
+        btnSettings.put(name, visibility);
+    }
+
     protected static HashMap<String, Boolean> btnSettings;
     protected static HashMap<String, UIElement> btnMap;
 }
