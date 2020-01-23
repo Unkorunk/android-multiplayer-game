@@ -7,7 +7,6 @@ import ru.timelimit.client.game.ResourceManager;
 import ru.timelimit.client.game.Trap;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.function.Consumer;
 
 public final class PreparationUI extends UI {
@@ -19,16 +18,13 @@ public final class PreparationUI extends UI {
 
     @Override
     public void init() {
-        UI.currentUI = this;
+        super.init();
 
         var width = cameraInst.viewportWidth;
         var height = cameraInst.viewportHeight;
 
-        btnMap = new HashMap<>();
-
         errorLabel = new Label(100, height - 20, 0, 0, "");
         errorLabel.background = null;
-        btnMap.put("errorLabel", errorLabel);
 
         var menuBtn = new Button(width - 40, height - 50, 40, 40, () -> {
             GameClient.sendDisconnect();
@@ -41,9 +37,10 @@ public final class PreparationUI extends UI {
 
         moneyDisplay = new Label(width - 70 - 20, height - 50 - 20, 0, 0, "$0");
 
-        btnMap.put("MenuBtn", menuBtn);
-        btnMap.put("Title", title);
-        btnMap.put("MoneyDisplay", moneyDisplay);
+        addElement("ErrorLabel", errorLabel, true);
+        addElement("MenuBtn", menuBtn, true);
+        addElement("Title", title, true);
+        addElement("MoneyDisplay", moneyDisplay, true);
     }
 
     public void initChooser(ArrayList<Trap> trapList, Consumer<Integer> cb) {

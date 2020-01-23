@@ -10,7 +10,12 @@ import java.util.HashMap;
 public abstract class UI {
     protected OrthographicCamera cameraInst;
     protected static UI currentUI;
-    public abstract void init();
+
+    public void init() {
+        UI.currentUI = this;
+        btnMap = new HashMap<>();
+        btnSettings = new HashMap<>();
+    }
 
     public Label errorLabel;
 

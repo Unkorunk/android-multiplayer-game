@@ -63,15 +63,32 @@ public final class GlobalSettings {
         return type.isInstance(candidate);
     }
 
-    public static void translateCamera(float deltaX, float deltaY, OrthographicCamera camera, Sprite background) {
-//        if (GlobalSettings.WORLD_HEIGHT - camera.viewportHeight / 2 - camera.position.y < deltaY) {
-//            deltaY = GlobalSettings.WORLD_HEIGHT - camera.viewportHeight / 2 - camera.position.y;
-//        }
-//
-//        if (0 + camera.viewportHeight / 2 - camera.position.y > deltaY){
-//            deltaY = 0 + camera.viewportHeight / 2 - camera.position.y;
-//        }
+    public static void parallaxTranslate(OrthographicCamera camera,
+                                         ArrayList<Sprite> layer1, float speed1,
+                                         ArrayList<Sprite> layer2, float speed2,
+                                         ArrayList<Sprite> layer3, float speed3, float delta) {
+        if (GlobalSettings.WORLD_WIDTH - camera.viewportWidth / 2 - camera.position.x < delta) {
+            delta = GlobalSettings.WORLD_WIDTH - camera.viewportWidth / 2 - camera.position.x;
+        }
 
+        if (0 + camera.viewportWidth / 2 - camera.position.x > delta){
+            delta = 0 + camera.viewportWidth / 2 - camera.position.x;
+        }
+
+        for (var sprite : layer1) {
+            sprite.translate(delta * (1 - speed1), 0);
+        }
+        for (var sprite : layer2) {
+            sprite.translate(delta * (1 - speed2), 0);
+        }
+        for (var sprite : layer3) {
+            sprite.translate(delta * (1 - speed3), 0);
+        }
+
+        camera.translate(delta, 0);
+    }
+
+    public static void translateCamera(float deltaX, OrthographicCamera camera, Sprite background) {
         if (GlobalSettings.WORLD_WIDTH - camera.viewportWidth / 2 - camera.position.x < deltaX) {
             deltaX = GlobalSettings.WORLD_WIDTH - camera.viewportWidth / 2 - camera.position.x;
         }

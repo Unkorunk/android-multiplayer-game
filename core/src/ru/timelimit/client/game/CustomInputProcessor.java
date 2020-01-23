@@ -102,9 +102,8 @@ public final class CustomInputProcessor implements InputProcessor, GestureDetect
     public boolean pan(float x, float y, float deltaX, float deltaY) {
         if (GlobalSettings.checkForType(gc.sceneManager.currentScene, PreparationScene.class)) {
             deltaX = -deltaX * (cam.viewportWidth / Gdx.graphics.getWidth());
-            deltaY = deltaY * (cam.viewportHeight / Gdx.graphics.getHeight());
 
-            GlobalSettings.translateCamera(deltaX, deltaY, cam, bg);
+            gc.sceneManager.currentScene.translateCamera(deltaX);
             ((PreparationScene) gc.sceneManager.currentScene).currentTrap = -1;
             return true;
         }

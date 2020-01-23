@@ -32,7 +32,7 @@ public class MenuUI extends UI {
                 hideElement("prevLobby");
                 hideElement("nextLobby");
                 hideElement("createLobbyBtn");
-                hideElement("mmrlabel");
+                hideElement("MMRLabel");
                 break;
             case LOGIN:
                 showElement("LobbyChooseTitle");
@@ -40,7 +40,7 @@ public class MenuUI extends UI {
                 showElement("prevLobby");
                 showElement("nextLobby");
                 showElement("createLobbyBtn");
-                showElement("mmrlabel");
+                showElement("MMRLabel");
                 break;
             case JOINING:
                 break;
@@ -50,13 +50,9 @@ public class MenuUI extends UI {
         status = state;
     }
 
-    //private int startTimer = -1;
-
     public TextFieldWrapper activeField = null;
-    private int MMR = -1;
 
     public void updateMMR(int mmr) {
-        MMR = mmr;
         MMRLabel.setText("Score: " + mmr);
     }
 
@@ -128,16 +124,13 @@ public class MenuUI extends UI {
 
     @Override
     public void init() {
-        UI.currentUI = this;
-        btnMap = new HashMap<>();
-        btnSettings = new HashMap<>();
+        super.init();
 
         var cameraWidth = cameraInst.viewportWidth;
         var cameraHeight = cameraInst.viewportHeight;
 
         errorLabel = new Label( 100, cameraHeight - 20, 0, 0, "");
         errorLabel.background = null;
-        btnMap.put("errorLabel", errorLabel);
 
         MMRLabel = new Label(50, cameraHeight - 100, 0, 0, "Score: ");
 
@@ -184,13 +177,14 @@ public class MenuUI extends UI {
         });
         loginBtn.setSprite(new Sprite(ResourceManager.getTexture("BtnUp")));
 
-        addElement("createLobbyBtn", createLobbyBtn, true);
+        addElement("ErrorLabel", errorLabel, true);
+        addElement("CreateLobbyBtn", createLobbyBtn, true);
         addElement("ExitBtn", btnExit, true);
         addElement("MainTitle", title, true);
         addElement("LoginBtn", loginBtn, true);
-        addElement("nicknameInput", nicknameInput, true);
-        addElement("passwordInput", passwordInput, true);
-        addElement("mmrlabel", MMRLabel, true);
+        addElement("NicknameInput", nicknameInput, true);
+        addElement("PasswordInput", passwordInput, true);
+        addElement("MMRLabel", MMRLabel, true);
 
         lobbyChooserInit();
 

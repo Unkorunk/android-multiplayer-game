@@ -9,47 +9,49 @@ import ru.timelimit.client.game.ResourceManager;
 import ru.timelimit.client.game.UI.MenuUI;
 import ru.timelimit.client.game.UI.UI;
 
+import java.util.ArrayList;
 import java.util.Objects;
+
 
 public class MenuScene implements Scene {
     private int exitCode = 0;
     private OrthographicCamera camera;
     private UI gui = new MenuUI();
 
-    private Sprite background;
-    private Sprite backgroundCity1;
-    private Sprite backgroundCity2;
+    private ArrayList<Sprite> skyBackground;
+    private ArrayList<Sprite> citybackground;
+    private ArrayList<Sprite> groundBackground;
 
     private float flowSpeed = 0.5f;
 
     @Override
     public void instantiate() {
-        float width = Gdx.graphics.getWidth();
-        float height = Gdx.graphics.getHeight();
+        Scene.super.instantiate();
 
-        camera = new OrthographicCamera(600, 600 * (height / width));
-        camera.position.set(0 + camera.viewportWidth / 2, 0 + camera.viewportHeight / 2, 0);
-        camera.update();
-        gui.setCamera(camera);
-        gui.init();
+        skyBackground = new ArrayList<>();
+        citybackground = new ArrayList<>();
+        groundBackground = new ArrayList<>();
 
-        background = new Sprite(Objects.requireNonNull(ResourceManager.getTexture("BackgroundSky")));
+        skyBackground.add(new Sprite(Objects.requireNonNull(ResourceManager.getTexture("BackgroundSky"))));
 
-        background.setSize(camera.viewportWidth * 1.5f, camera.viewportHeight);
-        background.setPosition(camera.viewportWidth * (1.0f - 1.5f) / 2, 0);
+        skyBackground.get(0).setSize(camera.viewportWidth * 1.5f, camera.viewportHeight);
+        skyBackground.get(0).setPosition(camera.viewportWidth * (1.0f - 1.5f) / 2, 0);
 
-        backgroundCity1 = new Sprite(ResourceManager.getTexture("BackgroundCity"));
+        var backgroundCity1 = new Sprite(ResourceManager.getTexture("BackgroundCity"));
         backgroundCity1.setSize(camera.viewportWidth, camera.viewportHeight + 64);
         backgroundCity1.setPosition(0, -64);
 
-        backgroundCity2 = new Sprite(ResourceManager.getTexture("BackgroundCity"));
+        var backgroundCity2 = new Sprite(ResourceManager.getTexture("BackgroundCity"));
         backgroundCity2.setSize(camera.viewportWidth, camera.viewportHeight + 64);
         backgroundCity2.setPosition(camera.viewportWidth, -64);
+
+        citybackground.add(backgroundCity1);
+        citybackground.add(backgroundCity2);
     }
 
     @Override
     public void dispose() {
-        GlobalSettings.clearObjects();
+        Scene.super.dispose();
         ResourceManager.disposeTempFonts();
     }
 
@@ -64,8 +66,35 @@ public class MenuScene implements Scene {
     }
 
     @Override
-    public Sprite getBackground() {
-        return background;
+    public void setCamera(OrthographicCamera camera) {
+        this.camera = camera;
+    }
+
+    @Override
+    public void translateCamera(float delta) {
+        citybackground.get(0).translate(-delta, 0);
+        citybackground.get(1).translate(-delta, 0);
+
+        if (citybackground.get(0).getBoundingRectangle().x < -camera.viewportWidth) {
+            citybackground.get(0).setX(camera.viewportWidth - 1);
+        } else if (citybackground.get(1).getBoundingRectangle().x < -camera.viewportWidth) {
+            citybackground.get(1).setX(camera.viewportWidth - 1);
+        }
+    }
+
+    @Override
+    public ArrayList<Sprite> getFirstPlane() {
+        return groundBackground;
+    }
+
+    @Override
+    public ArrayList<Sprite> getSecondPlane() {
+        return citybackground;
+    }
+
+    @Override
+    public ArrayList<Sprite> getThirdPlane() {
+        return skyBackground;
     }
 
     @Override
@@ -74,18 +103,16 @@ public class MenuScene implements Scene {
             gui.findClicked();
         }
 
-        backgroundCity1.translate(flowSpeed, 0);
-        backgroundCity2.translate(flowSpeed, 0);
+        translateCamera(flowSpeed);
 
-        if (backgroundCity1.getBoundingRectangle().x > camera.viewportWidth) {
-            backgroundCity1.setX(-camera.viewportWidth + 1);
-        } else if (backgroundCity2.getBoundingRectangle().x > camera.viewportWidth) {
-            backgroundCity2.setX(-camera.viewportWidth + 1);
+        for (var sprite : skyBackground) {
+            sprite.draw(batch);
         }
 
-        background.draw(batch);
-        backgroundCity1.draw(batch);
-        backgroundCity2.draw(batch);
+        for (var sprite : citybackground) {
+            sprite.draw(batch);
+        }
+
         gui.render(batch);
     }
 

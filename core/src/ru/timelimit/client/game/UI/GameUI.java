@@ -16,17 +16,12 @@ public final class GameUI extends UI {
 
     @Override
     public void init() {
-        UI.currentUI = this;
-
+        super.init();
         var width = cameraInst.viewportWidth;
         var height = cameraInst.viewportHeight;
 
-        btnMap = new HashMap<>();
-        btnSettings = new HashMap<>();
-
         errorLabel = new Label(100, height - 20, 0, 0, "");
         errorLabel.background = null;
-        btnMap.put("errorLabel", errorLabel);
 
         var jumpBtn = new Button(30, 10, 40, 40, () -> {});
         var slipBtn = new Button(width - 70, 10, 40, 40, () -> {});
@@ -41,11 +36,10 @@ public final class GameUI extends UI {
 
         hpDisplay = new Label(width - 70 - 20, height - 50 - 20, 0, 0, "HP: ");
 
-        btnMap.put("JumpBtn", jumpBtn);
-        btnSettings.put("JumpBtn", false);
-        btnMap.put("SlipBtn", slipBtn);
-        btnSettings.put("SlipBtn", false);
-        btnMap.put("MenuBtn", menuBtn);
-        btnMap.put("HpBar", hpDisplay);
+        addElement("ErrorLabel", errorLabel, true);
+        addElement("JumpBtn", jumpBtn, false);
+        addElement("SlipBtn", slipBtn, false);
+        addElement("MenuBtn", menuBtn, true);
+        addElement("HpBar", hpDisplay, true);
     }
 }

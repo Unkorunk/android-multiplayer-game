@@ -10,7 +10,7 @@ import ru.timelimit.client.game.UI.PreparationUI;
 import ru.timelimit.client.game.UI.UI;
 
 import java.util.ArrayList;
-import java.util.concurrent.locks.ReentrantLock;
+
 
 public class PreparationScene implements Scene {
     private int exitCode = 0;
@@ -20,9 +20,9 @@ public class PreparationScene implements Scene {
     private OrthographicCamera camera;
     private UI gui = new PreparationUI();
 
-    private Sprite background;
-    private ArrayList<Sprite> ground;
-    private ArrayList<Sprite> parallaxCity;
+    private ArrayList<Sprite> skyBackground;
+    private ArrayList<Sprite> groundBackground;
+    private ArrayList<Sprite> cityBackground;
 
     private ArrayList<Trap> trapTypes;
 
@@ -53,40 +53,28 @@ public class PreparationScene implements Scene {
     public void instantiate() {
         trapInit();
 
-        float width = Gdx.graphics.getWidth();
-        float height = Gdx.graphics.getHeight();
+        Scene.super.instantiate();
 
-        camera = new OrthographicCamera(600, 600 * (height / width));
-        camera.position.set(0 + camera.viewportWidth / 2, 0 + camera.viewportHeight / 2, 0);
-        camera.update();
+        skyBackground = new ArrayList<>();
+        groundBackground = new ArrayList<>();
+        cityBackground = new ArrayList<>();
 
-        gui.setCamera(camera);
-        gui.init();
-
-        background = new Sprite(ResourceManager.getTexture("BackgroundSky"));
-        background.setSize(camera.viewportWidth * 1.5f, camera.viewportHeight);
-        background.setPosition(camera.viewportWidth * (1.0f - 1.5f) / 2, 0);
+        skyBackground.add(new Sprite(ResourceManager.getTexture("BackgroundSky")));
+        skyBackground.get(0).setSize(camera.viewportWidth * 1.5f, camera.viewportHeight);
+        skyBackground.get(0).setPosition(camera.viewportWidth * (1.0f - 1.5f) / 2, 0);
 
         int x = 0;
-        ground = new ArrayList<>();
-        parallaxCity = new ArrayList<>();
+        cityBackground = new ArrayList<>();
+        groundBackground = new ArrayList<>();
         while (x < GlobalSettings.WORLD_WIDTH) {
             var gSprite = new Sprite(ResourceManager.getTexture("BackgroundGround"));
             var cSprite = new Sprite(ResourceManager.getTexture("BackgroundCity"));
             gSprite.setPosition(x, -1);
             cSprite.setPosition(x, 16);
-            ground.add(gSprite);
-            parallaxCity.add(cSprite);
+            groundBackground.add(gSprite);
+            cityBackground.add(cSprite);
             x += gSprite.getWidth();
         }
-
-//        preparationTimer = new Timer();
-//        preparationTimer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                exitCode = 3;
-//            }
-//        }, GlobalSettings.preparationTime);
 
         ((PreparationUI)gui).initChooser(trapTypes, (Integer trap) -> {
             currentTrap = trap;
@@ -102,7 +90,7 @@ public class PreparationScene implements Scene {
     @Override
     public void dispose() {
         if (exitCode != 3) {
-            GlobalSettings.clearObjects();
+            Scene.super.dispose();
         }
     }
 
@@ -117,10 +105,29 @@ public class PreparationScene implements Scene {
     }
 
     @Override
-    public Sprite getBackground() {
-        return background;
+    public void setCamera(OrthographicCamera camera) {
+        this.camera = camera;
     }
 
+    @Override
+    public void translateCamera(float delta) {
+        GlobalSettings.parallaxTranslate(camera, getFirstPlane(), 1f, getSecondPlane(), 0.25f, getThirdPlane(), 0f, delta);
+    }
+
+    @Override
+    public ArrayList<Sprite> getFirstPlane() {
+        return groundBackground;
+    }
+
+    @Override
+    public ArrayList<Sprite> getSecondPlane() {
+        return cityBackground;
+    }
+
+    @Override
+    public ArrayList<Sprite> getThirdPlane() {
+        return skyBackground;
+    }
 
     private void renderObjects(SpriteBatch batch) {
         GlobalSettings.locker.lock();
@@ -131,13 +138,15 @@ public class PreparationScene implements Scene {
     }
 
     private void renderBackground(SpriteBatch batch) {
-        background.draw(batch);
-
-        for (var sprite : parallaxCity) {
+        for (var sprite : skyBackground) {
             sprite.draw(batch);
         }
 
-        for (var sprite : ground) {
+        for (var sprite : cityBackground) {
+            sprite.draw(batch);
+        }
+
+        for (var sprite : groundBackground) {
             sprite.draw(batch);
         }
         ((PreparationUI)gui).updateMoney(money);
@@ -147,7 +156,10 @@ public class PreparationScene implements Scene {
     public void render(SpriteBatch batch) {
         renderBackground(batch);
 
-        String clickedBtn = gui.findClicked();
+        String clickedBtn = null;
+        if (Gdx.input.justTouched())
+            clickedBtn = gui.findClicked();
+
         if (clickedBtn != null) {
             System.out.println(2);
         }
@@ -163,6 +175,8 @@ public class PreparationScene implements Scene {
 
         renderObjects(batch);
         gui.render(batch);
+
+
     }
 
     @Override

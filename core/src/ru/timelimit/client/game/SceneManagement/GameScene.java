@@ -21,9 +21,9 @@ public class GameScene implements Scene {
 
     private OrthographicCamera camera;
     private UI gui = new GameUI();
-    private Sprite background;
-    private ArrayList<Sprite> ground;
-    private ArrayList<Sprite> parallaxCity;
+    private ArrayList<Sprite> skyBackground;
+    private ArrayList<Sprite> groundBackground;
+    private ArrayList<Sprite> cityBackground;
 
     private void objectsInit() {
         player = new Entity();
@@ -44,38 +44,27 @@ public class GameScene implements Scene {
 
     @Override
     public void instantiate() {
-        float width = Gdx.graphics.getWidth();
-        float height = Gdx.graphics.getHeight();
-
-        camera = new OrthographicCamera(600, 600 * (height / width));
-        camera.position.set(0 + camera.viewportWidth / 2, 0 + camera.viewportHeight / 2, 0);
-        camera.update();
-        gui.setCamera(camera);
-        gui.init();
-
-        background = new Sprite(ResourceManager.getTexture("BackgroundSky"));
-        background.setSize(camera.viewportWidth * 1.5f, camera.viewportHeight);
-        background.setPosition(camera.viewportWidth * (1.0f - 1.5f) / 2, 0);
+        Scene.super.instantiate();
 
         int x = 0;
-        ground = new ArrayList<>();
-        parallaxCity = new ArrayList<>();
+        skyBackground = new ArrayList<>();
+        skyBackground.add(new Sprite(ResourceManager.getTexture("BackgroundSky")));
+        skyBackground.get(0).setSize(camera.viewportWidth * 1.5f, camera.viewportHeight);
+        skyBackground.get(0).setPosition(camera.viewportWidth * (1.0f - 1.5f) / 2, 0);
+
+        groundBackground = new ArrayList<>();
+        cityBackground = new ArrayList<>();
         while (x < GlobalSettings.WORLD_WIDTH) {
             var gSprite = new Sprite(ResourceManager.getTexture("BackgroundGround"));
             var cSprite = new Sprite(ResourceManager.getTexture("BackgroundCity"));
             gSprite.setPosition(x, -1);
             cSprite.setPosition(x, 16);
-            ground.add(gSprite);
-            parallaxCity.add(cSprite);
+            groundBackground.add(gSprite);
+            cityBackground.add(cSprite);
             x += gSprite.getWidth();
         }
 
         objectsInit();
-    }
-
-    @Override
-    public void dispose() {
-        GlobalSettings.clearObjects();
     }
 
     @Override
@@ -89,8 +78,28 @@ public class GameScene implements Scene {
     }
 
     @Override
-    public Sprite getBackground() {
-        return background;
+    public void setCamera(OrthographicCamera camera) {
+        this.camera = camera;
+    }
+
+    @Override
+    public void translateCamera(float delta) {
+        GlobalSettings.parallaxTranslate(camera, getFirstPlane(), 1f, getSecondPlane(), 0.25f, getThirdPlane(), 0f, delta);
+    }
+
+    @Override
+    public ArrayList<Sprite> getFirstPlane() {
+        return groundBackground;
+    }
+
+    @Override
+    public ArrayList<Sprite> getSecondPlane() {
+        return cityBackground;
+    }
+
+    @Override
+    public ArrayList<Sprite> getThirdPlane() {
+        return skyBackground;
     }
 
     public void updateGame(ru.timelimit.network.GameUser[] users, ru.timelimit.network.Trap[] traps) {
@@ -120,19 +129,24 @@ public class GameScene implements Scene {
     }
 
     private void renderBackground(SpriteBatch batch) {
-        background.draw(batch);
-
-        for (var sprite : parallaxCity) {
+        for (var sprite : skyBackground) {
             sprite.draw(batch);
         }
 
-        for (var sprite : ground) {
+        for (var sprite : cityBackground) {
+            sprite.draw(batch);
+        }
+
+        for (var sprite : groundBackground) {
             sprite.draw(batch);
         }
     }
 
     @Override
     public void render(SpriteBatch batch) {
+        if (Gdx.input.justTouched())
+            gui.findClicked();
+
         ((GameUI)gui).updateHp(player.getHp());
         updateObjects();
 
@@ -140,8 +154,7 @@ public class GameScene implements Scene {
 
         renderObjects(batch);
 
-        GlobalSettings.translateCamera(player.position.x - camera.position.x,
-                player.position.y - camera.position.y, camera, background);
+        translateCamera(player.position.x - camera.position.x);
 
         gui.render(batch);
 
@@ -150,7 +163,6 @@ public class GameScene implements Scene {
             exitCode = 1;
             GameClient.sendDisconnect();
         }
-        String clickedBtn = gui.findClicked();
     }
 
     @Override

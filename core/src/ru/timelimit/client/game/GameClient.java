@@ -1,7 +1,6 @@
 package ru.timelimit.client.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
@@ -103,9 +102,9 @@ public final class GameClient extends ApplicationAdapter {
 
 		var ui = (MenuUI)GameClient.instance.sceneManager.currentScene.getUI();
 		ui.setState(MenuUI.State.JOINING);
-		((Label)ui.getElement("createLobbyBtn").getChildren(Label.class)).setText("Waiting for game (Click to leave)");
-		var bounds = ui.getElement("createLobbyBtn").getBounds();
-		ui.getElement("createLobbyBtn").setBounds(new Rectangle(bounds.x - 100, bounds.y, bounds.width + 200, bounds.height));
+		((Label)ui.getElement("CreateLobbyBtn").getChildren(Label.class)).setText("Waiting for game (Click to leave)");
+		var bounds = ui.getElement("CreateLobbyBtn").getBounds();
+		ui.getElement("CreateLobbyBtn").setBounds(new Rectangle(bounds.x - 100, bounds.y, bounds.width + 200, bounds.height));
 	}
 
 	public static void sendUpdate() {
@@ -270,7 +269,7 @@ public final class GameClient extends ApplicationAdapter {
 			}
 		}).start();
 
-		inputProcessor.updateCamera(sceneManager.currentScene.getCamera(), sceneManager.currentScene.getBackground());
+		inputProcessor.updateCamera(sceneManager.currentScene.getCamera(), sceneManager.currentScene.getThirdPlane().get(0));
 
 		im.addProcessor(inputProcessor);
 		im.addProcessor(gd);
@@ -293,7 +292,7 @@ public final class GameClient extends ApplicationAdapter {
 
 		batch.end();
 
-		inputProcessor.updateCamera(sceneManager.currentScene.getCamera(), sceneManager.currentScene.getBackground());
+		inputProcessor.updateCamera(sceneManager.currentScene.getCamera(), sceneManager.currentScene.getThirdPlane().get(0));
 		sceneManager.currentScene.getCamera().update();
 
 		sceneManager.checkScene();
